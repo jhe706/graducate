@@ -5,9 +5,10 @@
         <!-- <header>show up</header> -->
         <v-toolbar app color="green lighten-1">
             <h1>graducate</h1>
-            <authentication class="z nav navbar-nav navbar-right">
+            <authentication class="z nav navbar-nav navbar-right right-justify">
                 <!--:getUser="getUser" :setUser="setUser" :viewProfile="viewProfile" :show="showPopup"-->
             </authentication>
+            <button v-bind:click="getUserDetails">Click Me</button>
         </v-toolbar>
 
         <!--Navigation drawer-->
@@ -17,7 +18,7 @@
                     <v-list>
                         <v-list-tile avatar>
                             <v-list-tile-avatar>
-                                <img src="https://randomuser.me/api/portraits/men/85.jpg">		</v-list-tile-avatar>
+                                <img src="https://randomuser.me/api/portraits/men/85.jpg"></v-list-tile-avatar>
                                 <v-list-tile-content>
                                     <v-list-tile-title>Molly Chen</v-list-tile-title>
                                 </v-list-tile-content>
@@ -28,7 +29,7 @@
                 <v-list dense class="pt-0">
                     <v-divider>
                     </v-divider>
-                    <v-list-tile v-for="page in pages" :key="page.title" :onClick="checkJSON">
+                    <v-list-tile v-for="page in pages" :key="page.title">
                         <v-list-tile-action>
                             <v-icon>{{ page.icon }}</v-icon>
                         </v-list-tile-action>
@@ -66,20 +67,20 @@ import {
     matchesRef
 } from "./database";
 import Authentication from "./components/Authentication";
+import CreateProfile from "./components/CreateProfile";
 import Header from "./components/Header";
 import ProfileCard from "./components/ProfileCard";
-// const Users = require('../users.json');    // TODO: change to import from Firebase
 
 export default {
     name: "App",
     components: {
         // components that this component needs to render
         Authentication,
+        CreateProfile,
         Header,
         ProfileCard
     },
-    data() {
-        // any params accessed by HTML
+    data() {                                // TIED TO V-MODEL
         return {
             matches: [{
                     src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
@@ -104,7 +105,7 @@ export default {
                 }
             ],
             right: null,
-            users: userRef // is this enough to access the .json stored in db?
+            users: userRef 
         };
     },
     computed: {
@@ -117,17 +118,20 @@ export default {
     },
     methods: {
         // any functionality defined specifically for this component
-        checkJSON() {
-            // for (let user in userRef){
-            //   console.log(user.firstName);
-            // }
+        getUserDetails() {
+            console.log("Hi");
+            userRef.on('value', function(snapshot){
+                var jsonData = snapshot.val();
+                console.log(jsonData);
+            })
         }
     },
     props: {}
 };
 </script>
 
-<style>
+<style> 
+/* #: id, .: class*/
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -137,7 +141,7 @@ export default {
     margin-top: 60px;
 }
 
-.matches-carousel {
-    /*width: 1000px;*/
+.right-justify {
+
 }
 </style>

@@ -10,6 +10,7 @@
   "dependencies": {
     "firebaseui": "^3.4.1",
     "js-beautify": "^1.8.8",
+    "material-design-icons": "^3.0.1",
     "material-design-icons-iconfont": "^3.0.3",
     "pug-beautify": "^0.1.1",
     "vue": "^2.5.17",

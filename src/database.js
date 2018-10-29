@@ -1,4 +1,6 @@
 import Firebase from 'firebase';
+// var firebase = require("firebase/app");
+// require("firebase/database");
 
 // Initialize Firebase
 var config = {
@@ -10,6 +12,7 @@ var config = {
 	messagingSenderId: "361849913325"
 };
 var app = Firebase.initializeApp(config);
+
 export const db = app.database();
 export const userRef = db.ref('users');
 export const matchesRef = db.ref('matches');
