@@ -8,7 +8,6 @@
             <authentication class="z nav navbar-nav navbar-right right-justify">
                 <!--:getUser="getUser" :setUser="setUser" :viewProfile="viewProfile" :show="showPopup"-->
             </authentication>
-            <button v-bind:click="getUserDetails">Click Me</button>
         </v-toolbar>
 
         <!--Navigation drawer-->
@@ -118,13 +117,17 @@ export default {
     },
     methods: {
         // any functionality defined specifically for this component
-        getUserDetails() {
-            console.log("Hi");
-            userRef.on('value', function(snapshot){
-                var jsonData = snapshot.val();
-                console.log(jsonData);
-            })
-        }
+        // getUserDetails() {
+        //     console.log("Hi");
+        //     userRef.on('value', function(snapshot){
+        //         var jsonData = snapshot.val();
+        //         console.log(jsonData);
+        //     })
+        // },
+        // getAreasOfStudy(){
+        //     var parsed = JSON.parse(majors);
+        //     console.log(parsed);
+        // }
     },
     props: {}
 };

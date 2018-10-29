@@ -1,7 +1,7 @@
-var undergradMajors = [
+export const undergradMajors = [
 	"Asian American Studies", "Arabic", "Biology", "Biophysics", "Chemistry", "Computer Science", "Economics"
 ];
 
-var gradMajors = [
+export const gradMajors = [
 	"Law", "Medicine", "Veterinary", "Research"
 ];
