@@ -1,53 +1,58 @@
 <template>
 <div id="app">
     <v-app>
-        <v-content>
-            <!--Header-->
-            <v-toolbar app color="green lighten-1">
-                <h1>graducate</h1>
-                <authentication class="z nav navbar-nav navbar-right" :getUser="getUser" :setUser="setUser" :viewProfile="viewProfile" :show="showPopup">
-                </authentication>
-            </v-toolbar>
+        <!--Header-->
+        <!-- <header>show up</header> -->
+        <v-toolbar app color="green lighten-1">
+            <h1>graducate</h1>
+            <authentication class="z nav navbar-nav navbar-right">
+                <!--:getUser="getUser" :setUser="setUser" :viewProfile="viewProfile" :show="showPopup"-->
+            </authentication>
+        </v-toolbar>
 
-			<!--Navigation drawer-->
-            <v-card app height="350px">
-                <v-navigation-drawer permanent>
-                    <v-toolbar flat>
-                        <v-list>
-                            <v-list-tile avatar>
-                                <v-list-tile-avatar>
-                                    <img src="https://randomuser.me/api/portraits/men/85.jpg">		</v-list-tile-avatar>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>Molly Chen</v-list-tile-title>
-                                    </v-list-tile-content>
-                            </v-list-tile>
-                        </v-list>
-                    </v-toolbar>
-
-                    <v-list dense class="pt-0">
-                        <v-divider>
-                        </v-divider>
-                        <v-list-tile v-for="page in pages" :key="page.title" :onClick="checkJSON">
-                            <v-list-tile-action>
-                                <v-icon>{{ page.icon }}</v-icon>
-                            </v-list-tile-action>
-
-                            <v-list-tile-content>
-                                <v-list-tile-title>{{ page.title }}</v-list-tile-title>
-                            </v-list-tile-content>
+        <!--Navigation drawer-->
+        <v-card height="350px">
+            <v-navigation-drawer permanent>
+                <v-toolbar flat>
+                    <v-list>
+                        <v-list-tile avatar>
+                            <v-list-tile-avatar>
+                                <img src="https://randomuser.me/api/portraits/men/85.jpg">		</v-list-tile-avatar>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>Molly Chen</v-list-tile-title>
+                                </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
-                </v-navigation-drawer>
-            </v-card>
+                </v-toolbar>
 
-            <v-carousel app>
-                <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item>
+                <v-list dense class="pt-0">
+                    <v-divider>
+                    </v-divider>
+                    <v-list-tile v-for="page in pages" :key="page.title" :onClick="checkJSON">
+                        <v-list-tile-action>
+                            <v-icon>{{ page.icon }}</v-icon>
+                        </v-list-tile-action>
+
+                        <v-list-tile-content>
+                            <v-list-tile-title>{{ page.title }}</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list>
+            </v-navigation-drawer>
+            <!--insert v-content somewhere-->
+            <v-carousel>
+                <!-- <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item> -->
+                <v-carousel-item>
+                    <profile-card></profile-card>
+                </v-carousel-item>
             </v-carousel>
+        </v-card>
 
-            <v-footer :fixed="fixed" app>
-                <span>&copy; Molly Chen, 2018</span>
-            </v-footer>
-        </v-content>
+        <!--Footer-->
+        <v-footer :fixed="fixed" app>
+            <span>&copy; Molly Chen, 2018</span>
+        </v-footer>
+        <!-- </v-content> -->
     </v-app>
 </div>
 </template>
@@ -60,16 +65,18 @@ import {
     userRef,
     matchesRef
 } from "./database";
-import HelloWorld from "./components/HelloWorld";
+import Authentication from "./components/Authentication";
 import Header from "./components/Header";
-import Authentication from "./components/Authentication"
-// const Users = require('users.json');    // TODO: change to import from Firebase
+import ProfileCard from "./components/ProfileCard";
+// const Users = require('../users.json');    // TODO: change to import from Firebase
 
 export default {
     name: "App",
     components: {
         // components that this component needs to render
-        Authentication
+        Authentication,
+        Header,
+        ProfileCard
     },
     data() {
         // any params accessed by HTML
@@ -112,7 +119,7 @@ export default {
         // any functionality defined specifically for this component
         checkJSON() {
             // for (let user in userRef){
-            //   console.log(user.first-name);
+            //   console.log(user.firstName);
             // }
         }
     },
