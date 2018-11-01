@@ -17,7 +17,7 @@ const NotFound = {
   template: '<p>Page not found</p>'
 };
 
-const routes = {
+export const routes = {
   '/': App,
   '/createprofile': CreateProfile,
   '/matches': Matches
