@@ -16,5 +16,5 @@ var app = Firebase.initializeApp(config);
 export const db = app.database();
 export const userRef = db.ref('users');
 export const matchesRef = db.ref('matches');
-// TODO: add more tables
+export const majorsRef = db.ref('majors');
 export const storageRef = app.storage().ref();

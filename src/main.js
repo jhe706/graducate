@@ -14,7 +14,9 @@ Vue.use(Vuetify);
 
 // simple routing from scratch
 const NotFound = {
-  template: '<p>Page not found</p>'
+  template:`
+    <p>Page not found</p>
+`
 };
 
 export const routes = {
@@ -36,13 +38,7 @@ new Vue({
       return routes[this.currentRoute] || NotFound
     }
   },
-  render: h => h(App)
-  // render (h) {
-  //   return h(this.ViewComponent);
-  // }
-
-  // components: {
-  //   App
-  // },
-  // render: h => h(App)
+  render (h) {
+    return h(this.ViewComponent);
+  }
 })

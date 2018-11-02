@@ -1,0 +1,335 @@
+{
+	"users": {
+		"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd": {
+			"uuid": "f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd",
+			"school": "Trinity",
+			"hometown": {
+				"city": "Houston",
+				"state": "TX",
+				"country": "USA"
+			},
+			"tags": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"adviceGiven": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"adviceNeeded": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
+			"firstName": "Molly",
+			"lastName": "Chen",
+			"status": "undergrad",
+			"degree": {
+				"degree": "BS",
+				"major": "Computer Science",
+				"concentration": ""
+			},
+			"email": "molly.chen@duke.edu",
+			"phoneNumber": "8322825093",
+			"gradYear": "2019"
+		},
+		"c22ac451-b0f6-48a6-96ad-61d9daa99dea": {
+			"uuid": "c22ac451-b0f6-48a6-96ad-61d9daa99dea",
+			"major": "Computer Science",
+			"school": "Trinity",
+			"hometown": {
+				"city": "Saratoga",
+				"state": "CA",
+				"country": "USA"
+			},
+			"tags": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"adviceGiven": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"adviceNeeded": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"bio": "I am looking to go into product design in the industry and I need some career advice.",
+			"firstName": "Carolyn",
+			"lastName": "Sun",
+			"status": "undergrad",
+			"degree": {
+				"degree": "BA",
+				"major": "Computer Science",
+				"concentration": "Design"
+			},
+			"email": "carolyn.sun@duke.edu",
+			"phoneNumber": "9999999999",
+			"gradYear": "2019"
+		},
+		"accf252c-ec54-451e-853d-7007724e1fdf": {
+			"uuid": "accf252c-ec54-451e-853d-7007724e1fdf",
+			"school": "Trinity",
+			"hometown": {
+				"city": "Anytown",
+				"state": "PA",
+				"country": "USA"
+			},
+			"tags": [
+				{
+					"tag": "UIUX",
+					"selected": true
+				},
+				{
+					"tag": "coding",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"adviceGiven": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"adviceNeeded": [
+				{
+					"tag": "",
+					"selected": true
+				},
+				{
+					"tag": "",
+					"selected": false
+				},
+				{
+					"tag": "",
+					"selected": false
+				}
+			],
+			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
+			"firstName": "Kim",
+			"lastName": "Huynh",
+			"status": "undergrad",
+			"degree": {
+				"degree": "BA",
+				"major": "Computer Science",
+				"concentration": "Design"
+			},
+			"email": "kim.huynh@duke.edu",
+			"phoneNumber": "9999999999",
+			"gradYear": "2020"
+		}
+	},
+	"majors": {
+		"undergradMajors": {
+			"Asian and Middle Eastern Studies": {
+				"concentrations": [
+					"-",
+					"Central Asian Culture",
+					"East Asian Culture",
+					"Middle Eastern Culture",
+					"South Asian Culture",
+					"Southeast Asian Culture"
+				]
+			},
+			"Biology": {
+				"concentrations": [
+					"-",
+					"Cell and Molecular Biology",
+					"Biochemistry",
+					"Pharmacology",
+					"Pre-Med",
+					"Microbiology"
+				]
+			},
+			"Chemistry": {
+				"concentrations": [
+					"-",
+					"Chemical Engineering",
+					"Industrial Chemistry",
+					"Physical Chemistry",
+					"Petroleum Engineering",
+					"Research"
+				]
+			},
+			"Computer Science": {
+				"concentrations": [
+					"-",
+					"Algorithms",
+					"Conceptual Computing",
+					"Design",
+					"DevOps",
+					"Hardware",
+					"UI/UX",
+					"Software"
+				]
+			},
+			"Economics": {
+				"concentrations": [
+					"-",
+					"Global Economics",
+					"Wolf of Wall Street",
+					"Macroeconomics",
+					"Microeconomics"
+				]
+			},
+			"Entrepreneurship": {
+				"concentrations": [
+					"-",
+					"Global Entrepreneurship",
+					"Startups",
+					"Social Entrepreneurship",
+					"Patents and Innovation"
+				]
+			},
+			"Psychology": {
+				"concentrations": [
+					"-",
+					"Abnormal Psychology",
+					"Community Intervention Research",
+					"Consumer Psychology",
+					"Developmental Psychology",
+					"Neurobiology"
+				]
+			},
+			"Pre-Medicine": {
+				"concentrations": [
+					"-",
+					"General Practitioner",
+					"Surgery"
+				]
+			},
+			"Pre-Law": {
+				"concentrations": [
+					"-",
+					"Civil Law",
+					"Criminal Law"
+				]
+			},
+			"Pre-Veterinary": {
+				"concentrations": [
+					"-",
+					"Cats",
+					"Doggos"
+				]
+			},
+			"Other": {
+
+			}
+		},
+		"gradMajors": {
+			"Medicine": {
+				"concentrations": [
+					"-",
+					"General Practitioner",
+					"Physical Therapy",
+					"Optometry",
+					"Pediatrics",
+					"Surgery"
+				]
+			},
+			"Law": {
+				"concentrations": [
+					"-",
+					"Civil Law",
+					"Criminal Law",
+					"National Government",
+					"State/Local Government",
+					"Torts"
+				]
+			},
+			"Veterinary": {
+				"concentrations": [
+					"-",
+					"Cats",
+					"Doggos",
+					"Horsies",
+					"Large Mammals",
+					"Small Mammals"
+				]
+			},
+			"Other": {
+
+			}
+		}
+	},
+	"matches": {
+		"c22ac451-b0f6-48a6-96ad-61d9daa99dea": [],
+		"accf252c-ec54-451e-853d-7007724e1fdf": 
+		[
+			"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd"
+		],
+		"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd": []
+	}
+}

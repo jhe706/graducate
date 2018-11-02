@@ -1,21 +1,21 @@
 <template>
-<div>
-    <v-btn v-bind:click="createProfile"><a><span class="glyphicon glyphicon-user right-justify"></span>Create Profile</a></v-btn>
-
+<!-- <div> -->
+<v-card>
     <!--Form fields-->
     <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field v-model="name" :rules="nameRules" :counter="10" label="Name" required></v-text-field>
         <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
 
-		<!--Select under/grad status first-->
-        <v-radio-group v-model="radioGroup">
+        <!--Select under/grad status first-->
+        <v-radio-group v-model="selected">
             <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
+            <p>{{selected}}</p>
         </v-radio-group>
-        <!-- <v-text-field v-model="status" label="Undergrad or grad?" required></v-text-field> -->
 
         <!--Majors drop-down list changes based on under/grad status-->
-        <v-select v-if="status === Undergraduate" v-model="select" :items="ugradMajors" :rules="[v => !!v || 'Major is required']" label="Major" required></v-select>
-        <v-select v-else-if="status === Graduate" v-model="select" :items="gradMajors" :rules="[v => !!v || 'Major is required']" label="Major" required></v-select>
+        <v-btn @click="getMajors()">Click for Majors</v-btn>
+        <v-select v-if="isUndergrad()" v-model="select" :items="ugradMajors" :rules="[v => !!v || 'Major is required']" label="Major" required></v-select>
+        <v-select v-else v-model="select" :items="gradMajors" :rules="[v => !!v || 'Major is required']" label="Major" required></v-select>
         <v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
 
         <v-btn :disabled="!valid" @click="submit">
@@ -23,8 +23,8 @@
         </v-btn>
         <v-btn @click="clear">clear</v-btn>
     </v-form>
-
-</div>
+</v-card>
+<!-- </div> -->
 </template>
 
 <script>
@@ -33,15 +33,21 @@ import Firebase from "firebase";
 import {
     db,
     userRef,
-    matchesRef
+    matchesRef,
+    majorsRef
 } from "../database";
-
 import ProfileCard from "./ProfileCard";
-var areasOfStudy = require("../areasOfStudy.js"); // TODO: check me
+import App from "../App";
+import {
+    undergradMajors,
+    gradMajors
+} from "../areasOfStudy.js";
+import * as Study from "../areasOfStudy.json"; // or require
 
 export default {
     name: "CreateProfile",
     components: {
+        App,
         ProfileCard
     },
     data() { // TIED TO V-MODEL
@@ -59,19 +65,21 @@ export default {
             ],
             select: null,
             // items: ["Item 1", "Item 2", "Item 3", "Item 4"],
-			ugradMajors: areasOfStudy.undergradMajors,		// TODO: ???
-			gradMajors: areasOfStudy.gradMajors,
-			checkbox: false,
-			radioGroup: 1,
-			statuses: ["Undergraduate, Graduate"]
+            ugradMajors: Study.undergradMajors,
+            gradMajors: Study.gradMajors,
+            checkbox: false,
+            radioGroup: 1,
+            selected: "Undergraduate",
+            statuses: ["Undergraduate", "Graduate"],
+            userRef: null
         };
     },
     firebase: {
-        user: userRef,
-        matches: matchesRef
+        users: userRef,
+        matches: matchesRef,
+        majors: majorsRef
     },
     methods: {
-        // any functionality defined specifically for this component
         createProfilePg1() {
             console.log("Hi");
             var profileData = {};
@@ -89,17 +97,59 @@ export default {
 
         // taken from Vuetify form docs
         submit() {
-            if (this.$refs.form.validate()) {
-                axios.post("/api/submit", {
-                    name: this.name,
-                    email: this.email,
-                    select: this.select,
-                    checkbox: this.checkbox
-                });
-            }
+            // if (this.$refs.form.validate()) {        // TODO: change axios to firebase post
+            //     axios.post("/api/submit", {     
+            //         name: this.name,
+            //         email: this.email,
+            //         select: this.select,
+            //         checkbox: this.checkbox
+            //     });
+            // }
         },
         clear() {
             this.$refs.form.reset();
+        },
+        isUndergrad() {
+            return this.selected === "Undergraduate";
+        },
+        getMajors() {
+            // TODO:
+            let undergradMajors = [
+                "Asian and Middle Eastern Studies", "Biology", "Chemistry",
+                "Computer Science", "Economics", "Entrepreneurship", "Psychology",
+                "Pre-Medicine", "Pre-Law", "Pre-Vet", "Other"
+            ];
+
+            let gradMajors = [
+                "Law", "Medicine", "Veterinary", "Research", "Other"
+            ];
+
+            let majors = null;
+
+            majorsRef.on('value', function (snapshot) {
+                majors = snapshot.val();
+            });
+
+            // for (let m in undergradMajors) {
+                // let x = undergradMajors[1];
+                console.log(majors.undergradMajors[1].concentrations);
+            //}
+
+            // let gradMajors = majors["undergradMajors"];
+            // console.log(gradMajors);
+            // let undergradMajors = majors["undergradMajors"];
+            // let majorsList = [];
+
+            // if (this.selected === "Undergraduate") {
+            //     for (let m in undergradMajors) {
+            //         console.log("key ", undergradMajors[m].key);
+            //         majorsList.push(undergradMajors[m].key);
+            //     }
+            // } else {
+
+            // }
+
+            return majorsList;
         }
     },
     props: {}

@@ -2,8 +2,8 @@
 <div>
     <ul>
         <!-- <li v-if="isSignedIn" style="color: white; font-size: 18px; font-weight: bold;">Hi, {{user.name}}!</li> -->
-        <!-- <v-btn @click="showProfile"><a><span class="glyphicon glyphicon-log-out"></span>Profile</a></v-btn> -->
-        <v-btn @click="getAreasOfStudy"><a><span class="glyphicon glyphicon-log-out"></span>Get Areas of Study</a></v-btn>
+        <v-btn @click="getUser"><a><span class="glyphicon glyphicon-log-out"></span>Get User Details</a></v-btn>
+        <v-btn @click="showProfile"><a><span class="glyphicon glyphicon-log-out"></span>Create Profile</a></v-btn>
         <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
         <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn>
         <!-- sign in "popup" container does not popup for email authentication, so provide some styling help -->
@@ -19,7 +19,7 @@ var authUI = new FirebaseUI.auth.AuthUI(Firebase.auth()); // single instance of 
 import {
     userRef
 } from '../database';
-var majors = require("../areasOfStudy.js");
+
 
 export default {
     name: 'Authentication',
@@ -43,17 +43,16 @@ export default {
         },
         signOut() {
             console.log("Sign out: ");
-        },
-        getUserDetails() {
-            console.log("Hi");
-            userRef.on('value', function (snapshot) {
-                var jsonData = snapshot.val();
-                console.log(jsonData);
-            })
-        },
-        getAreasOfStudy() {
-            console.log(majors.undergradMajors);
-        }
+		},
+		getUser(){
+			// userRef.on('value', function (snapshot) {
+            //     var jsonData = snapshot.val();
+			// 	// console.log(jsonData);
+			// 	for (let user in jsonData){
+			// 		console.log("My name is ", jsonData[user].firstName);
+			// 	}
+			// });
+		}
     },
     firebase: {
         user: userRef

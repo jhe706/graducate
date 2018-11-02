@@ -1,7 +1,9 @@
 export const undergradMajors = [
-	"Asian American Studies", "Arabic", "Biology", "Biophysics", "Chemistry", "Computer Science", "Economics"
+	"Asian and Middle Eastern Studies", "Biology", "Chemistry", 
+	"Computer Science", "Economics", "Entrepreneurship", "Psychology",
+	"Pre-Medicine", "Pre-Law", "Pre-Vet", "Other"
 ];
 
 export const gradMajors = [
-	"Law", "Medicine", "Veterinary", "Research"
+	"Law", "Medicine", "Veterinary", "Research", "Other"
 ];

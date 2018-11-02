@@ -35,7 +35,6 @@ export default {
                 routes[this.href],
                 this.href
             );
-            console.log("pushed");
         }
     }
 }

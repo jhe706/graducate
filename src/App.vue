@@ -2,57 +2,37 @@
 <div id="app">
     <v-app>
         <!--Header-->
-        <!-- <header>show up</header> -->
         <v-toolbar app color="green lighten-1">
             <h1>graducate</h1>
-            <authentication class="z nav navbar-nav navbar-right right-justify">
-                <!--:getUser="getUser" :setUser="setUser" :viewProfile="viewProfile" :show="showPopup"-->
-            </authentication>
+            <!-- <authentication class="z nav navbar-nav navbar-right">
+            </authentication> -->
+            <ul>
+                <!-- <li v-if="isSignedIn" style="color: white; font-size: 18px; font-weight: bold;">Hi, {{user.name}}!</li> -->
+                <!-- <v-btn href="" @click="getUser"><a><span class="glyphicon glyphicon-log-out"></span>Get User Details</a></v-btn> -->
+                <v-btn @click="showProfile=true"><span class="glyphicon glyphicon-log-out"></span>Create Profile</v-btn>
+                <!-- <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
+                <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
+                <!-- <div id="firebaseui-auth-container" :class="{ popup: isShown }"></div> -->
+            </ul>
         </v-toolbar>
+        <create-profile v-if="showProfile"></create-profile>
 
-        <!--Navigation drawer-->
-        <v-card height="350px">
-            <v-navigation-drawer permanent>
-                <v-toolbar flat>
-                    <v-list>
-                        <v-list-tile avatar>
-                            <v-list-tile-avatar>
-                                <img src="https://randomuser.me/api/portraits/men/85.jpg"></v-list-tile-avatar>
-                                <v-list-tile-content>
-                                    <v-list-tile-title>Molly Chen</v-list-tile-title>
-                                </v-list-tile-content>
-                        </v-list-tile>
-                    </v-list>
-                </v-toolbar>
-
-                <v-list dense class="pt-0">
-                    <v-divider>
-                    </v-divider>
-                    <v-list-tile v-for="page in pages" :key="page.title">
-                        <v-list-tile-action>
-                            <v-icon>{{ page.icon }}</v-icon>
-                        </v-list-tile-action>
-
-                        <v-list-tile-content>
-                            <v-list-tile-title>{{ page.title }}</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </v-list>
-            </v-navigation-drawer>
-            <!--insert v-content somewhere-->
-            <v-carousel>
-                <!-- <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item> -->
-                <v-carousel-item>
-                    <profile-card></profile-card>
-                </v-carousel-item>
-            </v-carousel>
-        </v-card>
+        <v-content>
+            <!--Carousel of new profiles for review-->
+            <v-card>
+                <v-carousel>
+                    <!-- <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item> -->
+                    <v-carousel-item>
+                        <h1>Carousel item!</h1>
+                    </v-carousel-item>
+                </v-carousel>
+            </v-card>
+        </v-content>
 
         <!--Footer-->
-        <v-footer :fixed="fixed" app>
+        <v-footer app>
             <span>&copy; Molly Chen, 2018</span>
         </v-footer>
-        <!-- </v-content> -->
     </v-app>
 </div>
 </template>
@@ -69,6 +49,7 @@ import Authentication from "./components/Authentication";
 import CreateProfile from "./components/CreateProfile";
 import Header from "./components/Header";
 import ProfileCard from "./components/ProfileCard";
+import VLink from "./components/VLink";
 
 export default {
     name: "App",
@@ -77,9 +58,10 @@ export default {
         Authentication,
         CreateProfile,
         Header,
-        ProfileCard
+        ProfileCard,
+        VLink
     },
-    data() {                                // TIED TO V-MODEL
+    data() { // TIED TO V-MODEL
         return {
             matches: [{
                     src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
@@ -104,11 +86,18 @@ export default {
                 }
             ],
             right: null,
-            users: userRef 
+            users: userRef,
+            showProfile: false, // TODO: switch from flags to actual routing and layout rendering
+            creatingProfile: false
         };
     },
     computed: {
         // variables referenced in HTML generated using complex logic
+        showProfile: function () {
+            if (creatingProfile) { // TODO: add second condition
+                return false;
+            }
+        }
     },
     firebase: {
         // reference passed b/w Firebase and program
@@ -133,7 +122,7 @@ export default {
 };
 </script>
 
-<style> 
+<style>
 /* #: id, .: class*/
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -144,7 +133,5 @@ export default {
     margin-top: 60px;
 }
 
-.right-justify {
-
-}
+.right-justify {}
 </style>
