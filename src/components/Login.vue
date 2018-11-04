@@ -49,7 +49,7 @@
 					active-class="active"
 					exact
 					:to="{ name: 'home' }">
-					View Matches
+					View Match
 				</router-link>
 				</li>
 				<li class="nav-item">

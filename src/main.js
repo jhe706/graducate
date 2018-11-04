@@ -7,7 +7,7 @@ import 'firebaseui/dist/firebaseui.css'
 
 // import all other components that need routes
 import CreateProfile from './components/CreateProfile.vue';
-import Matches from './components/Matches.vue';
+import Match from './components/Match.vue';
 
 Vue.config.productionTip = false
 Vue.use(Vuetify);
@@ -22,7 +22,7 @@ const NotFound = {
 export const routes = {
   '/': App,
   '/createprofile': CreateProfile,
-  '/matches': Matches
+  '/matches': Match
 }
 
 new Vue({
