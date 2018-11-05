@@ -1,29 +1,52 @@
 <template>
-<v-card>
     <!--Form fields-->
-    <v-form ref="form" v-model="valid" lazy-validation>
-        <v-text-field v-model="firstName" :rules="nameRules" :counter="20" label="First name" required></v-text-field>
-        <v-text-field v-model="lastName" :rules="nameRules" :counter="20" label="Last name" required></v-text-field>
-        <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
+    <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
+        <h1 style="margin-top:10px; margin-bottom:20px">About You</h1>
+
+        <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
+        <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
+        <v-text-field v-model="email" :rules="emailRules" label="E-mail" required class="margins"></v-text-field>
+        <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
 
         <!--Select under/grad status first-->
-        <v-radio-group v-model="selectedStatus">
+        <v-radio-group v-model="status" class="margins">
             <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
-            <p>{{selectedStatus}}</p>
         </v-radio-group>
 
         <!--Majors drop-down list changes based on under/grad status-->
-        <v-btn @click="getMajors()">Click for Majors</v-btn>
-        <v-select v-if="isUndergrad()" v-model="selectedMajor" :items="ugradMajors" :rules="[v => !!v || 'Major is required']" label="Major" required></v-select>
-        <v-select v-else v-model="selectedMajor" :items="gradMajors" :rules="[v => !!v || 'Major is required']" label="Major" required></v-select>
-        <v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
+        <h3>Degree:</h3>
+        <button class="material-icons" style="float:right" @click="numDegrees += 1">add_circle</button>
+        <v-select :items="degrees" label="Degree type" style="float:left" class="margins"></v-select>
+        <v-select v-if="isUndergrad()" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+        <v-select v-else v-model="major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+        <v-select v-if="numDegrees > 1" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
 
-        <v-btn :disabled="!valid" @click="submit">
-            submit
-        </v-btn>
-        <v-btn @click="clear">clear</v-btn>
+        <!--Buttons-->
+        <v-btn :disabled="!valid">Exit</v-btn>
+        <v-btn :disabled="!valid" @click="next()">Next</v-btn>
     </v-form>
-</v-card>
+
+    <v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
+        <h1 style="margin-bottom:20px">Tell us more about yourself.</h1>
+
+        <h3>Hometown:</h3>
+        <!--Do I have to define sep vars in vmodel?-->
+        <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>   
+        <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
+        <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
+
+        <h3>Interests:</h3><!--TODO: snaz it up-->
+        <v-select :items="interests" v-model="interests" label="Interests" class="margins"></v-select>
+
+        <h3>Advice:</h3>
+        <h4>What advice are you looking for from a grad student?</h4>
+        <v-checkbox></v-checkbox> 
+
+        <!--Buttons-->
+        <v-btn :disabled="!valid">Exit</v-btn>
+        <v-btn :disabled="!valid" @click="next()">Next</v-btn>
+        <v-btn vif="lastPage" :disabled="!valid" @click="submit()">Submit</v-btn>
+    </v-form>
 </template>
 
 <script>
@@ -41,7 +64,13 @@ import {
     undergradMajors,
     gradMajors
 } from "../assets/areasOfStudy.js";
-import * as Study from "../assets/areasOfStudy.json"; // or require
+import {
+    states, countries
+} from "../assets/locations.js";
+import {
+    interests, advice
+} from "../assets/interests.js";
+// import * as Study from "../assets/areasOfStudy.json";
 
 export default {
     name: "CreateProfile",
@@ -49,7 +78,7 @@ export default {
         App,
         Profile
     },
-    data() { // TIED TO V-MODEL
+    data() {
         return {
             valid: true,
             firstName: "",
@@ -63,15 +92,30 @@ export default {
                 v => !!v || "E-mail is required",
                 v => /.+@.+/.test(v) || "E-mail must be valid"
             ],
-            selectedMajor: null,
-            // items: ["Item 1", "Item 2", "Item 3", "Item 4"],
-            ugradMajors: undergradMajors,
+            major: "",
+            majorRules: [
+                v => !!v || 'Major is required'
+            ],
+            phoneNumberRules: [
+                v => !!v || "Phone number is required",
+                v => (v && v.length > 9) || "Phone number must be valid"
+            ],
+            ugradMajors: undergradMajors,           // TODO: group based on JSON defs in users.json
             gradMajors: gradMajors,
-            checkbox: false,
-            radioGroup: 1,
-            selectedStatus: "Undergraduate",
+            status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
-            userRef: null
+            degrees: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
+            numDegrees: 1,
+            pageNumber: 1,
+            lastPage: false,
+            hometown: {
+                city: "",
+                state: "",
+                country: ""
+            },
+            states: states,
+            countries: countries,
+            interests: interests
         };
     },
     firebase: {
@@ -94,35 +138,29 @@ export default {
                 .ref()
                 .update(updates);
         },
-
-        // taken from Vuetify form docs
-        // axios.post("/api/submit", {     
-        //     name: this.name,
-        //     email: this.email,
-        //     select: this.select,
-        //     checkbox: this.checkbox
-        // });
-
-        // TODO: post method, aka submit
+        next(){
+            this.pageNumber += 1;
+        },
+        // TODO: post method, aka submit, axios?
         submit() {
             const uuid = require("uuid/v4");
-
+        
             // TODO: do we need to define all data in v-model
-            if (this.$refs.form.validate()) { 
+            if (this.$refs.form.validate()) {
                 db.ref('users/' + uuid).set({
                     uuid: uuid,
                     school: null,
-                    hometown: null,
+                    hometown: hometown,
                     tags: null,
                     adviceGiven: null,
                     adviceNeeded: null,
                     bio: null,
                     firstName: firstName,
                     lastName: lastName,
-                    status: selectedStatus,
+                    status: status,
                     degree: {
                         degree: null,
-                        major: selectedMajor,
+                        major: major,
                         concentration: null
                     },
                     email: email,
@@ -135,7 +173,7 @@ export default {
             this.$refs.form.reset();
         },
         isUndergrad() {
-            return this.selectedStatus === "Undergraduate";
+            return this.status === "Undergraduate";
         },
         getMajors() {
             console.log("here");
@@ -166,7 +204,7 @@ export default {
             // let undergradMajors = majors["undergradMajors"];
             // let majorsList = [];
 
-            // if (this.selectedStatus === "Undergraduate") {
+            // if (this.status === "Undergraduate") {
             //     for (let m in undergradMajors) {
             //         console.log("key ", undergradMajors[m].key);
             //         majorsList.push(undergradMajors[m].key);
@@ -181,3 +219,9 @@ export default {
     props: {}
 };
 </script>
+<style>
+    .margins {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+</style>

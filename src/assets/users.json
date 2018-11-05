@@ -10,15 +10,15 @@
 			},
 			"tags": [
 				{
-					"tag": "",
+					"tag": "Art",
 					"selected": true
 				},
 				{
-					"tag": "",
+					"tag": "Music",
 					"selected": false
 				},
 				{
-					"tag": "",
+					"tag": "Cooking",
 					"selected": false
 				}
 			],

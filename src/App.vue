@@ -67,21 +67,8 @@ export default {
         Profile,
         VLink
     },
-    data() { // TIED TO V-MODEL
+    data() {
         return {
-            matches: [{
-                    src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
-                },
-                {
-                    src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg"
-                },
-                {
-                    src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
-                },
-                {
-                    src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
-                }
-            ],
             pages: [{
                     title: "Home",
                     icon: "dashboard"
@@ -95,7 +82,7 @@ export default {
             users: userRef,
             createProfile: false, // TODO: switch from flags to actual routing and layout rendering
             creatingProfile: false,
-            showHome: true,          // home screen with matches,
+            showHome: true,          // home screen with matches
             showProfile: false
         };
     },
@@ -113,25 +100,12 @@ export default {
         matches: matchesRef
     },
     methods: {
-        // any functionality defined specifically for this component
-        // getUserDetails() {
-        //     console.log("Hi");
-        //     userRef.on('value', function(snapshot){
-        //         var jsonData = snapshot.val();
-        //         console.log(jsonData);
-        //     })
-        // },
-        // getAreasOfStudy(){
-        //     var parsed = JSON.parse(majors);
-        //     console.log(parsed);
-        // }
     },
     props: {}
 };
 </script>
 
 <style>
-/* #: id, .: class*/
 #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -140,6 +114,4 @@ export default {
     color: #2c3e50;
     margin-top: 60px;
 }
-
-.right-justify {}
 </style>
