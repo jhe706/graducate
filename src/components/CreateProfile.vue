@@ -12,14 +12,15 @@
     <v-radio-group v-model="status" class="margins">
         <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
     </v-radio-group>
+    <h3 style="float:right">Graduation Year:</h3>
+    <v-select v-model="gradYear" :items="gradYears" label="Graduation year" style="float:right" class="margins"></v-select>
 
     <!--Majors drop-down list changes based on under/grad status-->
     <h3>Degree:</h3>
     <button class="material-icons" style="float:right" @click="numDegrees += 1">add_circle</button>
     <v-select :items="degrees" label="Degree type" style="float:left" class="margins"></v-select>
-    <v-select v-if="isUndergrad()" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-    <v-select v-else v-model="major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
-    <v-select v-if="numDegrees > 1" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+    <v-select v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+    <v-select v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
 
     <!--Buttons-->
     <v-btn :disabled="!valid">Exit</v-btn>
@@ -30,7 +31,6 @@
     <h1 style="margin-bottom:20px">Tell us more about yourself.</h1>
 
     <h3>Hometown:</h3>
-    <!--Do I have to define sep vars in vmodel?-->
     <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
@@ -43,23 +43,35 @@
     <h4>What advice are you looking for from a grad student?</h4>
     <v-layout row wrap>
         <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="adviceNeeded" :label="advice[0]" color="red" value="red" hide-details></v-checkbox>
-            <v-checkbox v-model="adviceNeeded" :label="advice[1]" color="red darken-3" value="red darken-3" hide-details></v-checkbox>
+            <v-checkbox v-model="advice" :label="advice[0]" color="red" value="red" hide-details></v-checkbox>
+            <v-checkbox v-model="advice" :label="advice[1]" color="red darken-3" value="red darken-3" hide-details></v-checkbox>
         </v-flex>
         <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="adviceNeeded" :label="advice[2]" color="indigo" value="indigo" hide-details></v-checkbox>
-            <v-checkbox v-model="adviceNeeded" :label="advice[3]" color="indigo darken-3" value="indigo darken-3" hide-details></v-checkbox>
+            <v-checkbox v-model="advice" :label="advice[2]" color="indigo" value="indigo" hide-details></v-checkbox>
+            <v-checkbox v-model="advice" :label="advice[3]" color="indigo darken-3" value="indigo darken-3" hide-details></v-checkbox>
         </v-flex>
         <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="adviceNeeded" :label="advice[4]" color="orange" value="orange" hide-details></v-checkbox>
-            <v-checkbox v-model="adviceNeeded" :label="advice[5]" color="orange darken-3" value="orange darken-3" hide-details></v-checkbox>
+            <v-checkbox v-model="advice" :label="advice[4]" color="orange" value="orange" hide-details></v-checkbox>
+            <v-checkbox v-model="advice" :label="advice[5]" color="orange darken-3" value="orange darken-3" hide-details></v-checkbox>
         </v-flex>
     </v-layout>
 
     <!--Buttons-->
     <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
     <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
-    <v-btn vif="lastPage" :disabled="!valid" @click="submit()">Submit</v-btn>
+</v-form>
+
+<v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
+    <h1 style="margin-bottom:20px">You're almost done!</h1>
+
+    <v-flex>
+        <v-textarea solo name="input-7-4" label="Solo textarea" value="What makes you awesome?" v-model="bio"></v-textarea>
+    </v-flex>
+
+    <!--Buttons-->
+    <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
+    <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
+    <v-btn :disabled="!valid" @click="submit()">Submit</v-btn>
 </v-form>
 </template>
 
@@ -108,7 +120,11 @@ export default {
                 v => !!v || "E-mail is required",
                 v => /.+@.+/.test(v) || "E-mail must be valid"
             ],
-            major: "",
+            degree: {
+                degree: "",
+                major: "",
+                concentration: ""
+            },
             majorRules: [
                 v => !!v || 'Major is required'
             ],
@@ -121,6 +137,8 @@ export default {
             status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
             degrees: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
+            gradYears: ["Before 2015", 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, "Beyond 2022"],
+            gradYear: "2021",
             numDegrees: 1,
             pageNumber: 1,
             lastPage: false,
@@ -132,7 +150,8 @@ export default {
             states: states,
             countries: countries,
             interests: interests,
-            advice: advice
+            advice: advice,
+            bio: bio
         };
     },
     firebase: {
@@ -160,28 +179,41 @@ export default {
         },
         // TODO: post method, aka submit, axios?
         submit() {
+            console.log("submitting");
+            console.log(this.$refs.form.validate());
             const uuid = require("uuid/v4");
+            // let myUuid = uuid();
+            let myUuid = "accf252c-ec54-451e-853d-7007724e1fdf";
 
-            // TODO: do we need to define all data in v-model
+            // TODO: parse selected interests
+            let selectedInterests = null;
+
+            // TODO: parse selected advice
+            let selectedAdvice = null;
+
             if (this.$refs.form.validate()) {
-                db.ref('users/' + uuid).set({
-                    uuid: uuid,
-                    school: null,
-                    hometown: hometown,
-                    tags: null,
-                    adviceGiven: null,
-                    adviceNeeded: null,
-                    bio: null,
-                    firstName: firstName,
-                    lastName: lastName,
-                    status: status,
+                db.ref('users/' + myUuid).set({
+                    uuid: myUuid,
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    email: this.email,
+                    phoneNumber: this.phoneNumber,
+                    status: this.status,
+                    gradYear: this.gradYear,
                     degree: {
-                        degree: null,
-                        major: major,
+                        degree: this.degree.degree,
+                        major: this.degree.major,
                         concentration: null
                     },
-                    email: email,
-                    phoneNumber: null,
+                    hometown: {
+                        city: this.hometown.city,
+                        state: this.hometown.state,
+                        country: this.hometown.country
+                    },
+                    interests: selectedInterests,
+                    advice: selectedAdvice,
+                    bio: this.bio,
+
                     gradYear: null
                 })
             }

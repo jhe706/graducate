@@ -9,20 +9,11 @@ export const interests = [
 	"Other"
 ];
 
-// export const adviceGiven = [
-// 	"Advice on majors",
-// 	"Advice on grad/professional programs",
-// 	"Advice on extracurriculars",
-// 	"General life advice",
-// 	"General career advice",
-// 	"Talking about cool ideas"
-// ];
-
 export const advice = [
-	"Advice on majors",
-	"Advice on grad/professional programs",
-	"Advice on extracurriculars",
-	"General life advice",
-	"General career advice",
-	"Talking about cool ideas"
+	"Duke's major departments",
+	"Graduate programs or professional schools",
+	"Duke extracurriculars",
+	"Life",
+	"Career",
+	"Cool ideas"
 ];

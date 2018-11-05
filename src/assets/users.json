@@ -8,45 +8,63 @@
 				"state": "TX",
 				"country": "USA"
 			},
-			"tags": [
+			"interests": [
 				{
-					"tag": "Art",
+					"description": "Art",
 					"selected": true
 				},
 				{
-					"tag": "Music",
+					"description": "Coding",
 					"selected": false
 				},
 				{
-					"tag": "Cooking",
+					"description": "Music",
 					"selected": false
+				},
+				{
+					"description": "Travel",
+					"selected": true
+				},
+				{
+					"description": "Reading",
+					"selected": false
+				},
+				{
+					"description": "Cooking",
+					"selected": false
+				},
+				{
+					"description": "Exercise",
+					"selected": true
+				},
+				{
+					"description": "Other",
+					"selected": true
 				}
 			],
-			"adviceGiven": [
+			"advice": [
 				{
-					"tag": "",
+					"description": "Duke's major departments",
 					"selected": true
 				},
 				{
-					"tag": "",
+					"description": "Graduate programs or professional schools",
 					"selected": false
 				},
 				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceNeeded": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
+					"description": "Duke extracurriculars",
 					"selected": false
 				},
 				{
-					"tag": "",
+					"description": "Life",
+					"selected": false
+				},
+				{
+					"description": "Career",
+					"selected": false
+				},
+				{
+					"description": "Cool ideas",
 					"selected": false
 				}
 			],
@@ -72,46 +90,64 @@
 				"state": "CA",
 				"country": "USA"
 			},
-			"tags": [
+			"interests": [
 				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
+					"description": "Art",
 					"selected": false
 				},
 				{
-					"tag": "",
+					"description": "Coding",
+					"selected": false
+				},
+				{
+					"description": "Music",
+					"selected": false
+				},
+				{
+					"description": "Travel",
+					"selected": true
+				},
+				{
+					"description": "Reading",
+					"selected": true
+				},
+				{
+					"description": "Cooking",
+					"selected": true
+				},
+				{
+					"description": "Exercise",
+					"selected": false
+				},
+				{
+					"description": "Other",
 					"selected": false
 				}
 			],
-			"adviceGiven": [
+			"advice": [
 				{
-					"tag": "",
+					"description": "Duke's major departments",
 					"selected": true
 				},
 				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceNeeded": [
-				{
-					"tag": "",
+					"description": "Graduate programs or professional schools",
 					"selected": true
 				},
 				{
-					"tag": "",
+					"description": "Duke extracurriculars",
 					"selected": false
 				},
 				{
-					"tag": "",
+					"description": "Life",
+					"selected": true
+				},
+				{
+					"description": "Career",
 					"selected": false
+				},
+				{
+					"description": "Cool ideas",
+					"selected": true
 				}
 			],
 			"bio": "I am looking to go into product design in the industry and I need some career advice.",
@@ -135,45 +171,63 @@
 				"state": "PA",
 				"country": "USA"
 			},
-			"tags": [
+			"interests": [
 				{
-					"tag": "UIUX",
+					"description": "Art",
 					"selected": true
 				},
 				{
-					"tag": "coding",
+					"description": "Coding",
 					"selected": false
 				},
 				{
-					"tag": "",
+					"description": "Music",
+					"selected": false
+				},
+				{
+					"description": "Travel",
+					"selected": true
+				},
+				{
+					"description": "Reading",
+					"selected": false
+				},
+				{
+					"description": "Cooking",
+					"selected": false
+				},
+				{
+					"description": "Exercise",
+					"selected": false
+				},
+				{
+					"description": "Other",
 					"selected": false
 				}
 			],
-			"adviceGiven": [
+			"advice": [
 				{
-					"tag": "",
+					"description": "Duke's major departments",
+					"selected": false
+				},
+				{
+					"description": "Graduate programs or professional schools",
+					"selected": false
+				},
+				{
+					"description": "Duke extracurriculars",
+					"selected": false
+				},
+				{
+					"description": "Life",
+					"selected": false
+				},
+				{
+					"description": "Career",
 					"selected": true
 				},
 				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceNeeded": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
+					"description": "Cool ideas",
 					"selected": false
 				}
 			],
