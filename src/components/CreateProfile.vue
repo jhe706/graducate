@@ -14,27 +14,32 @@
     </v-radio-group>
 
     <!--Majors drop-down list changes based on under/grad status-->
-    <h3>Degree:</h3>
-    <ul>
-    <li v-for="(degree, index) in degrees" :key="degree.id">
-        <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
-        <v-select v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-        <v-select v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+    <div id="degree-header">
+        <h3>Degree:</h3>
         <button
-          type="button"
-          v-if="degrees.length > 1"
-          class="material-icons"
-          style="float:right"
-          @click="removeDegree(degree)"
-        >remove_circle</button>
-        <button
-          type="button"
-          v-if="degrees.length === (index + 1)"
-          class="material-icons"
-          style="float:right"
-          @click="addDegree(degree)"
+            id="add-btn"
+            type="button"
+            class="material-icons"
+            style="float:right"
+            @click="addDegree(degree)"
         >add_circle</button>
-  </li>
+    </div>
+    <ul>
+    <div id="degree-item">
+        <li v-for="degree in degrees" :key="degree.id">
+            <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
+            <v-select v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+            <v-select v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+            <button
+            id="remove-btn"
+            type="button"
+            v-if="degrees.length > 1"
+            class="material-icons"
+            style="float:right"
+            @click="removeDegree(degree)"
+            >remove_circle</button>
+        </li>
+    </div>
   </ul>
     <!--Buttons-->
     <v-btn :disabled="!valid">Exit</v-btn>
@@ -277,11 +282,29 @@ ul {
 }
 
 .margins {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: auto 20px
 }
 
 .margins-top {
     margin-top: 50px;
+}
+
+#degree-header {
+    display: flex;
+    margin: auto 20px;
+    justify-content: space-between
+}
+
+#degree-item {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#degree-item li {
+    display: flex;
+    width: 100%;
+    margin-right: 20px;
 }
 </style>
