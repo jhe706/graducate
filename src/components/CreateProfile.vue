@@ -1,52 +1,66 @@
 <template>
-    <!--Form fields-->
-    <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
-        <h1 style="margin-top:10px; margin-bottom:20px">About You</h1>
+<!--Form fields-->
+<v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
+    <h1 style="margin-top:10px; margin-bottom:20px">About You</h1>
 
-        <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
-        <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
-        <v-text-field v-model="email" :rules="emailRules" label="E-mail" required class="margins"></v-text-field>
-        <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
+    <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
+    <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
+    <v-text-field v-model="email" :rules="emailRules" label="E-mail" required class="margins"></v-text-field>
+    <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
 
-        <!--Select under/grad status first-->
-        <v-radio-group v-model="status" class="margins">
-            <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
-        </v-radio-group>
+    <!--Select under/grad status first-->
+    <v-radio-group v-model="status" class="margins">
+        <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
+    </v-radio-group>
 
-        <!--Majors drop-down list changes based on under/grad status-->
-        <h3>Degree:</h3>
-        <button class="material-icons" style="float:right" @click="numDegrees += 1">add_circle</button>
-        <v-select :items="degrees" label="Degree type" style="float:left" class="margins"></v-select>
-        <v-select v-if="isUndergrad()" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-        <v-select v-else v-model="major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
-        <v-select v-if="numDegrees > 1" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+    <!--Majors drop-down list changes based on under/grad status-->
+    <h3>Degree:</h3>
+    <button class="material-icons" style="float:right" @click="numDegrees += 1">add_circle</button>
+    <v-select :items="degrees" label="Degree type" style="float:left" class="margins"></v-select>
+    <v-select v-if="isUndergrad()" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+    <v-select v-else v-model="major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+    <v-select v-if="numDegrees > 1" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
 
-        <!--Buttons-->
-        <v-btn :disabled="!valid">Exit</v-btn>
-        <v-btn :disabled="!valid" @click="next()">Next</v-btn>
-    </v-form>
+    <!--Buttons-->
+    <v-btn :disabled="!valid">Exit</v-btn>
+    <v-btn :disabled="!valid" @click="next()">Next</v-btn>
+</v-form>
 
-    <v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
-        <h1 style="margin-bottom:20px">Tell us more about yourself.</h1>
+<v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
+    <h1 style="margin-bottom:20px">Tell us more about yourself.</h1>
 
-        <h3>Hometown:</h3>
-        <!--Do I have to define sep vars in vmodel?-->
-        <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>   
-        <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
-        <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
+    <h3>Hometown:</h3>
+    <!--Do I have to define sep vars in vmodel?-->
+    <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
+    <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
+    <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
-        <h3>Interests:</h3><!--TODO: snaz it up-->
-        <v-select :items="interests" v-model="interests" label="Interests" class="margins"></v-select>
+    <h3>Interests:</h3>
+    <!--TODO: snaz it up-->
+    <v-select :items="interests" v-model="interests" label="Interests" class="margins"></v-select>
 
-        <h3>Advice:</h3>
-        <h4>What advice are you looking for from a grad student?</h4>
-        <v-checkbox></v-checkbox> 
+    <h3>Advice:</h3>
+    <h4>What advice are you looking for from a grad student?</h4>
+    <v-layout row wrap>
+        <v-flex xs12 sm4 md4>
+            <v-checkbox v-model="adviceNeeded" :label="advice[0]" color="red" value="red" hide-details></v-checkbox>
+            <v-checkbox v-model="adviceNeeded" :label="advice[1]" color="red darken-3" value="red darken-3" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm4 md4>
+            <v-checkbox v-model="adviceNeeded" :label="advice[2]" color="indigo" value="indigo" hide-details></v-checkbox>
+            <v-checkbox v-model="adviceNeeded" :label="advice[3]" color="indigo darken-3" value="indigo darken-3" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm4 md4>
+            <v-checkbox v-model="adviceNeeded" :label="advice[4]" color="orange" value="orange" hide-details></v-checkbox>
+            <v-checkbox v-model="adviceNeeded" :label="advice[5]" color="orange darken-3" value="orange darken-3" hide-details></v-checkbox>
+        </v-flex>
+    </v-layout>
 
-        <!--Buttons-->
-        <v-btn :disabled="!valid">Exit</v-btn>
-        <v-btn :disabled="!valid" @click="next()">Next</v-btn>
-        <v-btn vif="lastPage" :disabled="!valid" @click="submit()">Submit</v-btn>
-    </v-form>
+    <!--Buttons-->
+    <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
+    <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
+    <v-btn vif="lastPage" :disabled="!valid" @click="submit()">Submit</v-btn>
+</v-form>
 </template>
 
 <script>
@@ -65,10 +79,12 @@ import {
     gradMajors
 } from "../assets/areasOfStudy.js";
 import {
-    states, countries
+    states,
+    countries
 } from "../assets/locations.js";
 import {
-    interests, advice
+    interests,
+    advice
 } from "../assets/interests.js";
 // import * as Study from "../assets/areasOfStudy.json";
 
@@ -100,7 +116,7 @@ export default {
                 v => !!v || "Phone number is required",
                 v => (v && v.length > 9) || "Phone number must be valid"
             ],
-            ugradMajors: undergradMajors,           // TODO: group based on JSON defs in users.json
+            ugradMajors: undergradMajors, // TODO: group based on JSON defs in users.json
             gradMajors: gradMajors,
             status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
@@ -115,7 +131,8 @@ export default {
             },
             states: states,
             countries: countries,
-            interests: interests
+            interests: interests,
+            advice: advice
         };
     },
     firebase: {
@@ -138,13 +155,13 @@ export default {
                 .ref()
                 .update(updates);
         },
-        next(){
+        next() {
             this.pageNumber += 1;
         },
         // TODO: post method, aka submit, axios?
         submit() {
             const uuid = require("uuid/v4");
-        
+
             // TODO: do we need to define all data in v-model
             if (this.$refs.form.validate()) {
                 db.ref('users/' + uuid).set({
@@ -219,9 +236,14 @@ export default {
     props: {}
 };
 </script>
+
 <style>
-    .margins {
-        margin-left: 20px;
-        margin-right: 20px;
-    }
+.margins {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.margins-top {
+    margin-top: 50px;
+}
 </style>
