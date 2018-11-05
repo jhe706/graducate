@@ -15,12 +15,27 @@
 
     <!--Majors drop-down list changes based on under/grad status-->
     <h3>Degree:</h3>
-    <button class="material-icons" style="float:right" @click="numDegrees += 1">add_circle</button>
-    <v-select :items="degrees" label="Degree type" style="float:left" class="margins"></v-select>
-    <v-select v-if="isUndergrad()" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-    <v-select v-else v-model="major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
-    <v-select v-if="numDegrees > 1" v-model="major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-
+    <ul>
+    <li v-for="(degree, index) in degrees" :key="degree.id">
+        <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
+        <v-select v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+        <v-select v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+        <button
+          type="button"
+          v-if="degrees.length > 1"
+          class="material-icons"
+          style="float:right"
+          @click="removeDegree(degree)"
+        >remove_circle</button>
+        <button
+          type="button"
+          v-if="degrees.length === (index + 1)"
+          class="material-icons"
+          style="float:right"
+          @click="addDegree(degree)"
+        >add_circle</button>
+  </li>
+  </ul>
     <!--Buttons-->
     <v-btn :disabled="!valid">Exit</v-btn>
     <v-btn :disabled="!valid" @click="next()">Next</v-btn>
@@ -120,7 +135,7 @@ export default {
             gradMajors: gradMajors,
             status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
-            degrees: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
+            degreeTypes: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
             numDegrees: 1,
             pageNumber: 1,
             lastPage: false,
@@ -132,7 +147,13 @@ export default {
             states: states,
             countries: countries,
             interests: interests,
-            advice: advice
+            advice: advice,
+            degrees: [{
+                id: 1,
+                type: null,
+                major: null,
+                concentration: null
+            }]
         };
     },
     firebase: {
@@ -175,11 +196,7 @@ export default {
                     firstName: firstName,
                     lastName: lastName,
                     status: status,
-                    degree: {
-                        degree: null,
-                        major: major,
-                        concentration: null
-                    },
+                    degrees: degrees,
                     email: email,
                     phoneNumber: null,
                     gradYear: null
@@ -231,6 +248,21 @@ export default {
             // }
 
             return majorsList;
+        },
+
+        addDegree() {
+            let newDegree = {
+                id: this.degrees.length + 1,
+                type: null,
+                major: null,
+                concentration: null
+            }
+            
+            this.$set(this.degrees, this.degrees.length, newDegree);
+        },
+
+        removeDegree(degree) {
+            this.degrees.splice(degree.key, 1);
         }
     },
     props: {}
@@ -238,6 +270,12 @@ export default {
 </script>
 
 <style>
+ul {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
 .margins {
     margin-left: 20px;
     margin-right: 20px;
