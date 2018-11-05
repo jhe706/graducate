@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "firebase": "^5.5.7",
     "firebaseui": "^3.4.1",
     "js-beautify": "^1.8.8",
     "material-design-icons": "^3.0.1",
