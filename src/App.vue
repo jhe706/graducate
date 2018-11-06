@@ -9,10 +9,11 @@
             </authentication> -->
                 <ul>
                     <!-- <li v-if="isSignedIn" style="color: white; font-size: 18px; font-weight: bold;">Hi, {{user.name}}!</li> -->
-                    <v-btn @click="showProfile=true" :disabled="!currentUser"><span class="glyphicon glyphicon-log-out"></span>View Profile</v-btn>
-                    <v-btn @click="createProfile=true"><span class="glyphicon glyphicon-log-out"></span>Create Profile</v-btn>
+                    <!-- :disabled="!currentUser"-->
+                    <v-btn v-if="currentUser" @click="showProfile=true"><span class="glyphicon glyphicon-log-out"></span>My Profile</v-btn>
+                    <v-btn @click="createProfile=true"><span class="glyphicon glyphicon-log-out"></span>Sign Up</v-btn>
                     <!-- <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
-                <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
+                    <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
                     <!-- <div id="firebaseui-auth-container" :class="{ popup: isShown }"></div> -->
                 </ul>
             </v-toolbar>
@@ -75,10 +76,95 @@ export default {
     data() {
         return {
             right: null,
-            createProfile: false,       // TODO: switch from flags to actual routing and layout rendering
-            showHome: true,             // home screen with matches
+            createProfile: false,   // TODO: switch from flags to actual routing and layout rendering
+            showHome: true,         // home screen with matches
             showProfile: false,
-            currentUser: null
+            currentUser: {          // temporary for testing
+                uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
+                firstName: "Molly",
+                lastName: "Chen",
+                email: "molly.chen@duke.edu",
+                phoneNumber: "8322825093",
+                status: "Undergraduate",
+                gradYear: "2019",
+                degrees: {
+                    "0": {
+                        major: "Computer Science",
+                        type: "BS",
+                        concentration: "NA"
+                    },
+                    "1": {
+                        major: "Psychology",
+                        type: "BA",
+                        concentration: "Abnormal"
+                    }
+                },
+                hometown: {
+                    city: "Cary",
+                    state: "North Carolina",
+                    country: "United States"
+                },
+                interests: [{
+                        "description": "Art",
+                        "selected": false
+                    },
+                    {
+                        "description": "Coding",
+                        "selected": false
+                    },
+                    {
+                        "description": "Music",
+                        "selected": false
+                    },
+                    {
+                        "description": "Travel",
+                        "selected": true
+                    },
+                    {
+                        "description": "Reading",
+                        "selected": true
+                    },
+                    {
+                        "description": "Cooking",
+                        "selected": true
+                    },
+                    {
+                        "description": "Exercise",
+                        "selected": false
+                    },
+                    {
+                        "description": "Other",
+                        "selected": false
+                    }
+                ],
+                advice: [
+                    {
+                        "description": "Duke's major departments",
+                        "selected": true
+                    },
+                    {
+                        "description": "Graduate programs or professional schools",
+                        "selected": true
+                    },
+                    {
+                        "description": "Duke extracurriculars",
+                        "selected": false
+                    },
+                    {
+                        "description": "Life",
+                        "selected": true
+                    },
+                    {
+                        "description": "Career",
+                        "selected": false
+                    },
+                    {
+                        "description": "Cool ideas",
+                        "selected": true
+                    }
+                ],
+                bio: "Hi, I'm Molly!"
+            }
         };
     },
     computed: {
@@ -98,10 +184,11 @@ export default {
             createProfile = false;
             showProfile = true;
         },
-        getMatches(){
+        getMatches() {
 
         },
-        setUser(user){
+        // defined in parent, set in child component CreateProfile so that App can access value of user
+        setUser(user) {
             this.currentUser = user;
         }
     },

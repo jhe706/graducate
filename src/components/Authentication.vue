@@ -25,7 +25,7 @@ export default {
     name: 'Authentication',
     data() {
         return {
-            user: userRef
+            // user: userRef
         }
     },
     computed: {
@@ -43,7 +43,7 @@ export default {
 		}
     },
     firebase: {
-        user: userRef
+        // user: userRef
     },
     props: ["user", "setUser"]
 }
