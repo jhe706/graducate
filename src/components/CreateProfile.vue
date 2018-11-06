@@ -1,5 +1,5 @@
 <template>
-<!--Form fields-->
+<!--Page 1-->
 <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
     <h1 style="margin-top:10px; margin-bottom:20px">About You</h1>
 
@@ -29,12 +29,12 @@
         >add_circle</button>
     </div>
     <ul>
-    <div id="degree-item">
-        <li v-for="degree in degrees" :key="degree.id">
-            <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
-            <v-select id="major-select"  v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-            <v-select id="major-select" v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
-            <button
+        <div id="degree-item">
+            <li v-for="degree in degrees" :key="degree.id">
+                <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
+                <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
+                <v-select id="major-select" v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+                <button
             id="remove-btn"
             type="button"
             v-if="degrees.length > 1"
@@ -42,14 +42,16 @@
             style="float:right"
             @click="removeDegree(degree)"
             >remove_circle</button>
-        </li>
-    </div>
-  </ul>
+            </li>
+        </div>
+    </ul>
     <!--Buttons-->
     <v-btn :disabled="!valid">Exit</v-btn>
+    <v-btn :disabled="!valid">Back</v-btn>
     <v-btn :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
+<!--Page 2-->
 <v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
     <h1 style="margin-bottom:20px">Tell us more about yourself.</h1>
 
@@ -81,20 +83,23 @@
 
     <!--Buttons-->
     <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
+    <!--TODO: Turn into X, upper R hand corner-->
+    <v-btn :disabled="!valid">Back</v-btn>
     <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
+<!--Page 3-->
 <v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
     <h1 style="margin-bottom:20px">You're almost done!</h1>
 
     <v-flex>
-        <v-textarea solo name="input-7-4" label="Solo textarea" value="What makes you awesome?" v-model="bio"></v-textarea>
+        <v-textarea solo name="input-7-4" value="What makes you awesome?" v-model="bio"></v-textarea>
     </v-flex>
 
     <!--Buttons-->
     <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
-    <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
-    <v-btn :disabled="!valid" @click="submit()">Submit</v-btn>
+    <v-btn :disabled="!valid">Back</v-btn>
+    <v-btn :disabled="!valid" @click="registerUser()">Register</v-btn>
 </v-form>
 </template>
 
@@ -128,6 +133,9 @@ export default {
     components: {
         App,
         Profile
+    },
+    computed: {
+
     },
     data() {
         return {
@@ -180,7 +188,9 @@ export default {
                 type: null,
                 major: null,
                 concentration: null
-            }]
+            }],
+            uuid: "",
+            newUser: null
         };
     },
     firebase: {
@@ -189,30 +199,13 @@ export default {
         majors: majorsRef
     },
     methods: {
-        createProfilePg1() {
-            console.log("Hi");
-            var profileData = {};
-            var newProfileKey = Firebase.database()
-                .ref()
-                .child("users")
-                .push().key;
-            var updates = {};
-            updates["/createprofile/" + newProfileKey] = profileData;
-
-            return Firebase.database()
-                .ref()
-                .update(updates);
-        },
         next() {
             this.pageNumber += 1;
         },
-        // TODO: post method, aka submit, axios?
-        submit() {
-            console.log("submitting");
-            console.log(this.$refs.form.validate());
+        registerUser() {
             const uuid = require("uuid/v4");
-            // let myUuid = uuid();
-            let myUuid = "accf252c-ec54-451e-853d-7007724e1fdf";
+            let myUuid = uuid();
+            this.uuid = myUuid;
 
             // TODO: parse selected interests
             let selectedInterests = null;
@@ -220,27 +213,31 @@ export default {
             // TODO: parse selected advice
             let selectedAdvice = null;
 
-            if (this.$refs.form.validate()) {
-                db.ref('users/' + myUuid).set({
-                    uuid: myUuid,
-                    firstName: this.firstName,
-                    lastName: this.lastName,
-                    email: this.email,
-                    phoneNumber: this.phoneNumber,
-                    status: this.status,
-                    gradYear: this.gradYear,
-                    degrees: this.degrees,
-                    hometown: {
-                        city: this.hometown.city,
-                        state: this.hometown.state,
-                        country: this.hometown.country
-                    },
-                    interests: selectedInterests,
-                    advice: selectedAdvice,
-                    bio: this.bio,
+            let newUser = {
+                uuid: myUuid,
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                phoneNumber: this.phoneNumber,
+                status: this.status,
+                gradYear: this.gradYear,
+                degrees: this.degrees,
+                hometown: {
+                    city: this.hometown.city,
+                    state: this.hometown.state,
+                    country: this.hometown.country
+                },
+                interests: selectedInterests,
+                advice: selectedAdvice,
+                bio: this.bio,
+                gradYear: null
+            };
 
-                    gradYear: null
-                })
+            // equivalent to signing in automatically
+            this.setUser(newUser);
+
+            if (this.$refs.form.validate()) {
+                db.ref('users/' + myUuid).set(newUser)
             }
         },
         clear() {
@@ -297,7 +294,7 @@ export default {
                 major: null,
                 concentration: null
             }
-            
+
             this.$set(this.degrees, this.degrees.length, newDegree);
         },
 
@@ -305,15 +302,15 @@ export default {
             this.degrees.splice(degree.key, 1);
         }
     },
-    props: {}
+    props: ['setUser', 'user']
 };
 </script>
 
 <style>
 ul {
-   list-style: none;
-   margin: 0;
-   padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .margins {
@@ -324,7 +321,8 @@ ul {
     margin-top: 50px;
 }
 
-#degree-header, #graduation-header {
+#degree-header,
+#graduation-header {
     display: flex;
     margin: auto 20px;
     justify-content: space-between;

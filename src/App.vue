@@ -9,7 +9,7 @@
             </authentication> -->
                 <ul>
                     <!-- <li v-if="isSignedIn" style="color: white; font-size: 18px; font-weight: bold;">Hi, {{user.name}}!</li> -->
-                    <v-btn @click="showProfile=true" style="margin-left:850px"><span class="glyphicon glyphicon-log-out"></span>View Profile</v-btn>
+                    <v-btn @click="showProfile=true" :disabled="!currentUser"><span class="glyphicon glyphicon-log-out"></span>View Profile</v-btn>
                     <v-btn @click="createProfile=true"><span class="glyphicon glyphicon-log-out"></span>Create Profile</v-btn>
                     <!-- <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
                 <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
@@ -17,22 +17,27 @@
                 </ul>
             </v-toolbar>
 
-        <v-container>
-            <!--Create profile page-->
-            <create-profile v-if="createProfile"></create-profile>
-            <!--Carousel of new profiles for review-->
-            <v-card v-else>
-                <v-carousel>
-                    <!-- <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item> -->
-                    <v-carousel-item>
-                        <h1>Carousel item!</h1>
-                    </v-carousel-item>
-                </v-carousel>
-            </v-card>
+            <!--TODO: Instead of placing all possible homepage views in one container, use conditional render/routing-->
+            <v-container>
+                <!--Create profile-->
+                <create-profile v-if="createProfile" :setUser="setUser" :user="currentUser"></create-profile>
 
-            <!--Show profile page-->
-            <profile v-if="showProfile"></profile>
-        </v-container>
+                <!--View profile-->
+                <profile v-if="showProfile" :user="currentUser"></profile>
+
+                <!--Scroll through potential matches-->
+                <v-card v-else>
+                    <v-carousel>
+                        <!-- <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item> -->
+                        <v-carousel-item>
+                            <h1>Carousel item!</h1>
+                        </v-carousel-item>
+                    </v-carousel>
+                </v-card>
+
+                <!--View existing matches-->
+                <!-- <match v-for="match in matches" v-bind:key="match.uuid" v-bind:match="match"></match> -->
+            </v-container>
 
             <!--Footer-->
             <v-footer app>
@@ -69,30 +74,19 @@ export default {
     },
     data() {
         return {
-            pages: [{
-                    title: "Home",
-                    icon: "dashboard"
-                },
-                {
-                    title: "About",
-                    icon: "question_answer"
-                }
-            ],
             right: null,
-            users: userRef,
-            createProfile: false, // TODO: switch from flags to actual routing and layout rendering
-            creatingProfile: false,
-            showHome: true,          // home screen with matches
-            showProfile: false
+            createProfile: false,       // TODO: switch from flags to actual routing and layout rendering
+            showHome: true,             // home screen with matches
+            showProfile: false,
+            currentUser: null
         };
     },
     computed: {
         // variables referenced in HTML generated using complex logic
-        createProfile: function () {
-            if (creatingProfile) { // TODO: add second condition
-                return false;
-            }
-        }
+        // showProfile: function () {
+        //     createProfile = false;
+        //     showProfile = true;
+        // }
     },
     firebase: {
         // reference passed b/w Firebase and program
@@ -100,8 +94,18 @@ export default {
         matches: matchesRef
     },
     methods: {
+        showProfile() {
+            createProfile = false;
+            showProfile = true;
+        },
+        getMatches(){
+
+        },
+        setUser(user){
+            this.currentUser = user;
+        }
     },
-    props: {}
+    props: ['match']
 };
 </script>
 
