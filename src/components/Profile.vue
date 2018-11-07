@@ -2,54 +2,76 @@
 <v-content>
     <h1>My Profile</h1>
     <v-card>
-        <v-container grid-list-md text-xs-center>
+        <v-container grid-list-md text-xs-center style="padding: 20px">
             <v-layout row wrap>
-                <!--Profile picture-->
-
                 <!--Default cover photo-->
                 <v-flex xs12>
                     <img src="../assets/coverphoto.jpg" height="200px" width="1090px"/>
                 </v-flex>
 
+                <!--Profile picture-->
                 <v-flex xs12>
                     <v-avatar style="float:left; margin-left:20px">
                         <img
-                            src="https://cdn.vuetifyjs.com/images/john.jpg"
-                            alt="Profile picture"
-                        >
+                        src="https://cdn.vuetifyjs.com/images/john.jpg"
+                        alt="Profile picture"
+                    >
                     </v-avatar>
                 </v-flex>
 
                 <!--Name + Summary-->
-                <v-flex xs12>
+                <v-flex xs12 style="height:150px">
                     <ul style="float:left; text-align:left">
-                        <li><h2>{{user.firstName}} {{user.lastName}}</h2></li>
+                        <li>
+                            <h2>{{user.firstName}} {{user.lastName}}</h2>
+                        </li>
                         <li>Trinity, Class of {{user.gradYear}}</li>
                         <li v-for="degree in user.degrees" :key="degree">{{degree.type}} {{degree.major}}</li>
                         <li>From {{user.hometown.city}}, {{user.hometown.state}}, {{user.hometown.country}}</li>
                     </ul>
                 </v-flex>
-                
-                <!--2x3 grid of info-->
-                <v-flex v-for="i in 2" :key="`6${i}`" xs6>
-                    <v-card v-for="item in row1" :key="item">
-                        <v-card-text class="px-0"><h2>{{row1[item].title}}</h2></v-card-text>
-                        <v-card-text v-for="c in item.content" :key="c">{{row1[item][c]}}</v-card-text>
+
+                <!--Row 1-->
+                <v-flex xs6>
+                    <v-card class="profile-text">
+                        <v-card-text class="left-margin px-0">
+                            <h3>Intro</h3>
+                            {{user.bio}}
+                        </v-card-text>
+                    </v-card>
+                </v-flex>
+                <v-flex xs6>
+                    <v-card class="profile-text">
+                        <v-card-text class="left-margin px-0">
+                            <h3>Contact</h3>
+                            {{user.email}}<br>
+                            {{user.phoneNumber}}
+                        </v-card-text>
                     </v-card>
                 </v-flex>
 
-
-            <!-- <button>Contact</button> -->
-            <!--Send email, mailto:-->
-            <!-- <span v-if="user.status==='Undergraduate' || user.status==='undergrad'">{{user.firstName}} is looking for:
-            <ul v-for="advice in user.adviceNeeded" v-bind:key="advice">
-                <li v-if="advice.selected">{{advice.tag}}</li>
-            </ul>
-            </span>
-                <span v-else>{{user.firstName}} can offer help with:
-            <ul v-for="advice in user.adviceGiven" v-bind:key="advice">
-                <li v-if="advice.selected">{{advice.tag}}</li>
-            </ul> -->
+                <!--Row 2-->
+                <v-flex xs6>
+                    <v-card class="profile-text">
+                        <v-card-text class="left-margin px-0">
+                            <h3 v-if="user.status==='Undergraduate'">{{user.firstName}} would like advice on: </h3>
+                            <h3 v-else>{{user.firstName}} would like to help with: </h3>
+                            <ul class="square" v-for="topic in user.advice" :key="topic">
+                                <li v-if="topic.selected">{{topic.description}}</li>
+                            </ul>
+                        </v-card-text>
+                    </v-card>
+                </v-flex>
+                <v-flex xs6>
+                    <v-card class="profile-text">
+                        <v-card-text class="left-margin px-0">
+                            <h3>Interests</h3>
+                            <ul class="square" v-for="interest in user.interests" :key="interest">
+                                <li v-if="interest.selected">{{interest.description}}</li>
+                            </ul>
+                        </v-card-text>
+                    </v-card>
+                </v-flex>
 
             </v-layout>
         </v-container>
@@ -58,60 +80,27 @@
 </template>
 
 <script>
-// render profile information onto HTML template
+/* eslint-disable */
 import {
     userRef,
     db
 } from "../database";
-import App from "../App";
+// import {
+//     row1,
+//     row2,
+//     row3
+// } from "../assets/profileTitles.js";
 import * as areasOfStudy from "../assets/areasOfStudy.js";
-/* eslint-disable */
+// import App from "../App";
 
 export default {
     name: "Profile",
     components: {
-        App
+        // App
     },
     data() {
         return {
-            row1: [
-                {
-                    title: "Intro",
-                    content: [
-                        user.bio
-                    ]
-                },
-                {
-                    title: "Contact",
-                    content: [
-                        user.email,
-                        user.phoneNumber
-                    ]
-                }
-            ],
-            row2: [
-                {
-                    title: this.typeOfAdvice(),
-                    content: [
-                        user.bio
-                    ]
-                },
-                {
-                    title: "Links",
-                    content: [
-                        // insert social media links
-                        "mollymolichen",
-                        "mollsprobs",
-                        "mc-squared"
-                    ]
-                }
-            ],
-            row3: [
-                {
-                    title: "Interests",
-                    content: user.interests     // already a list, iterate through
-                }
-            ]
+
         };
     },
     computed: {
@@ -122,17 +111,42 @@ export default {
         // }
     },
     firebase: {
-
+        users: userRef,
     },
     methods: {
-        typeOfAdvice(){
-            if (user.status === "Undergraduate"){
+        typeOfAdvice() {
+            if (user.status === "Undergraduate") {
                 return user.name + " would like advice about: ";
             } else {
                 return user.name + " would like to give advice about: ";
             }
         }
+        // findProfileItems() {
+        //     console.log("Hello");
+        //     console.log(this.row1[0]);
+        //     for (let item in this.row1) {
+        //         console.log(row1[item].title);
+        //         for (let c in item.content) {
+        //             console.log(row1[item][c]);
+        //         }
+        //     }
+        // }
     },
     props: ['user']
 };
 </script>
+<style>
+    .profile-text {
+        height:150px; 
+        margin:10px; 
+        text-align:left;
+    }
+
+    .left-margin {
+        margin-left: 15px;
+    }
+
+    ul.square {
+        list-style-type: square;
+    }
+</style>
