@@ -1,22 +1,28 @@
 <template>
 <v-card>
-    <v-img src="https://cdn.vuetifyjs.com/images/cards/desert.jpg" aspect-ratio="2.75"></v-img>
+    <v-container grid-list-md text-xs-center style="padding: 20px">
+        <v-layout row wrap>
+            <!--Profile picture-->
+            <v-flex xs6>
+            </v-flex>
 
-    <v-card-title primary-title>
-        <div>
-            <h3 class="headline mb-0">Molly Chen</h3>
-            <div>Located two hours south of Sydney in the <br>Southern Highlands of New South Wales, ...</div>
-            </div>
-    </v-card-title>
-
-    <v-card-actions>
-        <v-btn flat color="orange">View</v-btn>
-    </v-card-actions>
+            <!--Information-->
+            <v-flex xs6>
+                <ul style="float:left; text-align:left">
+                    <li>
+                        <h2>{{user.firstName}} {{user.lastName}}</h2>
+                    </li>
+                    <li>{{user.school}}, Class of {{user.gradYear}}</li>
+                    <li v-for="degree in user.degrees" :key="degree">{{degree.type}} {{degree.major}}</li>
+                </ul>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </v-card>
 </template>
 
 <script>
 export default {
-    props: ['match']
+    props: ['match', 'user']
 }
 </script>

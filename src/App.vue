@@ -5,39 +5,39 @@
             <!--Header-->
             <v-toolbar color="green lighten-1">
                 <h1>graducate</h1>
-                <!-- <authentication class="z nav navbar-nav navbar-right">
-            </authentication> -->
+                <!-- <authentication class="z nav navbar-nav navbar-right"></authentication> -->
                 <ul>
-                    <!-- <li v-if="isSignedIn" style="color: white; font-size: 18px; font-weight: bold;">Hi, {{user.name}}!</li> -->
                     <!-- :disabled="!currentUser"-->
-                    <v-btn v-if="currentUser" @click="showProfile=true"><span class="glyphicon glyphicon-log-out"></span>My Profile</v-btn>
-                    <v-btn @click="createProfile=true"><span class="glyphicon glyphicon-log-out"></span>Sign Up</v-btn>
+                    <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
+                    <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
+                    <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
                     <!-- <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
                     <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
-                    <!-- <div id="firebaseui-auth-container" :class="{ popup: isShown }"></div> -->
                 </ul>
             </v-toolbar>
 
             <!--TODO: Instead of placing all possible homepage views in one container, use conditional render/routing-->
             <v-container>
                 <!--Create profile-->
-                <create-profile v-if="createProfile" :setUser="setUser" :user="currentUser"></create-profile>
+                <create-profile v-if="showSignUpPage()" :setUser="setUser" :user="currentUser"></create-profile>
 
                 <!--View profile-->
-                <profile v-if="showProfile" :user="currentUser"></profile>
+                <profile v-if="showProfilePage()" :user="currentUser"></profile>
 
-                <!--Scroll through potential matches-->
-                <v-card v-else>
+                <!--Scroll through potential matches on homepage-->
+                <!-- <v-card>
                     <v-carousel>
-                        <!-- <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item> -->
+                        <v-carousel-item v-for="(match,m) in matches" :key="m" :src="match.src" :onClick="checkJSON"></v-carousel-item>
                         <v-carousel-item>
-                            <h1>Carousel item!</h1>
+                            <match :user="currentUser"></match>
                         </v-carousel-item>
                     </v-carousel>
-                </v-card>
+                </v-card> -->
 
                 <!--View existing matches-->
-                <!-- <match v-for="match in matches" v-bind:key="match.uuid" v-bind:match="match"></match> -->
+                <!-- <match-header v-if="showMatches" :user="currentUser"></match-header> -->
+                <match-filter v-if="showMatchesPage()"></match-filter>
+                <match v-if="showMatchesPage()" :user="currentUser"></match>
             </v-container>
 
             <!--Footer-->
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import Vue from "vue";
 import Firebase from 'firebase';
 import {
@@ -60,6 +61,9 @@ import {
 import Authentication from "./components/Authentication";
 import CreateProfile from "./components/CreateProfile";
 import Header from "./components/Header";
+import Match from "./components/Match";
+import MatchFilter from "./components/MatchFilter";
+import MatchHeader from "./components/MatchHeader";
 import Profile from "./components/Profile";
 import VLink from "./components/VLink";
 
@@ -70,16 +74,19 @@ export default {
         Authentication,
         CreateProfile,
         Header,
+        Match,
+        MatchFilter,
+        MatchHeader,
         Profile,
         VLink
     },
     data() {
         return {
             right: null,
-            createProfile: false,   // TODO: switch from flags to actual routing and layout rendering
-            showHome: true,         // home screen with matches
+            createProfile: false,
             showProfile: false,
-            currentUser: {          // temporary for testing
+            showMatches: false,
+            currentUser: {                                      // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
                 firstName: "Molly",
                 lastName: "Chen",
@@ -87,6 +94,7 @@ export default {
                 phoneNumber: "8322825093",
                 status: "Undergraduate",
                 gradYear: "2019",
+                school: "Trinity",
                 degrees: {
                     "0": {
                         major: "Computer Science",
@@ -137,8 +145,7 @@ export default {
                         "selected": false
                     }
                 ],
-                advice: [
-                    {
+                advice: [{
                         "description": "Duke's major departments",
                         "selected": true
                     },
@@ -167,12 +174,8 @@ export default {
             }
         };
     },
-    computed: {
-        // variables referenced in HTML generated using complex logic
-        // showProfile: function () {
-        //     createProfile = false;
-        //     showProfile = true;
-        // }
+    computed: {                             // variables referenced in HTML generated using complex logic
+       
     },
     firebase: {
         // reference passed b/w Firebase and program
@@ -180,16 +183,33 @@ export default {
         matches: matchesRef
     },
     methods: {
-        showProfile() {
-            createProfile = false;
-            showProfile = true;
-        },
-        getMatches() {
-
-        },
-        // defined in parent, set in child component CreateProfile so that App can access value of user
+        // setUser() is defined in parent, set in child component CreateProfile so that App can access value of user
         setUser(user) {
             this.currentUser = user;
+        },
+         toggleSignUpPage(){
+            this.createProfile = true;
+            this.showProfile = false;
+            this.showMatches = false;
+        },
+        toggleProfilePage() {
+            this.showProfile = true;
+            this.createProfile = false;
+            this.showMatches = false;
+        },
+        toggleMatchesPage() {
+            this.showMatches = true;
+            this.showProfile = false;
+            this.createProfile = false;
+        },
+        showSignUpPage(){
+            return this.createProfile && !this.showProfile && !this.showMatches;
+        },
+        showProfilePage(){
+            return this.showProfile && !this.createProfile && !this.showMatches;
+        },
+        showMatchesPage(){
+            return this.showMatches && !this.createProfile && !this.showProfile;
         }
     },
     props: ['match']

@@ -15,7 +15,7 @@
                         <img
                         src="https://cdn.vuetifyjs.com/images/john.jpg"
                         alt="Profile picture"
-                    >
+                        >
                     </v-avatar>
                 </v-flex>
 
@@ -44,8 +44,10 @@
                     <v-card class="profile-text">
                         <v-card-text class="left-margin px-0">
                             <h3>Contact</h3>
-                            {{user.email}}<br>
-                            {{user.phoneNumber}}
+                            <ul class="square">
+                                <li>Email: {{user.email}}</li>
+                                <li>Phone: {{user.phoneNumber}}</li>
+                            </ul>
                         </v-card-text>
                     </v-card>
                 </v-flex>

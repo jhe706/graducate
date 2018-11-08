@@ -32,6 +32,7 @@
         <div id="degree-item">
             <li v-for="degree in degrees" :key="degree.id">
                 <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
+                <v-select :items="schools" v-model="school" label="School" class="margins"></v-select>
                 <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
                 <v-select id="major-select" v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
                 <button
@@ -112,8 +113,8 @@ import {
     matchesRef,
     majorsRef
 } from "../database";
-import Profile from "./Profile";
-import App from "../App";
+// import Profile from "./Profile";
+// import App from "../App";
 import {
     undergradMajors,
     gradMajors
@@ -126,13 +127,12 @@ import {
     interests,
     advice
 } from "../assets/interests.js";
-// import * as Study from "../assets/areasOfStudy.json";
 
 export default {
     name: "CreateProfile",
     components: {
-        App,
-        Profile
+        // App,
+        // Profile
     },
     computed: {
 
@@ -163,14 +163,14 @@ export default {
                 v => !!v || "Phone number is required",
                 v => (v && v.length > 9) || "Phone number must be valid"
             ],
-            ugradMajors: undergradMajors, // TODO: group based on JSON defs in users.json
+            ugradMajors: undergradMajors,
             gradMajors: gradMajors,
             status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
             degreeTypes: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
             gradYears: ["Before 2015", 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, "Beyond 2022"],
             gradYear: "2021",
-            numDegrees: 1,
+            schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua"],
             pageNumber: 1,
             lastPage: false,
             hometown: {
@@ -186,6 +186,7 @@ export default {
             degrees: [{
                 id: 1,
                 type: null,
+                school: null,
                 major: null,
                 concentration: null
             }],
