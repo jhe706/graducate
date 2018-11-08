@@ -35,9 +35,19 @@
                 </v-card> -->
 
                 <!--View existing matches-->
-                <!-- <match-header v-if="showMatches" :user="currentUser"></match-header> -->
-                <match-filter v-if="showMatchesPage()"></match-filter>
-                <match v-if="showMatchesPage()" :user="currentUser"></match>
+                <div v-if="showMatchesPage()" id="container">
+                    <div id="flex-display left">
+                        <match-filter v-if="showMatchesPage()"></match-filter>
+                    </div>
+                    <div id="flex-display right">
+                        <match-header v-if="showMatchesPage()" :user="currentUser"></match-header>
+                        <match v-if="showMatchesPage()" :user="currentUser"></match>
+                        <match v-if="showMatchesPage()" :user="currentUser"></match>
+                        <match v-if="showMatchesPage()" :user="currentUser"></match>
+                        <match v-if="showMatchesPage()" :user="currentUser"></match>
+                        <match v-if="showMatchesPage()" :user="currentUser"></match>
+                    </div>
+                </div>
             </v-container>
 
             <!--Footer-->
@@ -69,8 +79,7 @@ import VLink from "./components/VLink";
 
 export default {
     name: "App",
-    components: {
-        // components that this component needs to render
+    components: { // other components that this component needs to render
         Authentication,
         CreateProfile,
         Header,
@@ -86,7 +95,7 @@ export default {
             createProfile: false,
             showProfile: false,
             showMatches: false,
-            currentUser: {                                      // temporary for testing
+            currentUser: { // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
                 firstName: "Molly",
                 lastName: "Chen",
@@ -174,11 +183,10 @@ export default {
             }
         };
     },
-    computed: {                             // variables referenced in HTML generated using complex logic
-       
+    computed: { // variables referenced in HTML generated using complex logic
+
     },
-    firebase: {
-        // reference passed b/w Firebase and program
+    firebase: { // reference passed b/w Firebase and program
         user: userRef,
         matches: matchesRef
     },
@@ -187,7 +195,7 @@ export default {
         setUser(user) {
             this.currentUser = user;
         },
-         toggleSignUpPage(){
+        toggleSignUpPage() {
             this.createProfile = true;
             this.showProfile = false;
             this.showMatches = false;
@@ -202,13 +210,13 @@ export default {
             this.showProfile = false;
             this.createProfile = false;
         },
-        showSignUpPage(){
+        showSignUpPage() {
             return this.createProfile && !this.showProfile && !this.showMatches;
         },
-        showProfilePage(){
+        showProfilePage() {
             return this.showProfile && !this.createProfile && !this.showMatches;
         },
-        showMatchesPage(){
+        showMatchesPage() {
             return this.showMatches && !this.createProfile && !this.showProfile;
         }
     },
@@ -224,4 +232,26 @@ export default {
     text-align: center;
     color: #2c3e50;
 }
+
+#flex-display {
+    display: flex;
+    /* margin: 0px 10px 0px 10px; */
+}
+
+#left {
+    width: 20%;
+    flex-direction: column;
+    margin-right: 40px;
+}
+
+#right {
+    width: 80%;
+    flex-direction: row;
+}
+
+#container {
+    display: flex;
+    width: 100%;
+}
+
 </style>
