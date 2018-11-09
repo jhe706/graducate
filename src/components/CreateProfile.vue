@@ -33,8 +33,10 @@
             <li v-for="degree in degrees" :key="degree.id">
                 <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
                 <v-select :items="schools" v-model="school" label="School" class="margins"></v-select>
-                <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major" required></v-select>
-                <v-select id="major-select" v-else v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Major" required></v-select>
+                <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major"></v-select>
+                <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major during Undergrad" required></v-select>
+                <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Current Major/Concentration" required></v-select>
+                <v-select v-model="degree.concentration" :items="getConcentrations(degree.major)" label="Concentration" required></v-select>
                 <button
             id="remove-btn"
             type="button"
@@ -113,11 +115,12 @@ import {
     matchesRef,
     majorsRef
 } from "../database";
-// import Profile from "./Profile";
-// import App from "../App";
+
 import {
     undergradMajors,
-    gradMajors
+    gradMajors,
+    undergradMajors2,
+    gradMajors2
 } from "../assets/areasOfStudy.js";
 import {
     states,
@@ -136,6 +139,12 @@ export default {
     },
     computed: {
 
+    },
+    created() {
+        setTimeout(() => {
+            this.degree.major = this.degree.major;
+            // this.setLocale = this.fetchedLocale;
+        }, 500);
     },
     data() {
         return {
@@ -301,6 +310,19 @@ export default {
 
         removeDegree(degree) {
             this.degrees.splice(degree.key, 1);
+        },
+
+        getConcentrations(major) {
+            let c = "N/A";
+            console.log("My major is ", major);
+            let forEach = require('lodash.foreach');
+            forEach(undergradMajors2, function (value, key) {
+                if (key === major) {
+                    c = value.concentrations;
+                    return c;                               
+                }
+            });
+            return c;
         }
     },
     props: ['setUser', 'user']

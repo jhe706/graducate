@@ -37,15 +37,15 @@
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
                     <div id="flex-display left">
-                        <match-filter v-if="showMatchesPage()"></match-filter>
+                        <match-filter ></match-filter>
                     </div>
                     <div id="flex-display right">
-                        <match-header v-if="showMatchesPage()" :user="currentUser"></match-header>
-                        <match v-if="showMatchesPage()" :user="currentUser"></match>
-                        <match v-if="showMatchesPage()" :user="currentUser"></match>
-                        <match v-if="showMatchesPage()" :user="currentUser"></match>
-                        <match v-if="showMatchesPage()" :user="currentUser"></match>
-                        <match v-if="showMatchesPage()" :user="currentUser"></match>
+                        <match-header :user="currentUser"></match-header>
+                        <match :user="currentUser"></match>
+                        <match :user="currentUser"></match>
+                        <match :user="currentUser"></match>
+                        <match :user="currentUser"></match>
+                        <match :user="currentUser"></match>
                     </div>
                 </div>
             </v-container>
@@ -79,7 +79,7 @@ import VLink from "./components/VLink";
 
 export default {
     name: "App",
-    components: { // other components that this component needs to render
+    components: {           // other components that this component needs to render
         Authentication,
         CreateProfile,
         Header,
@@ -95,7 +95,8 @@ export default {
             createProfile: false,
             showProfile: false,
             showMatches: false,
-            currentUser: { // temporary for testing
+            currentUser: null,
+            currentUser2: { // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
                 firstName: "Molly",
                 lastName: "Chen",
@@ -154,7 +155,8 @@ export default {
                         "selected": false
                     }
                 ],
-                advice: [{
+                advice: [
+                    {
                         "description": "Duke's major departments",
                         "selected": true
                     },
