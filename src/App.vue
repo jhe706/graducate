@@ -10,7 +10,8 @@
                     <!-- :disabled="!currentUser"-->
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
-                    <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn> <!--TODO: change back to !currentUser-->
+                    <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
+                    <!--TODO: change back to !currentUser-->
                     <!-- <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
                     <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
                 </ul>
@@ -82,7 +83,7 @@ import VLink from "./components/VLink";
 
 export default {
     name: "App",
-    components: {           // other components that this component needs to render
+    components: { // other components that this component needs to render
         Authentication,
         SignUp,
         Header,
@@ -99,7 +100,7 @@ export default {
             showProfile: false,
             showMatches: false,
             // currentUser: null,
-            currentUser: {             // temporary for testing
+            currentUser: { // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
                 firstName: "Molly",
                 lastName: "Chen",
@@ -126,7 +127,7 @@ export default {
                     country: "United States"
                 },
                 interests: ["Art", "Coding", "Travel", "Music"],
-                advice: [ 
+                advice: [
                     "Duke's major departments",
                     "Graduate programs or professional schools",
                     "Duke extracurriculars"
@@ -174,24 +175,88 @@ export default {
         // calculate matches upon creating user profile
         calculateMatches(user) {
             let uuid = user.uuid; // this? make sure this takes in the new user
-            let matches = []; // matrix
+            // let matches = []; // matrix
+            let matchMap = new Map();
 
             let users = null;
             userRef.on('value', function (snapshot) {
                 users = snapshot.val();
             });
-            
-            let i = 0;
+
+            // let i = 0;
+            // console.log(users);
+            let matches = [];
             for (let u in users) {
+                console.log(this.matchScore(this.currentUser, users[u]));
                 if (this.matchScore(this.currentUser, users[u]) > 65) {
-                    matches[uuid][i] = user[u];
+                    // matches[uuid][i] = user[u];
+                    matches.push(users[u].uuid);
                 }
             }
+            matchMap.set(this.currentUser.uuid, matches);
 
-            return matches[uuid];
+            console.log("User's matches: ", matchMap.get(this.currentUser.uuid));
+            // return matches[uuid];
+            return matchMap.get(this.currentUser.uuid);             // return array of current user's match ids
         },
 
         matchScore(u1, u2) {
+            // let u1 = {
+            //     uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
+            //     firstName: "Molly",
+            //     lastName: "Chen",
+            //     email: "molly.chen@duke.edu",
+            //     phoneNumber: "8322825093",
+            //     status: "Undergraduate",
+            //     gradYear: "2019",
+            //     school: "Trinity",
+            //     degree: {
+            //         major: "Computer Science",
+            //         type: "BS",
+            //         concentration: "Software"
+            //     },
+            //     hometown: {
+            //         city: "Cary",
+            //         state: "North Carolina",
+            //         country: "United States"
+            //     },
+            //     interests: ["Art", "Coding", "Travel", "Music"],
+            //     advice: [
+            //         "Duke's major departments",
+            //         "Graduate programs or professional schools",
+            //         "Duke extracurriculars"
+            //     ],
+            //     bio: "Hi, I'm Molly!"
+            // };
+
+            // let u2 = {
+            //     uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
+            //     firstName: "Molly2",
+            //     lastName: "Chen2",
+            //     email: "molly2.chen2@duke.edu",
+            //     phoneNumber: "8322835093",
+            //     status: "Undergraduate",
+            //     gradYear: "2019",
+            //     school: "Trinity",
+            //     degree: {
+            //         major: "Psychology",
+            //         type: "BA",
+            //         concentration: "Abnormal"
+            //     },
+            //     hometown: {
+            //         city: "Cary",
+            //         state: "North Carolina",
+            //         country: "United States"
+            //     },
+            //     interests: ["Art", "Coding", "Travel", "Music"],
+            //     advice: [
+            //         "Duke's major departments",
+            //         "Graduate programs or professional schools",
+            //         "Duke extracurriculars"
+            //     ],
+            //     bio: "Hi, I'm Molly!"
+            // };
+
             let rawScore = 0;
             let adviceScore = 0;
             let degreeScore = 0;
@@ -203,7 +268,7 @@ export default {
             console.log(u1);
             console.log(u2);
 
-            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));  // array of advice in common
+            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value)); // array of advice in common
             adviceScore = intersection.length * 6.67;
 
             // degree
@@ -211,24 +276,34 @@ export default {
                 degreeScore += 5;
             }
             // compare majors depending on status
-            let major1, major2 = "";
-            if (u1.status === "Graduate" && u2.status === "Undergraduate"){               
+            // let forEach = require('lodash.foreach');
+            // forEach(undergradMajors2, function (value, key) {
+            //     if (key === major) {
+            //         c = value.concentrations;
+            //         return c;
+            //     }
+            // });
+            console.log("u1 status: ", u1.status);
+            console.log("u2 status: ", u2.status);
+            let major1 = "";
+            let major2 = "";
+            if (u1.status === "Graduate" && u2.status === "Undergraduate") {
                 major1 = u1.previousMajor;
-                major2 = u2.degree.major;
-            } else if (u1.status === "Undergraduate" && u2.status === "Graduate"){
-                major1 = u1.degree.major;
+                major2 = u2.degrees[0].degree.major;
+            } else if (u1.status === "Undergraduate" && u2.status === "Graduate") {
+                major1 = u1.degrees[0].degree.major;
                 major2 = u2.previousMajor;
-            } else if (u1.status === "Graduate" && u2.status === "Graduate"){
-                major1 = u1.degree.major;
-                major2 = u2.degree.major;
+            } else if (u1.status === "Graduate" && u2.status === "Graduate") {
+                major1 = u1.degrees[0].degree.major;
+                major2 = u2.degrees[0].degree.major;
             } else {
-                major1 = u1.degree.major;
-                major2 = u2.degree.major;
+                major1 = u1.degrees[0].degree.major;
+                major2 = u2.degrees[0].degree.major;
             }
             console.log("major 1 ", major1);
             console.log("major 2 ", major2);
 
-            if (major1 === major2) {        // TODO: account for pre-professional as same?
+            if (major1 === major2) { // TODO: account for pre-professional as same?
                 degreeScore += 25;
             }
             console.log("degreeScore ", degreeScore);
@@ -240,34 +315,30 @@ export default {
             console.log("concentrationScore ", concentrationScore);
 
             // interests
-            let intersection2 = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));  // array of advice in common
-            interestsScore = intersection2.length;
+            let intersection2 = u1.interests.filter(value => -1 !== u2.interests.indexOf(value)); // array of advice in common
+            interestsScore = intersection2.length * 2;
             console.log("interestsScore ", interestsScore);
 
             // hometown
-            if (u1.hometown.country === u2.hometown.country){
+            if (u1.hometown.country === u2.hometown.country) {
                 hometownScore += 5;
             }
-            if (u1.hometown.state && u2.hometown.state && (u1.hometown.state === u2.hometown.state)){
+            if (u1.hometown.state && u2.hometown.state && (u1.hometown.state === u2.hometown.state)) {
                 hometownScore += 2.5;
-                if (u1.hometown.city === u2.hometown.city){
+                if (u1.hometown.city === u2.hometown.city) {
                     hometownScore += 2.5;
                 }
             } else {
-                if (u1.hometown.city === u2.hometown.city){
+                if (u1.hometown.city === u2.hometown.city) {
                     hometownScore += 5;
                 }
             }
             console.log("hometownScore ", hometownScore);
 
-            rawScore =  (0.4 * adviceScore) + 
-                        (0.3 * degreeScore) + 
-                        (0.1 * concentrationScore) +
-                        (0.1 * interestsScore) + 
-                        (0.1 * hometownScore);
-
+            rawScore = 2 * (adviceScore + degreeScore + concentrationScore + interestsScore + hometownScore);
             console.log("raw match score ", rawScore);
-            return rawScore; // rawScore *= 1.2;
+
+            return rawScore;
         }
     },
     props: ['match']
@@ -303,5 +374,4 @@ export default {
     display: flex;
     width: 100%;
 }
-
 </style>
