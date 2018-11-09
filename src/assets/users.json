@@ -8,66 +8,8 @@
 				"state": "TX",
 				"country": "USA"
 			},
-			"interests": [
-				{
-					"description": "Art",
-					"selected": true
-				},
-				{
-					"description": "Coding",
-					"selected": false
-				},
-				{
-					"description": "Music",
-					"selected": false
-				},
-				{
-					"description": "Travel",
-					"selected": true
-				},
-				{
-					"description": "Reading",
-					"selected": false
-				},
-				{
-					"description": "Cooking",
-					"selected": false
-				},
-				{
-					"description": "Exercise",
-					"selected": true
-				},
-				{
-					"description": "Other",
-					"selected": true
-				}
-			],
-			"advice": [
-				{
-					"description": "Duke's major departments",
-					"selected": true
-				},
-				{
-					"description": "Graduate programs or professional schools",
-					"selected": false
-				},
-				{
-					"description": "Duke extracurriculars",
-					"selected": false
-				},
-				{
-					"description": "Life",
-					"selected": false
-				},
-				{
-					"description": "Career",
-					"selected": false
-				},
-				{
-					"description": "Cool ideas",
-					"selected": false
-				}
-			],
+			"interests": ["Travel", "Coding", "Music"],
+			"advice": ["Career", "Cool ideas"],
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Molly",
 			"lastName": "Chen",
@@ -90,66 +32,8 @@
 				"state": "CA",
 				"country": "USA"
 			},
-			"interests": [
-				{
-					"description": "Art",
-					"selected": false
-				},
-				{
-					"description": "Coding",
-					"selected": false
-				},
-				{
-					"description": "Music",
-					"selected": false
-				},
-				{
-					"description": "Travel",
-					"selected": true
-				},
-				{
-					"description": "Reading",
-					"selected": true
-				},
-				{
-					"description": "Cooking",
-					"selected": true
-				},
-				{
-					"description": "Exercise",
-					"selected": false
-				},
-				{
-					"description": "Other",
-					"selected": false
-				}
-			],
-			"advice": [
-				{
-					"description": "Duke's major departments",
-					"selected": true
-				},
-				{
-					"description": "Graduate programs or professional schools",
-					"selected": true
-				},
-				{
-					"description": "Duke extracurriculars",
-					"selected": false
-				},
-				{
-					"description": "Life",
-					"selected": true
-				},
-				{
-					"description": "Career",
-					"selected": false
-				},
-				{
-					"description": "Cool ideas",
-					"selected": true
-				}
-			],
+			"interests": ["Art", "Coding"],
+			"advice": ["Duke's major departments", "Graduate programs or professional schools"],
 			"bio": "I am looking to go into product design in the industry and I need some career advice.",
 			"firstName": "Carolyn",
 			"lastName": "Sun",
@@ -171,66 +55,8 @@
 				"state": "PA",
 				"country": "USA"
 			},
-			"interests": [
-				{
-					"description": "Art",
-					"selected": true
-				},
-				{
-					"description": "Coding",
-					"selected": false
-				},
-				{
-					"description": "Music",
-					"selected": false
-				},
-				{
-					"description": "Travel",
-					"selected": true
-				},
-				{
-					"description": "Reading",
-					"selected": false
-				},
-				{
-					"description": "Cooking",
-					"selected": false
-				},
-				{
-					"description": "Exercise",
-					"selected": false
-				},
-				{
-					"description": "Other",
-					"selected": false
-				}
-			],
-			"advice": [
-				{
-					"description": "Duke's major departments",
-					"selected": false
-				},
-				{
-					"description": "Graduate programs or professional schools",
-					"selected": false
-				},
-				{
-					"description": "Duke extracurriculars",
-					"selected": false
-				},
-				{
-					"description": "Life",
-					"selected": false
-				},
-				{
-					"description": "Career",
-					"selected": true
-				},
-				{
-					"description": "Cool ideas",
-					"selected": false
-				}
-			],
+			"interests": ["Art", "Travel", "Reading"],
+			"advice": ["Cool ideas", "Life", "Career"],
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Kim",
 			"lastName": "Huynh",

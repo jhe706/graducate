@@ -10,7 +10,7 @@
                     <!-- :disabled="!currentUser"-->
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
-                    <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
+                    <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn> <!--TODO: change back to !currentUser-->
                     <!-- <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
                     <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn> -->
                 </ul>
@@ -36,8 +36,11 @@
 
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
+                    <div>
+                        <v-btn @click="calculateMatches(currentUser)">Get Matches</v-btn>
+                    </div>
                     <div id="flex-display left">
-                        <match-filter ></match-filter>
+                        <match-filter></match-filter>
                     </div>
                     <div id="flex-display right">
                         <match-header :user="currentUser"></match-header>
@@ -95,8 +98,8 @@ export default {
             signUp: false,
             showProfile: false,
             showMatches: false,
-            currentUser: null,
-            currentUser2: { // temporary for testing
+            // currentUser: null,
+            currentUser: {             // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
                 firstName: "Molly",
                 lastName: "Chen",
@@ -109,7 +112,7 @@ export default {
                     "0": {
                         major: "Computer Science",
                         type: "BS",
-                        concentration: "NA"
+                        concentration: "Software"
                     },
                     "1": {
                         major: "Psychology",
@@ -122,64 +125,11 @@ export default {
                     state: "North Carolina",
                     country: "United States"
                 },
-                interests: [{
-                        "description": "Art",
-                        "selected": false
-                    },
-                    {
-                        "description": "Coding",
-                        "selected": false
-                    },
-                    {
-                        "description": "Music",
-                        "selected": false
-                    },
-                    {
-                        "description": "Travel",
-                        "selected": true
-                    },
-                    {
-                        "description": "Reading",
-                        "selected": true
-                    },
-                    {
-                        "description": "Cooking",
-                        "selected": true
-                    },
-                    {
-                        "description": "Exercise",
-                        "selected": false
-                    },
-                    {
-                        "description": "Other",
-                        "selected": false
-                    }
-                ],
-                advice: [
-                    {
-                        "description": "Duke's major departments",
-                        "selected": true
-                    },
-                    {
-                        "description": "Graduate programs or professional schools",
-                        "selected": true
-                    },
-                    {
-                        "description": "Duke extracurriculars",
-                        "selected": false
-                    },
-                    {
-                        "description": "Life",
-                        "selected": true
-                    },
-                    {
-                        "description": "Career",
-                        "selected": false
-                    },
-                    {
-                        "description": "Cool ideas",
-                        "selected": true
-                    }
+                interests: ["Art", "Coding", "Travel", "Music"],
+                advice: [ 
+                    "Duke's major departments",
+                    "Graduate programs or professional schools",
+                    "Duke extracurriculars"
                 ],
                 bio: "Hi, I'm Molly!"
             }
@@ -220,6 +170,104 @@ export default {
         },
         showMatchesPage() {
             return this.showMatches && !this.signUp && !this.showProfile;
+        },
+        // calculate matches upon creating user profile
+        calculateMatches(user) {
+            let uuid = user.uuid; // this? make sure this takes in the new user
+            let matches = []; // matrix
+
+            let users = null;
+            userRef.on('value', function (snapshot) {
+                users = snapshot.val();
+            });
+            
+            let i = 0;
+            for (let u in users) {
+                if (this.matchScore(this.currentUser, users[u]) > 65) {
+                    matches[uuid][i] = user[u];
+                }
+            }
+
+            return matches[uuid];
+        },
+
+        matchScore(u1, u2) {
+            let rawScore = 0;
+            let adviceScore = 0;
+            let degreeScore = 0;
+            let interestsScore = 0;
+            let concentrationScore = 0;
+            let hometownScore = 0;
+
+            // advice
+            console.log(u1);
+            console.log(u2);
+
+            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));  // array of advice in common
+            adviceScore = intersection.length * 6.67;
+
+            // degree
+            if (u1.school === u2.school) {
+                degreeScore += 5;
+            }
+            // compare majors depending on status
+            let major1, major2 = "";
+            if (u1.status === "Graduate" && u2.status === "Undergraduate"){               
+                major1 = u1.previousMajor;
+                major2 = u2.degree.major;
+            } else if (u1.status === "Undergraduate" && u2.status === "Graduate"){
+                major1 = u1.degree.major;
+                major2 = u2.previousMajor;
+            } else if (u1.status === "Graduate" && u2.status === "Graduate"){
+                major1 = u1.degree.major;
+                major2 = u2.degree.major;
+            } else {
+                major1 = u1.degree.major;
+                major2 = u2.degree.major;
+            }
+            console.log("major 1 ", major1);
+            console.log("major 2 ", major2);
+
+            if (major1 === major2) {        // TODO: account for pre-professional as same?
+                degreeScore += 25;
+            }
+            console.log("degreeScore ", degreeScore);
+
+            // concentration                // TODO: group w/ degree?
+            if (u1.degree.concentration === u2.degree.concentration) {
+                concentrationScore += 10;
+            }
+            console.log("concentrationScore ", concentrationScore);
+
+            // interests
+            let intersection2 = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));  // array of advice in common
+            interestsScore = intersection2.length;
+            console.log("interestsScore ", interestsScore);
+
+            // hometown
+            if (u1.hometown.country === u2.hometown.country){
+                hometownScore += 5;
+            }
+            if (u1.hometown.state && u2.hometown.state && (u1.hometown.state === u2.hometown.state)){
+                hometownScore += 2.5;
+                if (u1.hometown.city === u2.hometown.city){
+                    hometownScore += 2.5;
+                }
+            } else {
+                if (u1.hometown.city === u2.hometown.city){
+                    hometownScore += 5;
+                }
+            }
+            console.log("hometownScore ", hometownScore);
+
+            rawScore =  (0.4 * adviceScore) + 
+                        (0.3 * degreeScore) + 
+                        (0.1 * concentrationScore) +
+                        (0.1 * interestsScore) + 
+                        (0.1 * hometownScore);
+
+            console.log("raw match score ", rawScore);
+            return rawScore; // rawScore *= 1.2;
         }
     },
     props: ['match']

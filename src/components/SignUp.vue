@@ -34,7 +34,7 @@
                 <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
                 <v-select :items="schools" v-model="school" label="School" class="margins"></v-select>
                 <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major"></v-select>
-                <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major during Undergrad" required></v-select>
+                <v-select id="major-select" v-if="!isUndergrad()" v-model="previousMajor" :items="ugradMajors" :rules="majorRules" label="Major during Undergrad" required></v-select>
                 <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Current Major/Concentration" required></v-select>
                 <v-select v-model="degree.concentration" :items="getConcentrations(degree.major)" label="Concentration" required></v-select>
                 <button
@@ -113,7 +113,7 @@
     <h1 style="margin-bottom:20px">Tell us a little about yourself.</h1>
 
     <v-flex>
-        <v-textarea value="What makes you awesome?" solo name="input-7-4" v-model="bio" :rules="bioRules"></v-textarea>
+        <v-textarea :value="bio" solo name="input-7-4" v-model="bio" :rules="bioRules"></v-textarea>
     </v-flex>
 
     <!--Buttons-->
@@ -151,8 +151,7 @@ import {
 
 export default {
     name: "SignUp",
-    components: {
-    },
+    components: {},
     computed: {
 
     },
@@ -207,8 +206,9 @@ export default {
             selectedInterests: [],
             advice: advice,
             selectedAdvice: [],
-            // bio: bio,
-            degrees: [
+            bio: null,
+            degrees: 
+            [
                 {
                     id: 1,
                     type: null,
@@ -218,7 +218,8 @@ export default {
                 }
             ],
             uuid: "",
-            newUser: null
+            newUser: null,
+            previousMajor: null
         };
     },
     firebase: {
@@ -230,6 +231,7 @@ export default {
         next() {
             this.pageNumber += 1;
         },
+
         registerUser() {
             const uuid = require("uuid/v4");
             let myUuid = uuid();
@@ -252,7 +254,8 @@ export default {
                 interests: this.selectedInterests,
                 advice: this.selectedAdvice,
                 bio: this.bio,
-                gradYear: null
+                gradYear: null,
+                previousMajor: this.previousMajor
             };
 
             // equivalent to signing in automatically
@@ -261,52 +264,16 @@ export default {
             if (this.$refs.form.validate()) {
                 db.ref('users/' + myUuid).set(newUser)
             }
+
+            this.calculateMatches(newUser);
         },
+
         clear() {
             this.$refs.form.reset();
         },
+
         isUndergrad() {
             return this.status === "Undergraduate";
-        },
-        getMajors() {
-            console.log("here");
-            // TODO: add concentrations
-            let undergradMajors = [
-                "Asian and Middle Eastern Studies", "Biology", "Chemistry",
-                "Computer Science", "Economics", "Entrepreneurship", "Psychology",
-                "Pre-Medicine", "Pre-Law", "Pre-Vet", "Other"
-            ];
-
-            let gradMajors = [
-                "Law", "Medicine", "Veterinary", "Research", "Other"
-            ];
-
-            let majors = null;
-
-            majorsRef.on('value', function (snapshot) {
-                majors = snapshot.val();
-            });
-
-            // for (let m in undergradMajors) {
-            // let x = undergradMajors[1];
-            console.log(majors.undergradMajors[1].concentrations);
-            //}
-
-            // let gradMajors = majors["undergradMajors"];
-            // console.log(gradMajors);
-            // let undergradMajors = majors["undergradMajors"];
-            // let majorsList = [];
-
-            // if (this.status === "Undergraduate") {
-            //     for (let m in undergradMajors) {
-            //         console.log("key ", undergradMajors[m].key);
-            //         majorsList.push(undergradMajors[m].key);
-            //     }
-            // } else {
-
-            // }
-
-            return majorsList;
         },
 
         addDegree() {
@@ -316,7 +283,6 @@ export default {
                 major: null,
                 concentration: null
             }
-
             this.$set(this.degrees, this.degrees.length, newDegree);
         },
 
@@ -326,16 +292,91 @@ export default {
 
         getConcentrations(major) {
             let c = "N/A";
-            console.log("My major is ", major);
+            // console.log("My major is ", major);
             let forEach = require('lodash.foreach');
             forEach(undergradMajors2, function (value, key) {
                 if (key === major) {
                     c = value.concentrations;
-                    return c;                               
+                    return c;
                 }
             });
             return c;
-        }
+        },
+
+        // // calculate matches upon creating user profile
+        // calculateMatches(user) {
+        //     console.log("here");
+        //     let uuid = user.uuid; // this? make sure this takes in the new user
+        //     let matches = []; // matrix
+
+        //     let users = null;
+        //     userRef.on('value', function (snapshot) {
+        //         users = snapshot.val();
+        //         console.log(users);
+        //     })
+
+        //     let i = 0;
+        //     for (let user in users) {
+        //         if (this.matchScore(users[user]) > 65) {
+        //             matches[uuid][i] = user[user];
+        //         }
+        //     }
+
+        //     return matches[uuid];
+        // },
+
+        // matchScore(u1, u2) {
+        //     console.log("here2");
+        //     let rawScore = 0;
+        //     let adviceScore = 0;
+        //     let degreeScore = 0;
+        //     let interestsScore = 0;
+        //     let concentrationScore = 0;
+        //     let hometownScore = 0;
+
+        //     // advice
+        //     for (let i in u1.advice) {
+        //         for (let j in u2.advice) {
+        //             if (u1.advice[i].selected && u2.advice[j].selected) {
+        //                 adviceScore++;
+        //             }
+        //             j++;
+        //         }
+        //         i++;
+        //     }
+
+        //     // degree
+        //     if (u1.degree.school === u2.degree.school) {
+        //         degreeScore += 5;
+        //     }
+        //     if (u1.degree.major === u2.degree.major) { // TODO: count pre-professional as same
+        //         degreeScore += 25;
+        //     }
+
+        //     // concentration TODO: group w/ degree?
+        //     if (u1.degree.concentration === u2.degree.concentration) {
+        //         concentrationScore += 10;
+        //     }
+
+        //     // interests
+        //     for (let i in u1.interests) {
+        //         for (let j in u2.interests) {
+        //             if (u1.interests[i].selected && u2.interests[j].selected) {
+        //                 interestsScore++;
+        //             }
+        //             j++;
+        //         }
+        //         i++;
+        //     }
+
+        //     // hometown
+
+        //     rawScore = (0.4 * adviceScore) + (0.3 * degreeScore) + (0.1 * concentrationScore) +
+        //         (0.1 * interestsScore) + (0.1 * hometownScore);
+
+        //     console.log("raw match score ", rawScore);
+        //     return rawScore; // rawScore *= 1.2;
+        // }
     },
     props: ['setUser', 'user']
 };

@@ -8,48 +8,8 @@
 				"state": "TX",
 				"country": "USA"
 			},
-			"tags": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceGiven": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceNeeded": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
+			"interests": ["Travel", "Coding", "Music"],
+			"advice": ["Career", "Cool ideas"],
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Molly",
 			"lastName": "Chen",
@@ -72,48 +32,8 @@
 				"state": "CA",
 				"country": "USA"
 			},
-			"tags": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceGiven": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceNeeded": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
+			"interests": ["Art", "Coding"],
+			"advice": ["Duke's major departments", "Graduate programs or professional schools"],
 			"bio": "I am looking to go into product design in the industry and I need some career advice.",
 			"firstName": "Carolyn",
 			"lastName": "Sun",
@@ -135,48 +55,8 @@
 				"state": "PA",
 				"country": "USA"
 			},
-			"tags": [
-				{
-					"tag": "UIUX",
-					"selected": true
-				},
-				{
-					"tag": "coding",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceGiven": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
-			"adviceNeeded": [
-				{
-					"tag": "",
-					"selected": true
-				},
-				{
-					"tag": "",
-					"selected": false
-				},
-				{
-					"tag": "",
-					"selected": false
-				}
-			],
+			"interests": ["Art", "Travel", "Reading"],
+			"advice": ["Cool ideas", "Life", "Career"],
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Kim",
 			"lastName": "Huynh",
@@ -285,7 +165,9 @@
 				]
 			},
 			"Other": {
+				"concentrations": [
 
+				]
 			}
 		},
 		"gradMajors": {
@@ -320,16 +202,23 @@
 				]
 			},
 			"Other": {
-
+				"concentrations": [
+					
+				]
 			}
 		}
 	},
 	"matches": {
-		"c22ac451-b0f6-48a6-96ad-61d9daa99dea": [],
+		"c22ac451-b0f6-48a6-96ad-61d9daa99dea": [
+			"accf252c-ec54-451e-853d-7007724e1fdf"
+		],
 		"accf252c-ec54-451e-853d-7007724e1fdf": 
 		[
-			"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd"
+			"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd",
+			"c22ac451-b0f6-48a6-96ad-61d9daa99dea"
 		],
-		"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd": []
+		"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd": [
+			"accf252c-ec54-451e-853d-7007724e1fdf"
+		]
 	}
 }
