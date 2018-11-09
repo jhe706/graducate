@@ -59,7 +59,7 @@
                             <h3 v-if="user.status==='Undergraduate'">{{user.firstName}} would like advice on: </h3>
                             <h3 v-else>{{user.firstName}} would like to help with: </h3>
                             <ul class="square" v-for="topic in user.advice" :key="topic">
-                                <li v-if="topic.selected">{{topic.description}}</li>
+                                <li>{{topic}}</li>
                             </ul>
                         </v-card-text>
                     </v-card>
@@ -69,7 +69,7 @@
                         <v-card-text class="left-margin px-0">
                             <h3>Interests</h3>
                             <ul class="square" v-for="interest in user.interests" :key="interest">
-                                <li v-if="interest.selected">{{interest.description}}</li>
+                                <li>{{interest}}</li>
                             </ul>
                         </v-card-text>
                     </v-card>
