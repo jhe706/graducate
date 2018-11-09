@@ -19,7 +19,7 @@
             <!--TODO: Instead of placing all possible homepage views in one container, use conditional render/routing-->
             <v-container>
                 <!--Create profile-->
-                <create-profile v-if="showSignUpPage()" :setUser="setUser" :user="currentUser"></create-profile>
+                <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser"></sign-up>
 
                 <!--View profile-->
                 <profile v-if="showProfilePage()" :user="currentUser"></profile>
@@ -69,7 +69,7 @@ import {
     matchesRef
 } from "./database";
 import Authentication from "./components/Authentication";
-import CreateProfile from "./components/CreateProfile";
+import SignUp from "./components/SignUp";
 import Header from "./components/Header";
 import Match from "./components/Match";
 import MatchFilter from "./components/MatchFilter";
@@ -81,7 +81,7 @@ export default {
     name: "App",
     components: {           // other components that this component needs to render
         Authentication,
-        CreateProfile,
+        SignUp,
         Header,
         Match,
         MatchFilter,
@@ -92,7 +92,7 @@ export default {
     data() {
         return {
             right: null,
-            createProfile: false,
+            signUp: false,
             showProfile: false,
             showMatches: false,
             currentUser: null,
@@ -193,33 +193,33 @@ export default {
         matches: matchesRef
     },
     methods: {
-        // setUser() is defined in parent, set in child component CreateProfile so that App can access value of user
+        // setUser() is defined in parent, set in child component SignUp so that App can access value of user
         setUser(user) {
             this.currentUser = user;
         },
         toggleSignUpPage() {
-            this.createProfile = true;
+            this.signUp = true;
             this.showProfile = false;
             this.showMatches = false;
         },
         toggleProfilePage() {
             this.showProfile = true;
-            this.createProfile = false;
+            this.signUp = false;
             this.showMatches = false;
         },
         toggleMatchesPage() {
             this.showMatches = true;
             this.showProfile = false;
-            this.createProfile = false;
+            this.signUp = false;
         },
         showSignUpPage() {
-            return this.createProfile && !this.showProfile && !this.showMatches;
+            return this.signUp && !this.showProfile && !this.showMatches;
         },
         showProfilePage() {
-            return this.showProfile && !this.createProfile && !this.showMatches;
+            return this.showProfile && !this.signUp && !this.showMatches;
         },
         showMatchesPage() {
-            return this.showMatches && !this.createProfile && !this.showProfile;
+            return this.showMatches && !this.signUp && !this.showProfile;
         }
     },
     props: ['match']

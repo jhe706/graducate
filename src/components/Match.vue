@@ -111,7 +111,7 @@ export default {
             rawScore = (0.4 * adviceScore) + (0.3 * degreeScore) + (0.1 * concentrationScore)
             + (0.1 * interestsScore) + (0.1 * hometownScore);
 
-            return rawScore;
+            return rawScore;        // rawScore *= 1.2;
         }       
     }
 }

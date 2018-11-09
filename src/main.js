@@ -6,7 +6,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'firebaseui/dist/firebaseui.css'
 
 // import all other components that need routes
-import CreateProfile from './components/CreateProfile.vue';
+import SignUp from './components/SignUp.vue';
 import Match from './components/Match.vue';
 
 Vue.config.productionTip = false
@@ -21,7 +21,7 @@ const NotFound = {
 
 export const routes = {
   '/': App,
-  '/createprofile': CreateProfile,
+  '/signup': SignUp,
   '/matches': Match
 }
 

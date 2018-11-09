@@ -132,7 +132,7 @@ import {
 } from "../assets/interests.js";
 
 export default {
-    name: "CreateProfile",
+    name: "SignUp",
     components: {
         // App,
         // Profile
