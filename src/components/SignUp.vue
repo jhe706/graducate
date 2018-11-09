@@ -1,7 +1,7 @@
 <template>
 <!--Page 1-->
 <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
-    <h1 style="margin-top:10px; margin-bottom:20px">About You</h1>
+    <h1 style="margin-top:10px; margin-bottom:20px">Let's make your profile.</h1>
 
     <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
     <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
@@ -56,7 +56,7 @@
 
 <!--Page 2-->
 <v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
-    <h1 style="margin-bottom:20px">Tell us more about yourself.</h1>
+    <!-- <h1 style="margin-bottom:20px">Tell us more about yourself.</h1> -->
 
     <h3>Hometown:</h3>
     <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
@@ -64,39 +64,56 @@
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
     <h3>Interests:</h3>
-    <!--TODO: snaz it up-->
-    <v-select :items="interests" v-model="interests" label="Interests" class="margins"></v-select>
+    <!-- <v-select :items="interests" v-model="interests" label="Interests" class="margins"></v-select> -->
+    <v-layout row wrap>
+        <v-flex xs12 sm3 md3>
+            <v-checkbox v-model="selectedInterests" :label="interests[0]" color="green lighten-1" :value="interests[0]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedInterests" :label="interests[1]" color="green lighten-1" :value="interests[1]" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm3 md3>
+            <v-checkbox v-model="selectedInterests" :label="interests[2]" color="green lighten-1" :value="interests[2]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedInterests" :label="interests[3]" color="green lighten-1" :value="interests[3]" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm3 md3>
+            <v-checkbox v-model="selectedInterests" :label="interests[4]" color="green lighten-1" :value="interests[4]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedInterests" :label="interests[5]" color="green lighten-1" :value="interests[5]" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm3 md3>
+            <v-checkbox v-model="selectedInterests" :label="interests[6]" color="green lighten-1" :value="interests[6]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedInterests" :label="interests[7]" color="green lighten-1" :value="interests[7]" hide-details></v-checkbox>
+        </v-flex>
+    </v-layout>
 
     <h3>Advice:</h3>
     <h4>What advice are you looking for from a grad student?</h4>
     <v-layout row wrap>
         <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="advice" :label="advice[0]" color="red" value="red" hide-details></v-checkbox>
-            <v-checkbox v-model="advice" :label="advice[1]" color="red darken-3" value="red darken-3" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[0]" color="green lighten-1" :value="advice[0]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[1]" ccolor="green lighten-1" :value="advice[1]" hide-details></v-checkbox>
         </v-flex>
         <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="advice" :label="advice[2]" color="indigo" value="indigo" hide-details></v-checkbox>
-            <v-checkbox v-model="advice" :label="advice[3]" color="indigo darken-3" value="indigo darken-3" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[2]" color="green lighten-1" :value="advice[2]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[3]" color="green lighten-1" :value="advice[3]" hide-details></v-checkbox>
         </v-flex>
         <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="advice" :label="advice[4]" color="orange" value="orange" hide-details></v-checkbox>
-            <v-checkbox v-model="advice" :label="advice[5]" color="orange darken-3" value="orange darken-3" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[4]" color="green lighten-1" :value="advice[4]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[5]" color="green lighten-1" :value="advice[5]" hide-details></v-checkbox>
         </v-flex>
     </v-layout>
 
     <!--Buttons-->
-    <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
     <!--TODO: Turn into X, upper R hand corner-->
+    <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
     <v-btn :disabled="!valid">Back</v-btn>
     <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
 <!--Page 3-->
 <v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
-    <h1 style="margin-bottom:20px">You're almost done!</h1>
+    <h1 style="margin-bottom:20px">Tell us a little about yourself.</h1>
 
     <v-flex>
-        <v-textarea solo name="input-7-4" value="What makes you awesome?" v-model="bio"></v-textarea>
+        <v-textarea value="What makes you awesome?" solo name="input-7-4" v-model="bio" :rules="bioRules"></v-textarea>
     </v-flex>
 
     <!--Buttons-->
@@ -107,6 +124,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import Vue from "vue";
 import Firebase from "firebase";
 import {
@@ -134,17 +152,9 @@ import {
 export default {
     name: "SignUp",
     components: {
-        // App,
-        // Profile
     },
     computed: {
 
-    },
-    created() {
-        setTimeout(() => {
-            this.degree.major = this.degree.major;
-            // this.setLocale = this.fetchedLocale;
-        }, 500);
     },
     data() {
         return {
@@ -172,6 +182,10 @@ export default {
                 v => !!v || "Phone number is required",
                 v => (v && v.length > 9) || "Phone number must be valid"
             ],
+            bioRules: [
+                v => !!v || "Bio is required",
+                v => (v && v.length <= 300) || "Enter up to 300 characters"
+            ],
             ugradMajors: undergradMajors,
             gradMajors: gradMajors,
             status: "Undergraduate",
@@ -179,7 +193,7 @@ export default {
             degreeTypes: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
             gradYears: ["Before 2015", 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, "Beyond 2022"],
             gradYear: "2021",
-            schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua"],
+            schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua", "Medical School"],
             pageNumber: 1,
             lastPage: false,
             hometown: {
@@ -190,15 +204,19 @@ export default {
             states: states,
             countries: countries,
             interests: interests,
+            selectedInterests: [],
             advice: advice,
+            selectedAdvice: [],
             // bio: bio,
-            degrees: [{
-                id: 1,
-                type: null,
-                school: null,
-                major: null,
-                concentration: null
-            }],
+            degrees: [
+                {
+                    id: 1,
+                    type: null,
+                    school: null,
+                    major: null,
+                    concentration: null
+                }
+            ],
             uuid: "",
             newUser: null
         };
@@ -217,12 +235,6 @@ export default {
             let myUuid = uuid();
             this.uuid = myUuid;
 
-            // TODO: parse selected interests
-            let selectedInterests = null;
-
-            // TODO: parse selected advice
-            let selectedAdvice = null;
-
             let newUser = {
                 uuid: myUuid,
                 firstName: this.firstName,
@@ -237,8 +249,8 @@ export default {
                     state: this.hometown.state,
                     country: this.hometown.country
                 },
-                interests: selectedInterests,
-                advice: selectedAdvice,
+                interests: this.selectedInterests,
+                advice: this.selectedAdvice,
                 bio: this.bio,
                 gradYear: null
             };

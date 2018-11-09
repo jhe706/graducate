@@ -87,18 +87,11 @@ import {
     userRef,
     db
 } from "../database";
-// import {
-//     row1,
-//     row2,
-//     row3
-// } from "../assets/profileTitles.js";
 import * as areasOfStudy from "../assets/areasOfStudy.js";
-// import App from "../App";
 
 export default {
     name: "Profile",
     components: {
-        // App
     },
     data() {
         return {
@@ -106,11 +99,6 @@ export default {
         };
     },
     computed: {
-        //  user () {
-        //     console.log("usr");
-        //     console.log(this.getUser());
-        //     return this.getUser();
-        // }
     },
     firebase: {
         users: userRef,
@@ -123,16 +111,6 @@ export default {
                 return user.name + " would like to give advice about: ";
             }
         }
-        // findProfileItems() {
-        //     console.log("Hello");
-        //     console.log(this.row1[0]);
-        //     for (let item in this.row1) {
-        //         console.log(row1[item].title);
-        //         for (let c in item.content) {
-        //             console.log(row1[item][c]);
-        //         }
-        //     }
-        // }
     },
     props: ['user']
 };
