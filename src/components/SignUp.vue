@@ -53,7 +53,7 @@
         </div>
     </ul>
     <!--Buttons-->
-    <v-btn :disabled="!valid">Back</v-btn>
+    <v-btn :disabled="!valid" @click="back()">Back</v-btn>
     <v-btn :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
@@ -106,7 +106,7 @@
     </v-layout>
 
     <!--Buttons-->
-    <v-btn :disabled="!valid">Back</v-btn>
+    <v-btn :disabled="!valid" @click="back()">Back</v-btn>
     <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
@@ -120,7 +120,7 @@
     </v-flex>
 
     <!--Buttons-->
-    <v-btn :disabled="!valid">Back</v-btn>
+    <v-btn :disabled="!valid" @click="back()">Back</v-btn>
     <v-btn :disabled="!valid" @click="registerUser()">Register</v-btn>
 </v-form>
 </template>
@@ -234,7 +234,22 @@ export default {
             if (this.pageNumber < 3){
                 this.pageNumber += 1;
             } else {
-                this.pageNumber = 0;
+                this.pageNumber = 1;
+            }
+        },
+
+        exit(){
+            console.log("here");
+            this.graphics();
+        },
+
+        back(){
+            console.log(this.pageNumber);
+            if (this.pageNumber > 1){
+                this.pageNumber--;
+            }
+            else {
+                this.graphics();        // go back to home screen
             }
         },
 
@@ -404,11 +419,6 @@ export default {
             console.log("raw match score ", rawScore);
 
             return Math.min(rawScore, 100);
-        },
-
-        exit(){
-            console.log("here");
-            this.graphics();
         }
     },
     props: ['setUser', 'user', 'graphics']
