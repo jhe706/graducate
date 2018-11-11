@@ -27,7 +27,8 @@
                         </li>
                         <li>Trinity, Class of {{user.gradYear}}</li>
                         <li v-for="degree in user.degrees" :key="degree">{{degree.type}} {{degree.major}}</li>
-                        <li>From {{user.hometown.city}}, {{user.hometown.state}}, {{user.hometown.country}}</li>
+                        <li v-if="!user.hometown.state">From {{user.hometown.city}}, {{user.hometown.country}}</li>
+                        <li v-else>From {{user.hometown.city}}, {{user.hometown.state}}, {{user.hometown.country}}</li>
                     </ul>
                 </v-flex>
 

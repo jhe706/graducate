@@ -6,7 +6,7 @@
 			"hometown": {
 				"city": "Houston",
 				"state": "TX",
-				"country": "USA"
+				"country": "United States"
 			},
 			"interests": ["Travel", "Sports", "Music"],
 			"advice": ["Career", "Cool ideas"],
@@ -37,7 +37,7 @@
 			"hometown": {
 				"city": "Saratoga",
 				"state": "CA",
-				"country": "USA"
+				"country": "United States"
 			},
 			"interests": ["Art", "Coding"],
 			"advice": ["Duke's major departments", "Graduate programs or professional schools"],
@@ -62,7 +62,7 @@
 			"hometown": {
 				"city": "Boston",
 				"state": "MA",
-				"country": "USA"
+				"country": "United States"
 			},
 			"interests": ["Art", "Travel", "Reading"],
 			"advice": ["Cool ideas", "Life", "Career"],
@@ -96,7 +96,7 @@
 			"hometown": {
 				"city": "Philadelphia",
 				"state": "PA",
-				"country": "USA"
+				"country": "United States"
 			},
 			"interests": ["Art", "Travel", "Reading"],
 			"advice": ["Cool ideas", "Life", "Career"],
@@ -138,7 +138,7 @@
 			"hometown": {
 				"city": "San Francisco",
 				"state": "CA",
-				"country": "USA"
+				"country": "United States"
 			},
 			"interests": ["Music", "Art", "Travel"],
 			"advice": ["Duke's major departments", "Graduate programs or professional schools", "Cool ideas", "Life"],

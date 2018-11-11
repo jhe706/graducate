@@ -35,7 +35,7 @@
                 <v-select :items="schools" v-model="school" label="School" class="margins"></v-select>
                 <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major"></v-select>
                 <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.previousMajor" :items="ugradMajors" :rules="majorRules" label="Major during Undergrad" required></v-select>
-                <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Current Major/Concentration" required></v-select>
+                <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Current major" required></v-select>
                 <v-select v-model="degree.concentration" :items="getConcentrations(degree.major)" label="Concentration" required></v-select>
                 <button
                     id="remove-btn"
@@ -264,6 +264,7 @@ export default {
                 db.ref('users/' + myUuid).set(newUser)
             }
 
+            console.log("calculating matches...");
             this.calculateMatches(newUser);
         },
 
@@ -291,7 +292,6 @@ export default {
 
         getConcentrations(major) {
             let c = "N/A";
-            // console.log("My major is ", major);
             let forEach = require('lodash.foreach');
             forEach(undergradMajors2, function (value, key) {
                 if (key === major) {
@@ -302,80 +302,108 @@ export default {
             return c;
         },
 
-        // // calculate matches upon creating user profile
-        // calculateMatches(user) {
-        //     console.log("here");
-        //     let uuid = user.uuid; // this? make sure this takes in the new user
-        //     let matches = []; // matrix
+        calculateMatches(user) {
+            let uuid = user.uuid;                          
+            let matchMap = new Map();
 
-        //     let users = null;
-        //     userRef.on('value', function (snapshot) {
-        //         users = snapshot.val();
-        //         console.log(users);
-        //     })
+            let users = null;
+            userRef.on('value', function (snapshot) {
+                users = snapshot.val();
+            });
 
-        //     let i = 0;
-        //     for (let user in users) {
-        //         if (this.matchScore(users[user]) > 65) {
-        //             matches[uuid][i] = user[user];
-        //         }
-        //     }
+            let matches = [];
+            for (let u in users) {
+                console.log("User ", users[u]);
+                let score = this.matchScore(this.currentUser, users[u]);        // obtain match score against logged in user
+                console.log("Match score: ", score);
+                if (score > 65) {
+                    matches.push(users[u].uuid);
+                }
+            }
 
-        //     return matches[uuid];
-        // },
+            // set final values in map and DB table
+            matchMap.set(this.currentUser.uuid, matches);
+            let myMatches = matchMap.get(uuid) ? matchMap.get(uuid) : [];      // should return list of match uuids
+            db.ref("matches/" + uuid).set(myMatches);
+            console.log("User's matches: ", myMatches);
+            
+            return myMatches;                                                   // return array of current user's match ids
+        },
 
-        // matchScore(u1, u2) {
-        //     console.log("here2");
-        //     let rawScore = 0;
-        //     let adviceScore = 0;
-        //     let degreeScore = 0;
-        //     let interestsScore = 0;
-        //     let concentrationScore = 0;
-        //     let hometownScore = 0;
+        matchScore(u1, u2) {
+            let rawScore = 0;
+            let adviceScore = 0;
+            let degreeScore = 0;
+            let interestsScore = 0;
+            let concentrationScore = 0;
+            let hometownScore = 0;
 
-        //     // advice
-        //     for (let i in u1.advice) {
-        //         for (let j in u2.advice) {
-        //             if (u1.advice[i].selected && u2.advice[j].selected) {
-        //                 adviceScore++;
-        //             }
-        //             j++;
-        //         }
-        //         i++;
-        //     }
+            // advice
+            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));
+            adviceScore = intersection.length * 6.67;
 
-        //     // degree
-        //     if (u1.degree.school === u2.degree.school) {
-        //         degreeScore += 5;
-        //     }
-        //     if (u1.degree.major === u2.degree.major) { // TODO: count pre-professional as same
-        //         degreeScore += 25;
-        //     }
+            // degree
+            if (u1.school === u2.school) {
+                degreeScore += 5;
+            }
+            let forEach = require('lodash.foreach');
+            let u1Majors = [];
+            let u2Majors = [];
+            let u1Concentrations = [];
+            let u2Concentrations = [];
+            forEach(u1.degrees, function (degree, key) {
+                if (u1.status === "Undergraduate") {
+                    console.log("My major: ", degree.major);
+                    u1Majors.push(degree.major);
+                } else {
+                    console.log("My prev major: ", degree.previousMajor);
+                    u1Majors.push(degree.previousMajor);
+                }
+                u1Concentrations.push(degree.concentration);
+            });
+            forEach(u2.degrees, function (degree, id) {     
+                if (u2.status === "Undergraduate") {
+                    console.log("Their major: ", degree.major);
+                    u2Majors.push(degree.major);
+                } else {
+                    console.log("Their prev major: ", degree.previousMajor);
+                    u2Majors.push(degree.previousMajor);
+                }
+                u2Concentrations.push(degree.concentration);
+            });
 
-        //     // concentration TODO: group w/ degree?
-        //     if (u1.degree.concentration === u2.degree.concentration) {
-        //         concentrationScore += 10;
-        //     }
+            intersection = u1Majors.filter(value => -1 !== u2Majors.indexOf(value));
+            degreeScore += intersection.length * 20;
+            intersection = u1Concentrations.filter(value => -1 !== u2Concentrations.indexOf(value));
+            degreeScore += intersection.length * 10;
+            console.log("degreeScore ", degreeScore);
 
-        //     // interests
-        //     for (let i in u1.interests) {
-        //         for (let j in u2.interests) {
-        //             if (u1.interests[i].selected && u2.interests[j].selected) {
-        //                 interestsScore++;
-        //             }
-        //             j++;
-        //         }
-        //         i++;
-        //     }
+            // interests
+            intersection = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));
+            interestsScore = intersection.length * 2;
+            console.log("interestsScore ", interestsScore);
 
-        //     // hometown
+            // hometown
+            if (u1.hometown.country === u2.hometown.country) {
+                hometownScore += 5;
+            }
+            if (u1.hometown.state && u2.hometown.state && (u1.hometown.state === u2.hometown.state)) {
+                hometownScore += 2.5;
+                if (u1.hometown.city === u2.hometown.city) {
+                    hometownScore += 2.5;
+                }
+            } else {
+                if (u1.hometown.city === u2.hometown.city) {
+                    hometownScore += 5;
+                }
+            }
+            console.log("hometownScore ", hometownScore);
 
-        //     rawScore = (0.4 * adviceScore) + (0.3 * degreeScore) + (0.1 * concentrationScore) +
-        //         (0.1 * interestsScore) + (0.1 * hometownScore);
+            rawScore = 2 * (adviceScore + degreeScore + interestsScore + hometownScore);
+            console.log("raw match score ", rawScore);
 
-        //     console.log("raw match score ", rawScore);
-        //     return rawScore; // rawScore *= 1.2;
-        // }
+            return Math.min(rawScore, 100);
+        }
     },
     props: ['setUser', 'user']
 };
