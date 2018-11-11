@@ -1,7 +1,10 @@
 <template>
 <!--Page 1-->
 <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
+    <div style="margin-bottom: 20px">
     <h1 style="margin-top:10px; margin-bottom:20px">Let's make your profile.</h1>
+    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
+    </div>
 
     <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
     <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
@@ -50,7 +53,6 @@
         </div>
     </ul>
     <!--Buttons-->
-    <v-btn :disabled="!valid">Exit</v-btn>
     <v-btn :disabled="!valid">Back</v-btn>
     <v-btn :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
@@ -60,6 +62,7 @@
     <!-- <h1 style="margin-bottom:20px">Tell us more about yourself.</h1> -->
 
     <h3>Hometown:</h3>
+    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
@@ -103,14 +106,13 @@
     </v-layout>
 
     <!--Buttons-->
-    <!--TODO: Turn into X, upper R hand corner-->
-    <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
     <v-btn :disabled="!valid">Back</v-btn>
     <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
 <!--Page 3-->
 <v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
+    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     <h1 style="margin-bottom:20px">Tell us a little about yourself.</h1>
 
     <v-flex>
@@ -118,7 +120,6 @@
     </v-flex>
 
     <!--Buttons-->
-    <v-btn class="margins-top" :disabled="!valid">Exit</v-btn>
     <v-btn :disabled="!valid">Back</v-btn>
     <v-btn :disabled="!valid" @click="registerUser()">Register</v-btn>
 </v-form>
@@ -403,9 +404,14 @@ export default {
             console.log("raw match score ", rawScore);
 
             return Math.min(rawScore, 100);
+        },
+
+        exit(){
+            console.log("here");
+            this.graphics();
         }
     },
-    props: ['setUser', 'user']
+    props: ['setUser', 'user', 'graphics']
 };
 </script>
 

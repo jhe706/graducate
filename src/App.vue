@@ -16,13 +16,13 @@
 
             <v-container>
                 <!--Idle graphics-->
-                <graphics v-if="showGraphics"></graphics>
+                <graphics v-if="showGraphicsPage()"></graphics>
                 
                 <!--Log in-->
                 <authentication v-if="showLoginPage()" :user="currentUser" :setUser="setUser" :profile="showProfilePage"></authentication>
 
                 <!--Create profile-->
-                <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser"></sign-up>
+                <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser" :graphics="toggleGraphicsPage"></sign-up>
 
                 <!--View profile-->
                 <profile v-if="showProfilePage()" :user="currentUser"></profile>
@@ -180,6 +180,13 @@ export default {
             this.signUp = false;
             this.showGraphics = false;
         },
+        toggleGraphicsPage(){
+            this.showGraphics = true;
+            this.showLogin = false;
+            this.showMatches = false;
+            this.showProfile = false;
+            this.signUp = false;
+        },
         showSignUpPage() {
             return this.signUp && !this.showProfile && !this.showMatches && !this.showLogin;
         },
@@ -191,6 +198,9 @@ export default {
         },
         showLoginPage(){
             return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;  // TODO: fix
+        },
+        showGraphicsPage(){
+            return this.showGraphics /*&& this.showLogin && !this.showMatches && !this.signUp && !this.showProfile*/;
         },
         signOut() {
             this.currentUser = null;
