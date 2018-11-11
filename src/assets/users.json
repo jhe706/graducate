@@ -8,7 +8,7 @@
 				"state": "TX",
 				"country": "USA"
 			},
-			"interests": ["Travel", "Coding", "Music"],
+			"interests": ["Travel", "Sports", "Music"],
 			"advice": ["Career", "Cool ideas"],
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Molly",
@@ -61,11 +61,22 @@
 			"firstName": "Kim",
 			"lastName": "Huynh",
 			"status": "undergrad",
-			"degree": {
-				"degree": "BA",
-				"major": "Computer Science",
-				"concentration": "Design"
-			},
+			"degrees": [
+				{
+					"id": 1,
+					"type": "BA",
+					"major": "Computer Science",
+					"previousMajor": null,
+					"concentration": "Design"
+				},
+				{
+					"id": 2,
+					"type": "BA",
+					"major": "Visual Arts",
+					"previousMajor": null,
+					"concentration": "Graphic Design"
+				}
+			],
 			"email": "kim.huynh@duke.edu",
 			"phoneNumber": "9999999999",
 			"gradYear": "2020"

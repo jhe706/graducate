@@ -1,7 +1,7 @@
 export const undergradMajors = [
-	"Asian and Middle Eastern Studies", "Biology", "Chemistry", 
-	"Computer Science", "Economics", "Entrepreneurship", "Psychology",
-	"Pre-Medicine", "Pre-Law", "Pre-Vet", "Other"
+	"Asian and Middle Eastern Studies", "Biology", "Chemistry", "Computer Science", 
+	"Economics", "Entrepreneurship", "History", "Music", "Psychology",
+	"Pre-Medicine", "Pre-Law", "Pre-Vet", "Public Policy", "Other", "Visual Arts"
 ];
 
 export const gradMajors = [
@@ -34,39 +34,58 @@ export const undergradMajors2 = {
 			"-",
 			"Chemical Engineering",
 			"Industrial Chemistry",
-			"Physical Chemistry",
 			"Petroleum Engineering",
-			"Research"
+			"Physical Chemistry"
 		]
 	},
 	"Computer Science": {
 		"concentrations": [
 			"-",
 			"Algorithms",
-			"Conceptual Computing",
 			"Design",
 			"DevOps",
 			"Hardware",
-			"UI/UX",
-			"Software"
+			"Software",
+			"UI/UX"
 		]
 	},
 	"Economics": {
 		"concentrations": [
 			"-",
 			"Global Economics",
-			"Wolf of Wall Street",
 			"Macroeconomics",
-			"Microeconomics"
+			"Microeconomics",
+			"Wolf of Wall Street"
 		]
 	},
 	"Entrepreneurship": {
 		"concentrations": [
 			"-",
 			"Global Entrepreneurship",
-			"Startups",
 			"Social Entrepreneurship",
+			"Startups",
 			"Patents and Innovation"
+		]
+	},
+	"History": {
+		"concentrations": [
+			"African History", 
+			"Antarctica!!!",
+			"Asian History",
+			"Australian History",
+			"European History",
+			"North American History",
+			"South American History",
+		]
+	},
+	"Music": {
+		"concentrations": [
+			"Orchestra",
+			"Performance",
+			"Piano",
+			"String Instruments", 
+			"Theory",
+			"Wind Instruments"
 		]
 	},
 	"Psychology": {
@@ -100,9 +119,25 @@ export const undergradMajors2 = {
 			"Doggos"
 		]
 	},
+	"Public Policy": {
+		"concentrations": [
+			"Child Policy",
+			"Education Policy",
+			"Government Policy",
+			"Private Sector Policy"
+		]
+	},
 	"Other": {
 
-	}
+	},
+	"Visual Arts": {
+		"concentrations": [
+			"Art History",
+			"Digital Art",
+			"Graphic Design",
+			"Painting"
+		]
+	} 
 };
 
 export const gradMajors2 = {

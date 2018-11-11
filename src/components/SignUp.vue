@@ -34,17 +34,18 @@
                 <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
                 <v-select :items="schools" v-model="school" label="School" class="margins"></v-select>
                 <v-select id="major-select" v-if="isUndergrad()" v-model="degree.major" :items="ugradMajors" :rules="majorRules" label="Major"></v-select>
-                <v-select id="major-select" v-if="!isUndergrad()" v-model="previousMajor" :items="ugradMajors" :rules="majorRules" label="Major during Undergrad" required></v-select>
+                <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.previousMajor" :items="ugradMajors" :rules="majorRules" label="Major during Undergrad" required></v-select>
                 <v-select id="major-select" v-if="!isUndergrad()" v-model="degree.major" :items="gradMajors" :rules="majorRules" label="Current Major/Concentration" required></v-select>
                 <v-select v-model="degree.concentration" :items="getConcentrations(degree.major)" label="Concentration" required></v-select>
                 <button
-            id="remove-btn"
-            type="button"
-            v-if="degrees.length > 1"
-            class="material-icons"
-            style="float:right"
-            @click="removeDegree(degree)"
-            >remove_circle</button>
+                    id="remove-btn"
+                    type="button"
+                    v-if="degrees.length > 1"
+                    class="material-icons"
+                    style="float:right"
+                    @click="removeDegree(degree)"
+                    >remove_circle
+                </button>
             </li>
         </div>
     </ul>
@@ -64,7 +65,6 @@
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
     <h3>Interests:</h3>
-    <!-- <v-select :items="interests" v-model="interests" label="Interests" class="margins"></v-select> -->
     <v-layout row wrap>
         <v-flex xs12 sm3 md3>
             <v-checkbox v-model="selectedInterests" :label="interests[0]" color="green lighten-1" :value="interests[0]" hide-details></v-checkbox>
@@ -85,11 +85,12 @@
     </v-layout>
 
     <h3>Advice:</h3>
-    <h4>What advice are you looking for from a grad student?</h4>
+    <h4 v-if="isUndergrad()">What are you looking for?</h4>
+    <h4 v-else>What advice can you offer?</h4>
     <v-layout row wrap>
         <v-flex xs12 sm4 md4>
             <v-checkbox v-model="selectedAdvice" :label="advice[0]" color="green lighten-1" :value="advice[0]" hide-details></v-checkbox>
-            <v-checkbox v-model="selectedAdvice" :label="advice[1]" ccolor="green lighten-1" :value="advice[1]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[1]" color="green lighten-1" :value="advice[1]" hide-details></v-checkbox>
         </v-flex>
         <v-flex xs12 sm4 md4>
             <v-checkbox v-model="selectedAdvice" :label="advice[2]" color="green lighten-1" :value="advice[2]" hide-details></v-checkbox>
@@ -192,6 +193,7 @@ export default {
             degreeTypes: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
             gradYears: ["Before 2015", 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, "Beyond 2022"],
             gradYear: "2021",
+            school: null,
             schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua", "Medical School"],
             pageNumber: 1,
             lastPage: false,
@@ -212,14 +214,13 @@ export default {
                 {
                     id: 1,
                     type: null,
-                    school: null,
                     major: null,
+                    previousMajor: null,    // applies only to grads
                     concentration: null
                 }
             ],
             uuid: "",
-            newUser: null,
-            previousMajor: null
+            newUser: null
         };
     },
     firebase: {
@@ -229,7 +230,11 @@ export default {
     },
     methods: {
         next() {
-            this.pageNumber += 1;
+            if (this.pageNumber < 3){
+                this.pageNumber += 1;
+            } else {
+                this.pageNumber = 0;
+            }
         },
 
         registerUser() {
@@ -246,16 +251,10 @@ export default {
                 status: this.status,
                 gradYear: this.gradYear,
                 degrees: this.degrees,
-                hometown: {
-                    city: this.hometown.city,
-                    state: this.hometown.state,
-                    country: this.hometown.country
-                },
+                hometown: this.hometown,
                 interests: this.selectedInterests,
                 advice: this.selectedAdvice,
                 bio: this.bio,
-                gradYear: null,
-                previousMajor: this.previousMajor
             };
 
             // equivalent to signing in automatically

@@ -1,12 +1,12 @@
 export const interests = [
 	"Art",
-	"Coding",
-	"Music",
-	"Travel",
-	"Reading",
 	"Cooking",
-	"Exercise",
-	"Other"
+	"Music",
+	"Other",
+	"Reading",
+	"Sports",
+	"Tech",
+	"Travel"
 ];
 
 export const advice = [

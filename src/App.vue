@@ -174,8 +174,7 @@ export default {
         },
         // calculate matches upon creating user profile
         calculateMatches(user) {
-            let uuid = user.uuid; // this? make sure this takes in the new user
-            // let matches = []; // matrix
+            let uuid = user.uuid;                           // this? make sure this takes in the new user
             let matchMap = new Map();
 
             let users = null;
@@ -183,80 +182,22 @@ export default {
                 users = snapshot.val();
             });
 
-            // let i = 0;
-            // console.log(users);
             let matches = [];
             for (let u in users) {
-                console.log(this.matchScore(this.currentUser, users[u]));
-                if (this.matchScore(this.currentUser, users[u]) > 65) {
-                    // matches[uuid][i] = user[u];
+                console.log("User ", users[u]);
+                let score = this.matchScore(this.currentUser, users[u]);
+                console.log("Match score: ", score);
+                if (score > 65) {
                     matches.push(users[u].uuid);
                 }
             }
             matchMap.set(this.currentUser.uuid, matches);
-
-            console.log("User's matches: ", matchMap.get(this.currentUser.uuid));
-            // return matches[uuid];
-            return matchMap.get(this.currentUser.uuid);             // return array of current user's match ids
+            let finalMatches = matchMap.get(this.currentUser.uuid);
+            console.log("User's matches: ", finalMatches);
+            return finalMatches;                                // return array of current user's match ids
         },
 
         matchScore(u1, u2) {
-            // let u1 = {
-            //     uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
-            //     firstName: "Molly",
-            //     lastName: "Chen",
-            //     email: "molly.chen@duke.edu",
-            //     phoneNumber: "8322825093",
-            //     status: "Undergraduate",
-            //     gradYear: "2019",
-            //     school: "Trinity",
-            //     degree: {
-            //         major: "Computer Science",
-            //         type: "BS",
-            //         concentration: "Software"
-            //     },
-            //     hometown: {
-            //         city: "Cary",
-            //         state: "North Carolina",
-            //         country: "United States"
-            //     },
-            //     interests: ["Art", "Coding", "Travel", "Music"],
-            //     advice: [
-            //         "Duke's major departments",
-            //         "Graduate programs or professional schools",
-            //         "Duke extracurriculars"
-            //     ],
-            //     bio: "Hi, I'm Molly!"
-            // };
-
-            // let u2 = {
-            //     uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
-            //     firstName: "Molly2",
-            //     lastName: "Chen2",
-            //     email: "molly2.chen2@duke.edu",
-            //     phoneNumber: "8322835093",
-            //     status: "Undergraduate",
-            //     gradYear: "2019",
-            //     school: "Trinity",
-            //     degree: {
-            //         major: "Psychology",
-            //         type: "BA",
-            //         concentration: "Abnormal"
-            //     },
-            //     hometown: {
-            //         city: "Cary",
-            //         state: "North Carolina",
-            //         country: "United States"
-            //     },
-            //     interests: ["Art", "Coding", "Travel", "Music"],
-            //     advice: [
-            //         "Duke's major departments",
-            //         "Graduate programs or professional schools",
-            //         "Duke extracurriculars"
-            //     ],
-            //     bio: "Hi, I'm Molly!"
-            // };
-
             let rawScore = 0;
             let adviceScore = 0;
             let degreeScore = 0;
@@ -265,58 +206,54 @@ export default {
             let hometownScore = 0;
 
             // advice
-            console.log(u1);
-            console.log(u2);
-
-            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value)); // array of advice in common
+            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));
             adviceScore = intersection.length * 6.67;
 
             // degree
             if (u1.school === u2.school) {
                 degreeScore += 5;
             }
-            // compare majors depending on status
-            // let forEach = require('lodash.foreach');
-            // forEach(undergradMajors2, function (value, key) {
-            //     if (key === major) {
-            //         c = value.concentrations;
-            //         return c;
-            //     }
-            // });
-            console.log("u1 status: ", u1.status);
-            console.log("u2 status: ", u2.status);
-            let major1 = "";
-            let major2 = "";
-            if (u1.status === "Graduate" && u2.status === "Undergraduate") {
-                major1 = u1.previousMajor;
-                major2 = u2.degrees[0].degree.major;
-            } else if (u1.status === "Undergraduate" && u2.status === "Graduate") {
-                major1 = u1.degrees[0].degree.major;
-                major2 = u2.previousMajor;
-            } else if (u1.status === "Graduate" && u2.status === "Graduate") {
-                major1 = u1.degrees[0].degree.major;
-                major2 = u2.degrees[0].degree.major;
-            } else {
-                major1 = u1.degrees[0].degree.major;
-                major2 = u2.degrees[0].degree.major;
-            }
-            console.log("major 1 ", major1);
-            console.log("major 2 ", major2);
+            let forEach = require('lodash.foreach');
+            let u1Majors = [];
+            let u2Majors = [];
+            let u1Concentrations = [];
+            let u2Concentrations = [];
+            forEach(u1.degrees, function (degree, key) {     // value, key bckwd?
+                if (u1.status === "Undergraduate") {
+                    console.log("My major: ", degree.major);
+                    u1Majors.push(degree.major);
+                } else {
+                    console.log("My prev major: ", degree.previousMajor);
+                    u1Majors.push(degree.previousMajor);
+                }
+                u1Concentrations.push(degree.concentration);
+            });
+            forEach(u2.degrees, function (degree, id) {     
+                if (u2.status === "Undergraduate") {
+                    console.log("Their major: ", degree.major);
+                    u2Majors.push(degree.major);
+                } else {
+                    console.log("Their prev major: ", degree.previousMajor);
+                    u2Majors.push(degree.previousMajor);
+                }
+                u2Concentrations.push(degree.concentration);
+            });
 
-            if (major1 === major2) { // TODO: account for pre-professional as same?
-                degreeScore += 25;
-            }
+            intersection = u1Majors.filter(value => -1 !== u2Majors.indexOf(value));
+            degreeScore += intersection.length * 20;
+            intersection = u1Concentrations.filter(value => -1 !== u2Concentrations.indexOf(value));
+            degreeScore += intersection.length * 10;
             console.log("degreeScore ", degreeScore);
 
-            // concentration                // TODO: group w/ degree?
-            if (u1.degree.concentration === u2.degree.concentration) {
-                concentrationScore += 10;
-            }
-            console.log("concentrationScore ", concentrationScore);
+            // // concentration
+            // if (u1.degree.concentration === u2.degree.concentration) {
+            //     concentrationScore += 10;
+            // }
+            // console.log("concentrationScore ", concentrationScore);
 
             // interests
-            let intersection2 = u1.interests.filter(value => -1 !== u2.interests.indexOf(value)); // array of advice in common
-            interestsScore = intersection2.length * 2;
+            intersection = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));
+            interestsScore = intersection.length * 2;
             console.log("interestsScore ", interestsScore);
 
             // hometown
@@ -335,10 +272,10 @@ export default {
             }
             console.log("hometownScore ", hometownScore);
 
-            rawScore = 2 * (adviceScore + degreeScore + concentrationScore + interestsScore + hometownScore);
+            rawScore = 5 * (adviceScore + degreeScore + interestsScore + hometownScore);
             console.log("raw match score ", rawScore);
 
-            return rawScore;
+            return Math.min(rawScore, 100);
         }
     },
     props: ['match']
