@@ -9,19 +9,17 @@
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
-                    <v-btn v-if="!currentUser" @click="signIn()">Sign In</v-btn>
+                    <v-btn v-if="!currentUser" @click="toggleLoginPage()">Sign In</v-btn>
                     <v-btn v-if="currentUser" @click="signOut()">Logout</v-btn>
-                    <!-- <authentication class="z nav navbar-nav navbar-right"
-                        :user="currentUser"
-                        >
-                    </authentication> -->
                 </ul>
             </v-toolbar>
 
-            <!--TODO: Instead of placing all possible homepage views in one container, use conditional render/routing-->
             <v-container>
+                <!--Idle graphics-->
+                <graphics></graphics>
+                
                 <!--Log in-->
-                <authentication v-if="showEmailPopup" :user="currentUser" :setUser="setUser"></authentication>
+                <authentication v-if="showLoginPage()" :user="currentUser" :setUser="setUser" :profile="showProfilePage"></authentication>
 
                 <!--Create profile-->
                 <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser"></sign-up>
@@ -79,11 +77,11 @@ import {
 import Authentication from "./components/Authentication";
 import SignUp from "./components/SignUp";
 import Header from "./components/Header";
+import Graphics from "./components/Graphics";
 import Match from "./components/Match";
 import MatchFilter from "./components/MatchFilter";
 import MatchHeader from "./components/MatchHeader";
 import Profile from "./components/Profile";
-// import VLink from "./components/VLink";
 
 export default {
     name: "App",
@@ -91,6 +89,7 @@ export default {
         Authentication,
         SignUp,
         Header,
+        Graphics,
         Match,
         MatchFilter,
         MatchHeader,
@@ -98,10 +97,14 @@ export default {
     },
     data() {
         return {
+            // show-hide
             right: null,
             signUp: false,
             showProfile: false,
             showMatches: false,
+            showLogin: false,
+
+            // user data
             currentUser: null,
             currentUser2: {                     // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
@@ -136,19 +139,14 @@ export default {
                     "Duke extracurriculars"
                 ],
                 bio: "Hi, I'm Molly!"
-            },
-            showEmailPopup: false
+            }
         };
-    },
-    computed: { // variables referenced in HTML generated using complex logic
-
     },
     firebase: { // reference passed b/w Firebase and program
         user: userRef,
         matches: matchesRef
     },
     methods: {
-        // setUser() is defined in parent, set in child component SignUp so that App can access value of user
         setUser(user) {
             console.log("YEEEE");
             this.currentUser = user;
@@ -157,39 +155,40 @@ export default {
             this.signUp = true;
             this.showProfile = false;
             this.showMatches = false;
+            this.showLogin = false;
         },
         toggleProfilePage() {
             this.showProfile = true;
             this.signUp = false;
             this.showMatches = false;
+            this.showLogin = false;
         },
         toggleMatchesPage() {
             this.showMatches = true;
             this.showProfile = false;
             this.signUp = false;
+            this.showLogin = false;
+        },
+        toggleLoginPage(){
+            this.showLogin = true;
+            this.showMatches = false;
+            this.showProfile = false;
+            this.signUp = false;
         },
         showSignUpPage() {
-            return this.signUp && !this.showProfile && !this.showMatches;
+            return this.signUp && !this.showProfile && !this.showMatches && !this.showLogin;
         },
         showProfilePage() {
-            return this.showProfile && !this.signUp && !this.showMatches;
+            return this.showProfile && !this.signUp && !this.showMatches && !this.showLogin;
         },
         showMatchesPage() {
-            return this.showMatches && !this.signUp && !this.showProfile;
+            return this.showMatches && !this.signUp && !this.showProfile && !this.showLogin;
+        },
+        showLoginPage(){
+            return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;  // TODO: fix
         },
         signOut() {
             this.currentUser = null;
-        },
-        signIn(){
-            this.showEmailPopup = true;
-            // let accounts = null;
-            // userRef.on('value', function (snapshot) {
-            //     accounts = snapshot.val();
-            // });
-            // let account = accounts["3ad93560-ad8b-483f-9f87-40246c9dac1c"];
-            // let id = this.findMatchingEmail(this.email);
-            // let account = accounts[id];
-            // this.setUser(account);
         }
     },
     props: ['match']
