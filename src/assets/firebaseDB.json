@@ -8,17 +8,24 @@
 				"state": "TX",
 				"country": "USA"
 			},
-			"interests": ["Travel", "Coding", "Music"],
+			"interests": ["Travel", "Sports", "Music"],
 			"advice": ["Career", "Cool ideas"],
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Molly",
 			"lastName": "Chen",
-			"status": "undergrad",
-			"degree": {
-				"degree": "BS",
-				"major": "Computer Science",
-				"concentration": ""
-			},
+			"status": "Undergraduate",
+			"degrees": [
+				{
+					"type": "BS",
+					"major": "Computer Science",
+					"concentration": "Software"
+				},
+				{
+					"type": "BA",
+					"major": "Psychology",
+					"concentration": "Abnormal Psychology"
+				}
+			],
 			"email": "molly.chen@duke.edu",
 			"phoneNumber": "8322825093",
 			"gradYear": "2019"
@@ -37,12 +44,14 @@
 			"bio": "I am looking to go into product design in the industry and I need some career advice.",
 			"firstName": "Carolyn",
 			"lastName": "Sun",
-			"status": "undergrad",
-			"degree": {
-				"degree": "BA",
-				"major": "Computer Science",
-				"concentration": "Design"
-			},
+			"status": "Undergraduate",
+			"degrees": [
+				{
+					"type": "BA",
+					"major": "Computer Science",
+					"concentration": "Design"
+				}
+			],
 			"email": "carolyn.sun@duke.edu",
 			"phoneNumber": "9999999999",
 			"gradYear": "2019"
@@ -51,8 +60,8 @@
 			"uuid": "accf252c-ec54-451e-853d-7007724e1fdf",
 			"school": "Trinity",
 			"hometown": {
-				"city": "Anytown",
-				"state": "PA",
+				"city": "Boston",
+				"state": "MA",
 				"country": "USA"
 			},
 			"interests": ["Art", "Travel", "Reading"],
@@ -60,15 +69,119 @@
 			"bio": "I am a senior studying Computer Science and am looking for advice on how to negotiate salary for a first-time position.",
 			"firstName": "Kim",
 			"lastName": "Huynh",
-			"status": "undergrad",
-			"degree": {
-				"degree": "BA",
-				"major": "Computer Science",
-				"concentration": "Design"
-			},
+			"status": "Undergraduate",
+			"degrees": [
+				{
+					"id": 1,
+					"type": "BA",
+					"major": "Computer Science",
+					"previousMajor": null,
+					"concentration": "Design"
+				},
+				{
+					"id": 2,
+					"type": "BA",
+					"major": "Visual Arts",
+					"previousMajor": null,
+					"concentration": "Graphic Design"
+				}
+			],
 			"email": "kim.huynh@duke.edu",
 			"phoneNumber": "9999999999",
 			"gradYear": "2020"
+		},
+		"488c4ad0-fae1-4846-9b1e-7bc03e885fb6": {
+			"uuid": "488c4ad0-fae1-4846-9b1e-7bc03e885fb6",
+			"school": "Law",
+			"hometown": {
+				"city": "Philadelphia",
+				"state": "PA",
+				"country": "USA"
+			},
+			"interests": ["Art", "Travel", "Reading"],
+			"advice": ["Cool ideas", "Life", "Career"],
+			"bio": "I am a lawyer looking for my next client!",
+			"firstName": "Annalise",
+			"lastName": "Keating",
+			"status": "Graduate",
+			"degrees": [
+				{
+					"id": 1,
+					"type": "JD",
+					"major": "Law",
+					"previousMajor": "Psychology",
+					"concentration": "Torts"
+				},
+				{
+					"id": 2,
+					"type": "BA",
+					"major": "Psychology",
+					"previousMajor": null,
+					"concentration": "Abnormal Psychology"
+				},
+				{
+					"id": 3,
+					"type": "PhD",
+					"major": "History",
+					"previousMajor": null,
+					"concentration": "Asian History"
+				}
+			],
+			"email": "htgawm@duke.edu",
+			"phoneNumber": "9999999999",
+			"gradYear": "2022"
+		},
+		"67799b00-e54f-11e8-b568-0800200c9a66": {
+			"uuid": "67799b00-e54f-11e8-b568-0800200c9a66", 
+			"major": "History",
+			"school": "Trinity",
+			"hometown": {
+				"city": "San Francisco",
+				"state": "CA",
+				"country": "USA"
+			},
+			"interests": ["Music", "Art", "Travel"],
+			"advice": ["Duke's major departments", "Graduate programs or professional schools", "Cool ideas", "Life"],
+			"bio": "Wassssuppppp who do you know here????",
+			"firstName": "Grant",
+			"lastName": "Wen",
+			"status": "Undergraduate",
+			"degrees": [
+				{
+					"type": "BA",
+					"major": "History",
+					"concentration": "Asian History"
+				}
+			],
+			"email": "grant.wen@duke.edu",
+			"phoneNumber": "9199199999",
+			"gradYear": "2019"
+		},
+		"3ad93560-ad8b-483f-9f87-40246c9dac1c": {
+			"uuid": "3ad93560-ad8b-483f-9f87-40246c9dac1c",
+			"major": "History",
+			"school": "Trinity",
+			"hometown": {
+				"city": "Algiers",
+				"state": null,
+				"country": "Algeria"
+			},
+			"interests": ["Music", "Art", "Travel"],
+			"advice": ["Duke's major departments", "Graduate programs or professional schools", "Cool ideas", "Life"],
+			"bio": "xx sweetener is out now xx",
+			"firstName": "Ariana",
+			"lastName": "Grande",
+			"status": "Undergraduate",
+			"degrees": [
+				{
+					"type": "MS",
+					"major": "History",
+					"concentration": "Antarctica!!!"
+				}
+			],
+			"email": "ari@duke.edu",
+			"phoneNumber": "9199199999",
+			"gradYear": "2016"
 		}
 	},
 	"majors": {
@@ -98,39 +211,69 @@
 					"-",
 					"Chemical Engineering",
 					"Industrial Chemistry",
-					"Physical Chemistry",
 					"Petroleum Engineering",
-					"Research"
+					"Physical Chemistry"
 				]
 			},
 			"Computer Science": {
 				"concentrations": [
 					"-",
 					"Algorithms",
-					"Conceptual Computing",
 					"Design",
 					"DevOps",
 					"Hardware",
-					"UI/UX",
-					"Software"
+					"Software",
+					"UI/UX"
 				]
 			},
 			"Economics": {
 				"concentrations": [
 					"-",
 					"Global Economics",
-					"Wolf of Wall Street",
 					"Macroeconomics",
-					"Microeconomics"
+					"Microeconomics",
+					"Wolf of Wall Street"
+				]
+			},
+			"Engineering": {
+				"concentrations": [
+					"-",
+					"Biomedical Engineering",
+					"Civil Engineering",
+					"Electrical Engineering",
+					"Environmental Engineering",
+					"Mechanical Engineering"
 				]
 			},
 			"Entrepreneurship": {
 				"concentrations": [
 					"-",
 					"Global Entrepreneurship",
-					"Startups",
 					"Social Entrepreneurship",
+					"Startups",
 					"Patents and Innovation"
+				]
+			},
+			"History": {
+				"concentrations": [
+					"-",
+					"African History", 
+					"Asian History",
+					"Australian History",
+					"European History",
+					"North American History",
+					"South American History"
+				]
+			},
+			"Music": {
+				"concentrations": [
+					"-",
+					"Orchestra",
+					"Performance",
+					"Piano",
+					"String Instruments", 
+					"Theory",
+					"Wind Instruments"
 				]
 			},
 			"Psychology": {
@@ -164,13 +307,102 @@
 					"Doggos"
 				]
 			},
+			"Public Policy": {
+				"concentrations": [
+					"-",
+					"Child Policy",
+					"Education Policy",
+					"Government Policy",
+					"Private Sector Policy"
+				]
+			},
 			"Other": {
 				"concentrations": [
-
+					"-"
+				]
+			},
+			"Visual Arts": {
+				"concentrations": [
+					"-",
+					"Art History",
+					"Digital Art",
+					"Graphic Design",
+					"Painting"
 				]
 			}
 		},
 		"gradMajors": {
+			"Business": {
+				"concentrations": [
+					"-",
+					"Global Entrepreneurship",
+					"Social Entrepreneurship",
+					"Startups",
+					"Patents and Innovation",
+					"Macroeconomics",
+					"Microeconomics"
+				]
+			},
+			"Biology": {
+				"concentrations": [
+					"-",
+					"Cell and Molecular Biology",
+					"Biochemistry",
+					"Pharmacology",
+					"Microbiology"
+				]
+			},
+			"Chemistry": {
+				"concentrations": [
+					"-",
+					"Chemical Engineering",
+					"Industrial Chemistry",
+					"Petroleum Engineering",
+					"Physical Chemistry"
+				]
+			},
+			"Computer Science": {
+				"concentrations": [
+					"-",
+					"Algorithms",
+					"Design",
+					"DevOps",
+					"Hardware",
+					"Software",
+					"UI/UX"
+				]
+			},
+			"Engineering": {
+				"concentrations": [
+					"-",
+					"Aerospace Engineering",
+					"Automobile Engineering",
+					"Biomedical Engineering",
+					"Civil Engineering",
+					"Electrical Engineering",
+					"Environmental Engineering",
+					"Industrial Engineering",
+					"Mechanical Engineering",
+					"Petroleum Engineering"
+				]
+			},
+			"History": {
+				"concentrations": [
+					"-",
+					"Central Asian Culture",
+					"East Asian Culture",
+					"Middle Eastern Culture",
+					"South Asian Culture",
+					"Southeast Asian Culture",
+					"African History", 
+					"Antarctica!!!",
+					"Asian History",
+					"Australian History",
+					"European History",
+					"North American History",
+					"South American History"
+				]
+			},
 			"Medicine": {
 				"concentrations": [
 					"-",
@@ -191,6 +423,25 @@
 					"Torts"
 				]
 			},
+			"Psychology": {
+				"concentrations": [
+					"-",
+					"Abnormal Psychology",
+					"Community Intervention Research",
+					"Consumer Psychology",
+					"Developmental Psychology",
+					"Neurobiology"
+				]
+			},
+			"Public Policy": {
+				"concentrations": [
+					"-",
+					"Child Policy",
+					"Education Policy",
+					"Government Policy",
+					"Private Sector Policy"
+				]
+			},
 			"Veterinary": {
 				"concentrations": [
 					"-",
@@ -203,22 +454,17 @@
 			},
 			"Other": {
 				"concentrations": [
-					
+					"-"
 				]
 			}
 		}
 	},
 	"matches": {
-		"c22ac451-b0f6-48a6-96ad-61d9daa99dea": [
-			"accf252c-ec54-451e-853d-7007724e1fdf"
-		],
-		"accf252c-ec54-451e-853d-7007724e1fdf": 
-		[
-			"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd",
-			"c22ac451-b0f6-48a6-96ad-61d9daa99dea"
-		],
-		"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd": [
-			"accf252c-ec54-451e-853d-7007724e1fdf"
-		]
+		"f475e0b6-ecf4-46cb-8ddc-9557fd1f68fd": [],
+		"c22ac451-b0f6-48a6-96ad-61d9daa99dea": [],
+		"accf252c-ec54-451e-853d-7007724e1fdf": [],
+		"488c4ad0-fae1-4846-9b1e-7bc03e885fb6": [],
+		"67799b00-e54f-11e8-b568-0800200c9a66": [],
+		"3ad93560-ad8b-483f-9f87-40246c9dac1c": []
 	}
 }

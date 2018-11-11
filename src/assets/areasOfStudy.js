@@ -1,11 +1,12 @@
 export const undergradMajors = [
 	"Asian and Middle Eastern Studies", "Biology", "Chemistry", "Computer Science", 
-	"Economics", "Entrepreneurship", "History", "Music", "Psychology",
+	"Economics", "Engineering", "Entrepreneurship", "History", "Music", "Psychology",
 	"Pre-Medicine", "Pre-Law", "Pre-Vet", "Public Policy", "Other", "Visual Arts"
 ];
 
 export const gradMajors = [
-	"Law", "Medicine", "Veterinary", "Research", "Other"
+	"Business", "Biology", "Chemistry", "Computer Science", "History", "Law", 
+	"Medicine", "Public Policy", "Psychology", "Research", "Other", "Veterinary"
 ];
 
 export const undergradMajors2 = {
@@ -58,6 +59,16 @@ export const undergradMajors2 = {
 			"Wolf of Wall Street"
 		]
 	},
+	"Engineering": {
+		"concentrations": [
+			"-",
+			"Biomedical Engineering",
+			"Civil Engineering",
+			"Electrical Engineering",
+			"Environmental Engineering",
+			"Mechanical Engineering"
+		]
+	},
 	"Entrepreneurship": {
 		"concentrations": [
 			"-",
@@ -69,8 +80,8 @@ export const undergradMajors2 = {
 	},
 	"History": {
 		"concentrations": [
+			"-",
 			"African History", 
-			"Antarctica!!!",
 			"Asian History",
 			"Australian History",
 			"European History",
@@ -80,6 +91,7 @@ export const undergradMajors2 = {
 	},
 	"Music": {
 		"concentrations": [
+			"-",
 			"Orchestra",
 			"Performance",
 			"Piano",
@@ -121,6 +133,7 @@ export const undergradMajors2 = {
 	},
 	"Public Policy": {
 		"concentrations": [
+			"-",
 			"Child Policy",
 			"Education Policy",
 			"Government Policy",
@@ -128,10 +141,13 @@ export const undergradMajors2 = {
 		]
 	},
 	"Other": {
-
+		"concentrations": [
+			"-"
+		]
 	},
 	"Visual Arts": {
 		"concentrations": [
+			"-",
 			"Art History",
 			"Digital Art",
 			"Graphic Design",
@@ -141,6 +157,77 @@ export const undergradMajors2 = {
 };
 
 export const gradMajors2 = {
+	"Business": {
+		"concentrations": [
+			"-",
+			"Global Entrepreneurship",
+			"Social Entrepreneurship",
+			"Startups",
+			"Patents and Innovation",
+			"Macroeconomics",
+			"Microeconomics",
+		]
+	},
+	"Biology": {
+		"concentrations": [
+			"-",
+			"Cell and Molecular Biology",
+			"Biochemistry",
+			"Pharmacology",
+			"Microbiology"
+		]
+	},
+	"Chemistry": {
+		"concentrations": [
+			"-",
+			"Chemical Engineering",
+			"Industrial Chemistry",
+			"Petroleum Engineering",
+			"Physical Chemistry"
+		]
+	},
+	"Computer Science": {
+		"concentrations": [
+			"-",
+			"Algorithms",
+			"Design",
+			"DevOps",
+			"Hardware",
+			"Software",
+			"UI/UX"
+		]
+	},
+	"Engineering": {
+		"concentrations": [
+			"-",
+			"Aerospace Engineering",
+			"Automobile Engineering",
+			"Biomedical Engineering",
+			"Civil Engineering",
+			"Electrical Engineering",
+			"Environmental Engineering",
+			"Industrial Engineering",
+			"Mechanical Engineering",
+			"Petroleum Engineering"
+		]
+	},
+	"History": {
+		"concentrations": [
+			"-",
+			"Central Asian Culture",
+			"East Asian Culture",
+			"Middle Eastern Culture",
+			"South Asian Culture",
+			"Southeast Asian Culture",
+			"African History", 
+			"Antarctica!!!",
+			"Asian History",
+			"Australian History",
+			"European History",
+			"North American History",
+			"South American History",
+		]
+	},
 	"Medicine": {
 		"concentrations": [
 			"-",
@@ -161,6 +248,25 @@ export const gradMajors2 = {
 			"Torts"
 		]
 	},
+	"Psychology": {
+		"concentrations": [
+			"-",
+			"Abnormal Psychology",
+			"Community Intervention Research",
+			"Consumer Psychology",
+			"Developmental Psychology",
+			"Neurobiology"
+		]
+	},
+	"Public Policy": {
+		"concentrations": [
+			"-",
+			"Child Policy",
+			"Education Policy",
+			"Government Policy",
+			"Private Sector Policy"
+		]
+	},
 	"Veterinary": {
 		"concentrations": [
 			"-",
@@ -172,6 +278,8 @@ export const gradMajors2 = {
 		]
 	},
 	"Other": {
-
+		"concentrations": [
+			"-"
+		]
 	}
 };

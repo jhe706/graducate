@@ -190,7 +190,7 @@ export default {
             gradMajors: gradMajors,
             status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
-            degreeTypes: ["BA", "BS", "BEng", "MD", "JD", "PhD"],
+            degreeTypes: ["BA", "BS", "BEng", "JD", "MD", "MS", "PhD"],
             gradYears: ["Before 2015", 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, "Beyond 2022"],
             gradYear: "2021",
             school: null,

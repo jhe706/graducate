@@ -174,7 +174,7 @@ export default {
         },
         // calculate matches upon creating user profile
         calculateMatches(user) {
-            let uuid = user.uuid;                           // this? make sure this takes in the new user
+            let uuid = user.uuid;                          
             let matchMap = new Map();
 
             let users = null;
@@ -185,16 +185,20 @@ export default {
             let matches = [];
             for (let u in users) {
                 console.log("User ", users[u]);
-                let score = this.matchScore(this.currentUser, users[u]);
+                let score = this.matchScore(this.currentUser, users[u]);        // obtain match score against logged in user
                 console.log("Match score: ", score);
                 if (score > 65) {
                     matches.push(users[u].uuid);
                 }
             }
+
+            // set final values in map and DB table
             matchMap.set(this.currentUser.uuid, matches);
-            let finalMatches = matchMap.get(this.currentUser.uuid);
-            console.log("User's matches: ", finalMatches);
-            return finalMatches;                                // return array of current user's match ids
+            let myMatches = matchMap.get(uuid) ? matchMap.get(uuid) : [];      // should return list of match uuids
+            db.ref("matches/" + uuid).set(myMatches);
+            console.log("User's matches: ", myMatches);
+            
+            return myMatches;                                                   // return array of current user's match ids
         },
 
         matchScore(u1, u2) {
@@ -245,12 +249,6 @@ export default {
             degreeScore += intersection.length * 10;
             console.log("degreeScore ", degreeScore);
 
-            // // concentration
-            // if (u1.degree.concentration === u2.degree.concentration) {
-            //     concentrationScore += 10;
-            // }
-            // console.log("concentrationScore ", concentrationScore);
-
             // interests
             intersection = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));
             interestsScore = intersection.length * 2;
@@ -272,7 +270,7 @@ export default {
             }
             console.log("hometownScore ", hometownScore);
 
-            rawScore = 5 * (adviceScore + degreeScore + interestsScore + hometownScore);
+            rawScore = 2 * (adviceScore + degreeScore + interestsScore + hometownScore);
             console.log("raw match score ", rawScore);
 
             return Math.min(rawScore, 100);
