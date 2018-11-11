@@ -5,19 +5,24 @@
             <!--Header-->
             <v-toolbar color="green lighten-1">
                 <h1>graducate</h1>
-                <!-- <authentication class="z nav navbar-nav navbar-right"></authentication> -->
                 <ul>
-                    <!-- :disabled="!currentUser"-->
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
                     <v-btn v-if="!currentUser" @click="signIn()">Sign In</v-btn>
                     <v-btn v-if="currentUser" @click="signOut()">Logout</v-btn>
+                    <!-- <authentication class="z nav navbar-nav navbar-right"
+                        :user="currentUser"
+                        >
+                    </authentication> -->
                 </ul>
             </v-toolbar>
 
             <!--TODO: Instead of placing all possible homepage views in one container, use conditional render/routing-->
             <v-container>
+                <!--Log in-->
+                <authentication v-if="showEmailPopup" :user="currentUser" :setUser="setUser"></authentication>
+
                 <!--Create profile-->
                 <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser"></sign-up>
 
@@ -78,7 +83,7 @@ import Match from "./components/Match";
 import MatchFilter from "./components/MatchFilter";
 import MatchHeader from "./components/MatchHeader";
 import Profile from "./components/Profile";
-import VLink from "./components/VLink";
+// import VLink from "./components/VLink";
 
 export default {
     name: "App",
@@ -89,8 +94,7 @@ export default {
         Match,
         MatchFilter,
         MatchHeader,
-        Profile,
-        VLink
+        Profile
     },
     data() {
         return {
@@ -99,7 +103,7 @@ export default {
             showProfile: false,
             showMatches: false,
             currentUser: null,
-            currentUser2: { // temporary for testing
+            currentUser2: {                     // temporary for testing
                 uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
                 firstName: "Molly",
                 lastName: "Chen",
@@ -132,7 +136,8 @@ export default {
                     "Duke extracurriculars"
                 ],
                 bio: "Hi, I'm Molly!"
-            }
+            },
+            showEmailPopup: false
         };
     },
     computed: { // variables referenced in HTML generated using complex logic
@@ -145,6 +150,7 @@ export default {
     methods: {
         // setUser() is defined in parent, set in child component SignUp so that App can access value of user
         setUser(user) {
+            console.log("YEEEE");
             this.currentUser = user;
         },
         toggleSignUpPage() {
@@ -175,13 +181,15 @@ export default {
             this.currentUser = null;
         },
         signIn(){
-            let retrievedAccount = null;
-            userRef.on('value', function (snapshot) {
-                retrievedAccount = snapshot.val();
-            });
-            // TODO: need to enter uuid or something to log in
-            let account = retrievedAccount["3ad93560-ad8b-483f-9f87-40246c9dac1c"];
-            this.setUser(account);
+            this.showEmailPopup = true;
+            // let accounts = null;
+            // userRef.on('value', function (snapshot) {
+            //     accounts = snapshot.val();
+            // });
+            // let account = accounts["3ad93560-ad8b-483f-9f87-40246c9dac1c"];
+            // let id = this.findMatchingEmail(this.email);
+            // let account = accounts[id];
+            // this.setUser(account);
         }
     },
     props: ['match']

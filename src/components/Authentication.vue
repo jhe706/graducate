@@ -1,56 +1,42 @@
 <template>
-<div>
-    <ul>
-        <!-- <li v-if="isSignedIn" style="color: white; font-size: 18px; font-weight: bold;">Hi, {{user.name}}!</li> -->
-        <v-btn><a><span class="glyphicon glyphicon-log-out"></span>Get User Details</a></v-btn>
-        <v-btn @click="showProfile"><a><span class="glyphicon glyphicon-log-out"></span>Create Profile</a></v-btn>
-        <v-btn @click="signOut"><a><span class="glyphicon glyphicon-log-out"></span>Logout</a></v-btn>
-        <v-btn @click="signIn"><a><span class="glyphicon glyphicon-user right-justify"></span>Sign In</a></v-btn>
-        <!-- sign in "popup" container does not popup for email authentication, so provide some styling help -->
-        <div id="firebaseui-auth-container" :class="{ popup: isShown }"></div>
-    </ul>
-</div>
+	<v-form>
+    <!-- <v-form> -->
+		<h1 style="margin-top:10px; margin-bottom:20px">Sign in to your account.</h1>
+		<v-text-field v-model="email" label="Email" required class="margins" style="float:left"></v-text-field>
+		<v-btn @click="hideLogin === true">Exit</v-btn>
+		<v-btn @click="submit()">Submit</v-btn>
+	</v-form>
 </template>
 
 <script>
-import Firebase from 'firebase';
-import FirebaseUI from 'firebaseui';
-var authUI = new FirebaseUI.auth.AuthUI(Firebase.auth()); // single instance of popup credentials UI
-import {
-    userRef
-} from '../database';
-
-
+/* eslint-disable */ 
+import { userRef } from "../database";
 export default {
-    name: 'Authentication',
-    data() {
-        return {
-            // user: userRef
+	name: "Authentication",
+	data: {
+        email: null,
+        hideLogin: false
+	},
+	props: ['user', 'setUser'],
+	methods: {
+		submit(){
+            let myAccount = null;
+            let users = null;
+
+            userRef.on('value', function (snapshot) {
+                users = snapshot.val();
+            });
+           
+            for (let user in users){
+                if (users[user].email === this.email){
+                    myAccount = users[String(user)];
+                    console.log(myAccount);
+                }
+            }
+
+            this.hideLogin = true;
+            myAccount ? this.setUser(myAccount) : this.setUser(null);
         }
-    },
-    computed: {
-
-    },
-    methods: {
-        showProfile() {
-
-        },
-        signIn() {
-            this.setUser(user);     // TODO: define user as populated JSON obj
-        },
-        signOut() {
-            
-		}
-    },
-    firebase: {
-        // user: userRef
-    },
-    props: ["user", "setUser"]
+	}
 }
 </script>
-
-<style>
-.right-justify {
-    float: right;
-}
-</style>
