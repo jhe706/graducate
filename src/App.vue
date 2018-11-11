@@ -16,7 +16,7 @@
 
             <v-container>
                 <!--Idle graphics-->
-                <graphics></graphics>
+                <graphics v-if="showGraphics"></graphics>
                 
                 <!--Log in-->
                 <authentication v-if="showLoginPage()" :user="currentUser" :setUser="setUser" :profile="showProfilePage"></authentication>
@@ -103,6 +103,7 @@ export default {
             showProfile: false,
             showMatches: false,
             showLogin: false,
+            showGraphics: true,
 
             // user data
             currentUser: null,
@@ -156,24 +157,28 @@ export default {
             this.showProfile = false;
             this.showMatches = false;
             this.showLogin = false;
+            this.showGraphics = false;
         },
         toggleProfilePage() {
             this.showProfile = true;
             this.signUp = false;
             this.showMatches = false;
             this.showLogin = false;
+            this.showGraphics = false;
         },
         toggleMatchesPage() {
             this.showMatches = true;
             this.showProfile = false;
             this.signUp = false;
             this.showLogin = false;
+            this.showGraphics = false;
         },
         toggleLoginPage(){
             this.showLogin = true;
             this.showMatches = false;
             this.showProfile = false;
             this.signUp = false;
+            this.showGraphics = false;
         },
         showSignUpPage() {
             return this.signUp && !this.showProfile && !this.showMatches && !this.showLogin;
