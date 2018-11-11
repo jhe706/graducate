@@ -166,7 +166,7 @@ export default {
                 v => (v && v.length <= 15) || "Name must be less than 15 characters"
             ],
             email: "",
-            emailRules: [
+            emailRules: [                               // TODO: no repeated emails (used for sign in)
                 v => !!v || "E-mail is required",
                 v => /.+@.+/.test(v) || "E-mail must be valid"
             ],
@@ -261,7 +261,7 @@ export default {
             this.setUser(newUser);
 
             if (this.$refs.form.validate()) {
-                db.ref('users/' + myUuid).set(newUser)
+                userRef.child(myUuid).set(newUser);
             }
 
             console.log("calculating matches...");
@@ -324,7 +324,7 @@ export default {
             // set final values in map and DB table
             matchMap.set(this.currentUser.uuid, matches);
             let myMatches = matchMap.get(uuid) ? matchMap.get(uuid) : [];      // should return list of match uuids
-            db.ref("matches/" + uuid).set(myMatches);
+            matchesRef(uuid).set(myMatches);
             console.log("User's matches: ", myMatches);
             
             return myMatches;                                                   // return array of current user's match ids
@@ -361,7 +361,7 @@ export default {
                 }
                 u1Concentrations.push(degree.concentration);
             });
-            forEach(u2.degrees, function (degree, id) {     
+            forEach(u2.degrees, function (degree, id) {         // TODO: change from id to key    
                 if (u2.status === "Undergraduate") {
                     console.log("Their major: ", degree.major);
                     u2Majors.push(degree.major);
