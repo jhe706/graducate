@@ -195,7 +195,7 @@ export default {
             status: "Undergraduate",
             statuses: ["Undergraduate", "Graduate"],
             degreeTypes: ["BA", "BS", "BEng", "JD", "MD", "MS", "PhD"],
-            gradYears: ["Before 2015", 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, "Beyond 2022"],
+            gradYears: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
             gradYear: "2021",
             school: null,
             schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua", "Medical School"],
@@ -226,7 +226,7 @@ export default {
     },
     firebase: {
         users: userRef,
-        matches: matchesRef,
+        matches2: matchesRef,
         majors: majorsRef
     },
     methods: {

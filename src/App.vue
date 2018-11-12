@@ -8,6 +8,7 @@
                 <ul>
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
+                    <v-btn v-if="currentUser">Discover</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleLoginPage()">Sign In</v-btn>
                     <v-btn v-if="currentUser" @click="toggleGraphicsPage()">Logout</v-btn>
@@ -31,8 +32,12 @@
                 <profile v-if="showProfilePage()" :user="currentUser"></profile>
 
                 <!--Scroll through potential profiles on homepage-->
-                <v-card v-if="showHomePage()"> <!--TODO: add profile carousel component-->
-                    <!-- <profile-carousel></profile-carousel> -->
+                <v-card v-if="showHomePage()"> <!--TODO: add discover carousel component-->
+                    <!-- <discover></discover> -->
+                
+                    <!-- <v-carousel v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
+                        <match :user="currentUser"></match>
+                    </v-carousel> -->
                 </v-card>
 
                 <!--View existing matches-->
@@ -43,15 +48,17 @@
                     <div id="flex-display right">
                         <match-header :user="currentUser"></match-header>
 
-                        <v-carousel v-for="match in matches" :key="match">
-                            <match :user="currentUser"></match>
+                        <!-- <v-btn @click="getMatches(currentUser)">Matches</v-btn> -->
+
+                        <v-carousel v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
+                            <match :user="getUserObj(match)"></match>
                         </v-carousel>
 
                         <match :user="currentUser"></match>
+                        <!-- <match :user="currentUser"></match>
                         <match :user="currentUser"></match>
                         <match :user="currentUser"></match>
-                        <match :user="currentUser"></match>
-                        <match :user="currentUser"></match>
+                        <match :user="currentUser"></match> -->
                     </div>
                 </div>
             </v-container>
@@ -74,27 +81,29 @@ import {
     userRef,
     matchesRef
 } from "./database";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import Discover from "./components/Discover";
 import Header from "./components/Header";
 import Graphics from "./components/Graphics";
 import Match from "./components/Match";
 import MatchFilter from "./components/MatchFilter";
 import MatchHeader from "./components/MatchHeader";
 import Profile from "./components/Profile";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
 let forEach = require('lodash.foreach');
 
 export default {
     name: "App",
     components: { // other components that this component needs to render
-        SignIn,
-        SignUp,
+        Discover,
         Header,
         Graphics,
         Match,
         MatchFilter,
         MatchHeader,
-        Profile
+        Profile,
+        SignIn,
+        SignUp
     },
     data() {
         return {
@@ -145,7 +154,8 @@ export default {
             },
 
             // matches data
-            matches: this.getMatches()
+            matches: []
+            // matches: this.getMatches(this.currentUser)
         };
     },
     firebase: { // reference passed b/w Firebase and program
@@ -227,23 +237,39 @@ export default {
         signOut() {
             this.currentUser = null;
         },
-        getMatches(){
-            // TODO: fix
-            console.log("Getting matches");
+        getMatches(user){
             let matches = null;
             let myMatches = [];
             matchesRef.on('value', function (snapshot) {
                 matches = snapshot.val();
             });
+
             console.log("all matches ", matches);
             forEach(matches, function(match, key){
-                if (key === this.currentUser.uuid){
+                if (key === user.uuid){
                     myMatches = matches[key];
                     console.log("myMatches ", myMatches);
                 }
             });
+            this.matches = myMatches;
 
             return myMatches;
+        },
+        getUsers() {
+            let users = null;
+            userRef.on('value', function (snapshot) {
+                users = snapshot.val();
+            });
+            return users;
+        },
+        getUserObj(uuid){
+            let users = this.getUsers();
+            for (let user in users){
+                if (users[user] === uuid){
+                    return users[user];         // return user object to render match card
+                }
+            }
+            return null;
         }
     },
     props: ['match']

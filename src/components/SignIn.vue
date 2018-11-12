@@ -28,11 +28,9 @@ export default {
     methods: {
         getUsers() {
             let users = null;
-
             userRef.on('value', function (snapshot) {
                 users = snapshot.val();
             });
-
             return users;
         },
 
