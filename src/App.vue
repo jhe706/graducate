@@ -160,7 +160,15 @@ export default {
     },
     firebase: { // reference passed b/w Firebase and program
         user: userRef,
-        matches: matchesRef
+        userObj: {
+            source: userRef,
+            asObject: true
+        },
+        matches: matchesRef,
+        matchesObj: {
+            source: matchesRef,
+            asObject: true
+        }
     },
     methods: {
         setUser(user) {
@@ -238,38 +246,10 @@ export default {
             this.currentUser = null;
         },
         getMatches(user){
-            let matches = null;
-            let myMatches = [];
-            matchesRef.on('value', function (snapshot) {
-                matches = snapshot.val();
-            });
-
-            console.log("all matches ", matches);
-            forEach(matches, function(match, key){
-                if (key === user.uuid){
-                    myMatches = matches[key];
-                    console.log("myMatches ", myMatches);
-                }
-            });
-            this.matches = myMatches;
-
-            return myMatches;
-        },
-        getUsers() {
-            let users = null;
-            userRef.on('value', function (snapshot) {
-                users = snapshot.val();
-            });
-            return users;
+          return this.matchesObj[user.uuid]
         },
         getUserObj(uuid){
-            let users = this.getUsers();
-            for (let user in users){
-                if (users[user] === uuid){
-                    return users[user];         // return user object to render match card
-                }
-            }
-            return null;
+            return this.userObj[uuid]
         }
     },
     props: ['match']

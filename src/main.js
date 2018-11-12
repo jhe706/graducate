@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Vuetify from 'vuetify'
+import VueFire from 'vuefire'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'firebaseui/dist/firebaseui.css'
@@ -10,7 +11,9 @@ import SignUp from './components/SignUp.vue';
 import Match from './components/Match.vue';
 
 Vue.config.productionTip = false
-Vue.use(Vuetify);
+Vue
+  .use(Vuetify)
+  .use(VueFire);
 
 // simple routing from scratch
 const NotFound = {
