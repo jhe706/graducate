@@ -1,6 +1,6 @@
 <template>
 <v-content>
-    <h1>My Profile</h1>
+    <h1>{{user.firstName}}'s Profile</h1>
     <v-card>
         <v-container grid-list-md text-xs-center style="padding: 20px">
             <v-layout row wrap>
@@ -95,7 +95,6 @@ export default {
     },
     data() {
         return {
-
         };
     },
     computed: {

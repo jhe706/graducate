@@ -35,9 +35,9 @@
                 <v-card v-if="showHomePage()"> <!--TODO: add discover carousel component-->
                     <!-- <discover></discover> -->
                 
-                    <!-- <v-carousel v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
-                        <match :user="currentUser"></match>
-                    </v-carousel> -->
+                    <v-carousel v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
+                        <match :user="currentUser" :toggleProfile="toggleProfilePage"></match>
+                    </v-carousel>
                 </v-card>
 
                 <!--View existing matches-->
@@ -48,17 +48,9 @@
                     <div id="flex-display right">
                         <match-header :user="currentUser"></match-header>
 
-                        <!-- <v-btn @click="getMatches(currentUser)">Matches</v-btn> -->
-
-                        <v-carousel v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
+                        <v-container v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
                             <match :user="getUserObj(match)"></match>
-                        </v-carousel>
-
-                        <match :user="currentUser"></match>
-                        <!-- <match :user="currentUser"></match>
-                        <match :user="currentUser"></match>
-                        <match :user="currentUser"></match>
-                        <match :user="currentUser"></match> -->
+                        </v-container>
                     </div>
                 </div>
             </v-container>

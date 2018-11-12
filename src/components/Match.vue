@@ -3,7 +3,7 @@
     <v-container grid-list-md text-xs-center id="matches">
         <v-layout row wrap>
             <!--Profile picture-->
-            <v-flex xs4>
+            <v-flex xs4 v-if="!view">
                 <v-avatar style="margin-left:50px">
                     <img
                         src="https://cdn.vuetifyjs.com/images/john.jpg"
@@ -13,7 +13,7 @@
             </v-flex>
 
             <!--Information-->
-            <v-flex xs4>
+            <v-flex xs4 v-if="!view">
                 <ul style="float:left; text-align:left">
                     <li>
                         <h2>{{user.firstName}} {{user.lastName}}</h2>
@@ -23,28 +23,52 @@
                 </ul>
             </v-flex>
 
-            <v-flex xs4>
+            <v-flex xs4 v-if="!view">
                 <v-tooltip bottom>
                     <span slot="activator">90% MATCH</span>
+                    <!--TODO: insert match score-->
                     <span>Match score is generated based on your profile.</span>
                 </v-tooltip>
+                <v-btn @click="viewProfile()">View Profile</v-btn>
             </v-flex>
-
         </v-layout>
+    </v-container>
+
+    <v-container v-if="view">
+        <v-icon class="material-icons" style="margin-left:98%" @click="exit()">clear</v-icon>
+        <profile :user="user"></profile>
     </v-container>
 </v-card>
 </template>
 
 <script>
-import { userRef } from "../database.js";
+import {
+    userRef
+} from "../database.js";
+import Profile from "./Profile";
 
 export default {
+    data() {
+        return {
+            view: false
+        }
+    },
+    components: {
+        Profile
+    },
     firebase: {
         userRef
     },
-    props: ['match', 'user'],
+    props: ['match', 'user', 'toggleProfile'],
     methods: {
-        
+        viewProfile() {
+            this.view = true;
+            this.toggleProfile();
+        },
+
+        exit() {
+            this.view = false;
+        }
     }
 }
 </script>
