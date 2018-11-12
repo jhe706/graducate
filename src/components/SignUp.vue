@@ -2,8 +2,8 @@
 <!--Page 1-->
 <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
     <div style="margin-bottom: 20px">
-    <h1 style="margin-top:10px; margin-bottom:20px">Let's make your profile.</h1>
-    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
+        <h1 style="margin-top:10px; margin-bottom:20px">Let's make your profile.</h1>
+        <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     </div>
 
     <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
@@ -129,6 +129,7 @@
 /* eslint-disable */
 import Vue from "vue";
 import Firebase from "firebase";
+
 import {
     db,
     userRef,
@@ -150,6 +151,7 @@ import {
     interests,
     advice
 } from "../assets/interests.js";
+let forEach = require('lodash.foreach');
 
 export default {
     name: "SignUp",
@@ -167,9 +169,10 @@ export default {
                 v => (v && v.length <= 15) || "Name must be less than 15 characters"
             ],
             email: "",
-            emailRules: [                               // TODO: no repeated emails (used for sign in)
-                v => !!v || "E-mail is required",
-                v => /.+@.+/.test(v) || "E-mail must be valid"
+            emailRules: [
+                v => !!v || "Email is required",
+                v => /.+@.+/.test(v) || "E-mail must be valid",
+                v => this.newEmail(v) || "Email is already in use"
             ],
             degree: {
                 degree: "",
@@ -210,16 +213,13 @@ export default {
             advice: advice,
             selectedAdvice: [],
             bio: null,
-            degrees: 
-            [
-                {
-                    id: 1,
-                    type: null,
-                    major: null,
-                    previousMajor: null,    // applies only to grads
-                    concentration: null
-                }
-            ],
+            degrees: [{
+                id: 1,
+                type: null,
+                major: null,
+                previousMajor: null, // applies only to grads
+                concentration: null
+            }],
             uuid: "",
             newUser: null
         };
@@ -231,25 +231,22 @@ export default {
     },
     methods: {
         next() {
-            if (this.pageNumber < 3){
+            if (this.pageNumber < 3) {
                 this.pageNumber += 1;
             } else {
                 this.pageNumber = 1;
             }
         },
 
-        exit(){
-            console.log("here");
+        exit() {
             this.graphics();
         },
 
-        back(){
-            console.log(this.pageNumber);
-            if (this.pageNumber > 1){
+        back() {
+            if (this.pageNumber > 1) {
                 this.pageNumber--;
-            }
-            else {
-                this.graphics();        // go back to home screen
+            } else {
+                this.graphics(); // go back to home screen
             }
         },
 
@@ -308,7 +305,6 @@ export default {
 
         getConcentrations(major) {
             let c = "N/A";
-            let forEach = require('lodash.foreach');
             forEach(undergradMajors2, function (value, key) {
                 if (key === major) {
                     c = value.concentrations;
@@ -318,8 +314,26 @@ export default {
             return c;
         },
 
+        newEmail(v) {
+            let users = null;
+            userRef.on('value', function (snapshot) {
+                users = snapshot.val();
+            });
+
+            console.log("My email: ", v);
+
+            for (let user in users) {
+                console.log("Their email: ", users[user].email);
+                if (users[user].email === v) {
+                    return false;
+                }
+            };
+
+            return true;
+        },
+
         calculateMatches(user) {
-            let uuid = user.uuid;                          
+            let uuid = user.uuid;
             let matchMap = new Map();
 
             let users = null;
@@ -330,7 +344,7 @@ export default {
             let matches = [];
             for (let u in users) {
                 console.log("User ", users[u]);
-                let score = this.matchScore(this.currentUser, users[u]);        // obtain match score against logged in user
+                let score = this.matchScore(user, users[u]); // obtain match score against logged in user
                 console.log("Match score: ", score);
                 if (score > 65) {
                     matches.push(users[u].uuid);
@@ -338,12 +352,13 @@ export default {
             }
 
             // set final values in map and DB table
-            matchMap.set(this.currentUser.uuid, matches);
-            let myMatches = matchMap.get(uuid) ? matchMap.get(uuid) : [];      // should return list of match uuids
-            matchesRef(uuid).set(myMatches);
-            console.log("User's matches: ", myMatches);
-            
-            return myMatches;                                                   // return array of current user's match ids
+            matchMap.set(uuid, matches);
+
+            // let myMatches = matchMap.get(uuid) ? matchMap.get(uuid) : []; // should return list of match uuids
+            matchesRef.child(uuid).set(matches);
+            console.log("User's matches: ", matches);
+
+            return matches;
         },
 
         matchScore(u1, u2) {
@@ -355,6 +370,8 @@ export default {
             let hometownScore = 0;
 
             // advice
+            console.log(u1.advice);
+            console.log(u2.advice);
             let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));
             adviceScore = intersection.length * 6.67;
 
@@ -362,7 +379,7 @@ export default {
             if (u1.school === u2.school) {
                 degreeScore += 5;
             }
-            let forEach = require('lodash.foreach');
+
             let u1Majors = [];
             let u2Majors = [];
             let u1Concentrations = [];
@@ -377,7 +394,7 @@ export default {
                 }
                 u1Concentrations.push(degree.concentration);
             });
-            forEach(u2.degrees, function (degree, id) {         // TODO: change from id to key    
+            forEach(u2.degrees, function (degree, key) { // TODO: change from id to key    
                 if (u2.status === "Undergraduate") {
                     console.log("Their major: ", degree.major);
                     u2Majors.push(degree.major);
@@ -463,5 +480,9 @@ ul {
     display: flex;
     width: 100%;
     margin-right: 20px;
+}
+
+#warning {
+    color: red;
 }
 </style>

@@ -4,6 +4,7 @@
 		<v-text-field v-model="email" label="Email" required class="margins" style="float:left"></v-text-field>
 		<v-btn @click="exit()">Exit</v-btn>
 		<v-btn @click="submit()">Submit</v-btn>
+        <h3 v-if="!displayWarning">We could not find an account with this email.</h3>
 	</v-form>
 </template>
 
@@ -11,17 +12,14 @@
 /* eslint-disable */ 
 import { userRef } from "../database";
 export default {
-	name: "Authentication",
+	name: "SignIn",
 	data: {
-        email: null
+        email: "",
+        displayWarning: false
     },
     computed: {
-        //  exit(){
-        //     this.showLogin = false;
-        //     this.profile();
-        // }
     },
-    props: ['user', 'setUser', 'showLogin', 'profile'],
+    props: ['user', 'setUser', 'showLogin', 'profile', 'graphics', 'home'],
 	methods: {
 		submit(){
             let myAccount = null;
@@ -36,10 +34,18 @@ export default {
                     myAccount = users[String(user)];
                 }
             }
-            myAccount ? this.setUser(myAccount) : this.setUser(null);
+
+            if (myAccount === null || !myAccount){
+                this.displayWarning = true;
+            } else {
+                this.home();        // go back to matches carousel
+                this.setUser(myAccount);
+                // myAccount ? this.setUser(myAccount) : this.setUser(null);
+            }
         },
-       exit (){
-           this.profile();
+
+       exit(){
+           this.graphics();
        }
 	}
 }
