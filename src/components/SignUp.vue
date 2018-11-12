@@ -7,21 +7,45 @@
         <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     </div>
 
-    <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
-    <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
+    <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" id="float"></v-text-field>
+    <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" id="float"></v-text-field>
     <v-text-field v-model="email" :rules="emailRules" label="Email" required class="margins"></v-text-field>
     <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
 
-    <!--Select under/grad status first-->
+    <!-- <h3>Hometown:</h3> -->
+    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
+    <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
+    <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
+    <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
+
+    <!--Buttons-->
+    <v-btn :disabled="!valid" @click="back()">Back</v-btn>
+    <v-btn :disabled="!valid" @click="next()">Next</v-btn>
+</v-form>
+
+<!--Page 2-->
+<v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
+    <h1>Are you an undergraduate or graduate student?</h1>
+
+    <!--TODO: change from radio buttons to larger selection buttons-->
     <v-radio-group v-model="status" class="margins">
         <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
     </v-radio-group>
+
+    <!--Buttons-->
+    <v-btn :disabled="!valid" @click="back()">Back</v-btn>
+    <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
+</v-form>
+
+<!--Page 3-->
+<v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
+    <!--Grad Year-->
     <div id="graduation-header">
         <h3 style="float:right">Graduation Year:</h3>
         <v-select v-model="gradYear" :items="gradYears" label="Graduation year" class="margins"></v-select>
     </div>
 
-    <!--Majors drop-down list changes based on under/grad status-->
+    <!--Degrees-->
     <div id="degree-header">
         <h3>Degree:</h3>
         <button
@@ -53,22 +77,27 @@
             </li>
         </div>
     </ul>
-    <!--Buttons-->
-    <v-btn :disabled="!valid" @click="back()">Back</v-btn>
-    <v-btn :disabled="!valid" @click="next()">Next</v-btn>
-</v-form>
 
-<!--Page 2-->
-<v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
-    <!-- <h1 style="margin-bottom:20px">Tell us more about yourself.</h1> -->
+    <!--Advice-->
+    <h4 v-if="isUndergrad()">What are you looking for?</h4>
+    <h4 v-else>What advice can you offer?</h4>
+    <v-layout row wrap>
+        <v-flex xs12 sm4 md4>
+            <v-checkbox v-model="selectedAdvice" :label="advice[0]" color="green lighten-1" :value="advice[0]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[1]" color="green lighten-1" :value="advice[1]" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm4 md4>
+            <v-checkbox v-model="selectedAdvice" :label="advice[2]" color="green lighten-1" :value="advice[2]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[3]" color="green lighten-1" :value="advice[3]" hide-details></v-checkbox>
+        </v-flex>
+        <v-flex xs12 sm4 md4>
+            <v-checkbox v-model="selectedAdvice" :label="advice[4]" color="green lighten-1" :value="advice[4]" hide-details></v-checkbox>
+            <v-checkbox v-model="selectedAdvice" :label="advice[5]" color="green lighten-1" :value="advice[5]" hide-details></v-checkbox>
+        </v-flex>
+    </v-layout>
 
-    <h3>Hometown:</h3>
-    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
-    <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
-    <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
-    <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
-
-    <h3>Interests:</h3>
+    <!--Interests-->
+    <h4>What are you interested in?</h4>
     <v-layout row wrap>
         <v-flex xs12 sm3 md3>
             <v-checkbox v-model="selectedInterests" :label="interests[0]" color="green lighten-1" :value="interests[0]" hide-details></v-checkbox>
@@ -88,31 +117,13 @@
         </v-flex>
     </v-layout>
 
-    <h3>Advice:</h3>
-    <h4 v-if="isUndergrad()">What are you looking for?</h4>
-    <h4 v-else>What advice can you offer?</h4>
-    <v-layout row wrap>
-        <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="selectedAdvice" :label="advice[0]" color="green lighten-1" :value="advice[0]" hide-details></v-checkbox>
-            <v-checkbox v-model="selectedAdvice" :label="advice[1]" color="green lighten-1" :value="advice[1]" hide-details></v-checkbox>
-        </v-flex>
-        <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="selectedAdvice" :label="advice[2]" color="green lighten-1" :value="advice[2]" hide-details></v-checkbox>
-            <v-checkbox v-model="selectedAdvice" :label="advice[3]" color="green lighten-1" :value="advice[3]" hide-details></v-checkbox>
-        </v-flex>
-        <v-flex xs12 sm4 md4>
-            <v-checkbox v-model="selectedAdvice" :label="advice[4]" color="green lighten-1" :value="advice[4]" hide-details></v-checkbox>
-            <v-checkbox v-model="selectedAdvice" :label="advice[5]" color="green lighten-1" :value="advice[5]" hide-details></v-checkbox>
-        </v-flex>
-    </v-layout>
-
     <!--Buttons-->
     <v-btn :disabled="!valid" @click="back()">Back</v-btn>
     <v-btn class="margins.top" :disabled="!valid" @click="next()">Next</v-btn>
 </v-form>
 
-<!--Page 3-->
-<v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
+<!--Page 4-->
+<v-form v-else-if="pageNumber === 4" ref="form" v-model="valid" lazy-validation>
     <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     <h1 style="margin-bottom:20px">Tell us a little about yourself.</h1>
 
@@ -233,7 +244,7 @@ export default {
     },
     methods: {
         next() {
-            if (this.pageNumber < 3) {
+            if (this.pageNumber < 4) {
                 this.pageNumber += 1;
             } else {
                 this.pageNumber = 1;
@@ -484,8 +495,8 @@ ul {
     margin-right: 20px;
 }
 
-#warning {
-    color: red;
+#float {
+    float: left;
 }
 
     .signup{
