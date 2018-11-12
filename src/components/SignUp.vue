@@ -1,4 +1,5 @@
 <template>
+<v-card class="signup">
 <!--Page 1-->
 <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
     <div style="margin-bottom: 20px">
@@ -123,6 +124,7 @@
     <v-btn :disabled="!valid" @click="back()">Back</v-btn>
     <v-btn :disabled="!valid" @click="registerUser()">Register</v-btn>
 </v-form>
+    </v-card>
 </template>
 
 <script>
@@ -485,4 +487,8 @@ ul {
 #warning {
     color: red;
 }
+
+    .signup{
+        padding: 30px;
+    }
 </style>
