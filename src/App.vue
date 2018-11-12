@@ -15,7 +15,6 @@
                 </ul>
             </v-toolbar>
 
-            <!--TODO: split into different containers?-->
             <v-container>
                 <!--Idle graphics-->
                 <graphics v-if="showGraphicsPage()"></graphics>
