@@ -8,7 +8,7 @@
 
     <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" style="float:left"></v-text-field>
     <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" style="float:left"></v-text-field>
-    <v-text-field v-model="email" :rules="emailRules" label="E-mail" required class="margins"></v-text-field>
+    <v-text-field v-model="email" :rules="emailRules" label="Email" required class="margins"></v-text-field>
     <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
 
     <!--Select under/grad status first-->
