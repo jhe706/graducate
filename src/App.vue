@@ -40,16 +40,20 @@
 
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
-                    <div id="flex-display left">
-                        <match-filter></match-filter>
-                    </div>
-                    <div id="flex-display right">
+                    <v-flex xs3>
+<!--                        <div id="flex-display left">-->
+                            <match-filter></match-filter>
+<!--                        </div>-->
+                    </v-flex>
+                    <v-flex xs9 style="margin-left: 50px">
+<!--                    <div id="flex-display right">-->
                         <match-header :user="currentUser"></match-header>
 
-                        <v-container v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
+                        <div v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
                             <match :user="getUserObj(match)"></match>
-                        </v-container>
-                    </div>
+                        </div>
+<!--                    </div>-->
+                    </v-flex>
                 </div>
             </v-container>
 
