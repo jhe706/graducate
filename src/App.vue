@@ -8,7 +8,6 @@
                 <ul>
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
-                    <v-btn v-if="currentUser">Discover</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleLoginPage()">Sign In</v-btn>
                     <v-btn v-if="currentUser" @click="toggleGraphicsPage()">Logout</v-btn>
