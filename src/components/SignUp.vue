@@ -3,8 +3,8 @@
 <!--Page 1-->
 <v-form v-if="pageNumber === 1" ref="form" v-model="valid" lazy-validation>
     <div style="margin-bottom: 20px">
-        <h1 style="margin-top:10px; margin-bottom:20px">Let's make your profile.</h1>
         <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
+        <h1 style="margin-top:10px; margin-bottom:20px">Let's make your profile.</h1>
     </div>
 
     <v-text-field v-model="firstName" :rules="nameRules" :counter="30" label="First name" required class="margins" id="float"></v-text-field>
@@ -23,8 +23,9 @@
 
 <!--Page 2-->
 <v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
-    <h1>Are you an undergraduate or graduate student?</h1>
     <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
+    <h1>Are you an undergraduate or graduate student?</h1>
+    
 
     <!--TODO: change from radio buttons to larger selection buttons-->
     <v-radio-group v-model="status" class="margins">
@@ -40,13 +41,13 @@
 <v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
     <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     <!--Grad Year-->
-    <div id="graduation-header">
+    <div id="graduation-header" style="margin-bottom:20px">
         <h3 style="float:right">Graduation Year:</h3>
         <v-select v-model="gradYear" :items="gradYears" label="Graduation year" class="margins"></v-select>
     </div>
 
     <!--Degrees-->
-    <div id="degree-header">
+    <div id="degree-header" >
         <h3>Degree:</h3>
         <button
             id="add-btn"
@@ -56,7 +57,7 @@
             @click="addDegree(degree)"
         >add_circle</button>
     </div>
-    <ul>
+    <ul style="margin-bottom:20px">
         <div id="degree-item">
             <li v-for="degree in degrees" :key="degree.id">
                 <v-select :items="degreeTypes" v-model="degree.type" label="Degree type" style="float:left" class="margins"></v-select>
@@ -79,9 +80,9 @@
     </ul>
 
     <!--Advice-->
-    <h4 v-if="isUndergrad()">What are you looking for?</h4>
-    <h4 v-else>What advice can you offer?</h4>
-    <v-layout row wrap>
+    <h3 v-if="isUndergrad()">What are you looking for?</h3>
+    <h3 v-else>What advice can you offer?</h3>
+    <v-layout row wrap style="margin-bottom:20px">
         <v-flex xs12 sm4 md4>
             <v-checkbox v-model="selectedAdvice" :label="advice[0]" color="green lighten-1" :value="advice[0]" hide-details></v-checkbox>
             <v-checkbox v-model="selectedAdvice" :label="advice[1]" color="green lighten-1" :value="advice[1]" hide-details></v-checkbox>
@@ -97,8 +98,8 @@
     </v-layout>
 
     <!--Interests-->
-    <h4>What are you interested in?</h4>
-    <v-layout row wrap>
+    <h3>What are you interested in?</h3>
+    <v-layout row wrap style="margin-bottom:20px">
         <v-flex xs12 sm3 md3>
             <v-checkbox v-model="selectedInterests" :label="interests[0]" color="green lighten-1" :value="interests[0]" hide-details></v-checkbox>
             <v-checkbox v-model="selectedInterests" :label="interests[1]" color="green lighten-1" :value="interests[1]" hide-details></v-checkbox>
