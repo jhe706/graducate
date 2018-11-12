@@ -10,9 +10,7 @@
     <v-text-field v-model="lastName" :rules="nameRules" :counter="30" label="Last name" required class="margins" id="float"></v-text-field>
     <v-text-field v-model="email" :rules="emailRules" label="Email" required class="margins"></v-text-field>
     <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
-
-    <!-- <h3>Hometown:</h3> -->
-    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
+    
     <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
@@ -25,6 +23,7 @@
 <!--Page 2-->
 <v-form v-else-if="pageNumber === 2" ref="form" v-model="valid" lazy-validation>
     <h1>Are you an undergraduate or graduate student?</h1>
+    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
 
     <!--TODO: change from radio buttons to larger selection buttons-->
     <v-radio-group v-model="status" class="margins">
@@ -38,6 +37,7 @@
 
 <!--Page 3-->
 <v-form v-else-if="pageNumber === 3" ref="form" v-model="valid" lazy-validation>
+    <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     <!--Grad Year-->
     <div id="graduation-header">
         <h3 style="float:right">Graduation Year:</h3>
