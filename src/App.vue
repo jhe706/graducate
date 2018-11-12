@@ -16,7 +16,7 @@
             </v-toolbar>
 
             <v-container>
-                <!--Idle graphics-->
+                <!--Graphics-->
                 <graphics v-if="showGraphicsPage()"></graphics>
                 
                 <!--Log in-->
