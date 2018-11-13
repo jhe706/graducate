@@ -4,7 +4,8 @@
         <v-layout row wrap>
             <v-flex xs12>
                 <div id="matches-header">
-                    <h1>5 Matches</h1>
+                    <h1>X Matches</h1>
+                    <v-btn @click="refresh()">Refresh Matches</v-btn>
                 </div>
                 <div id="matches-header">
                     <h4>Filtered by:</h4>
@@ -26,7 +27,12 @@ export default {
             schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua"]
         }
     },
-    props: ['match', 'user']
+    props: ['match', 'user', 'refreshMatches'],
+    methods: {
+        refresh(){
+            this.refreshMatches(user);
+        }
+    }
 }
 </script>
 

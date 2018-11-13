@@ -8,7 +8,6 @@
                 <ul>
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
-                    <v-btn v-if="currentUser">Discover</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleSignUpPage()">Sign Up</v-btn>
                     <v-btn v-if="!currentUser" @click="toggleLoginPage()">Sign In</v-btn>
                     <v-btn v-if="currentUser" @click="toggleGraphicsPage()">Logout</v-btn>
@@ -26,19 +25,10 @@
 
                 <!--Create profile-->
                 <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser" 
-                :graphics="toggleGraphicsPage"></sign-up>
+                :graphics="toggleGraphicsPage" :calculateMatches="calculateMatches" :toggleProfile="toggleProfilePage"></sign-up>
 
                 <!--View profile-->
                 <profile v-if="showProfilePage()" :user="currentUser"></profile>
-
-                <!--Scroll through potential profiles on homepage-->
-                <v-card v-if="showHomePage()"> <!--TODO: add discover carousel component-->
-                    <!-- <discover></discover> -->
-                
-                    <v-carousel v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
-                        <match :user="currentUser" :toggleProfile="toggleProfilePage"></match>
-                    </v-carousel>
-                </v-card>
 
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
@@ -46,9 +36,9 @@
                         <match-filter></match-filter>
                     </div>
                     <div id="flex-display right">
-                        <match-header :user="currentUser"></match-header>
+                        <match-header :user="currentUser" :refreshMatches="calculateMatches"></match-header>
 
-                        <v-container v-model="matches" v-for="match in getMatches(currentUser)" :key="match">
+                        <v-container v-model="matches" v-for="match in getMatchesObj(currentUser)" :key="match">
                             <match :user="getUserObj(match)"></match>
                         </v-container>
                     </div>
@@ -110,44 +100,9 @@ export default {
 
             // user data
             currentUser: null,
-            currentUser2: {                     // temporary for testing
-                uuid: "42f9758b-0fbf-4aaf-9cfa-2406b1f8f942",
-                firstName: "Molly",
-                lastName: "Chen",
-                email: "molly.chen@duke.edu",
-                phoneNumber: "8322825093",
-                status: "Undergraduate",
-                gradYear: "2019",
-                school: "Trinity",
-                degrees: {
-                    "0": {
-                        major: "Computer Science",
-                        type: "BS",
-                        concentration: "Software"
-                    },
-                    "1": {
-                        major: "Psychology",
-                        type: "BA",
-                        concentration: "Abnormal"
-                    }
-                },
-                hometown: {
-                    city: "Cary",
-                    state: "North Carolina",
-                    country: "United States"
-                },
-                interests: ["Art", "Coding", "Travel", "Music"],
-                advice: [
-                    "Duke's major departments",
-                    "Graduate programs or professional schools",
-                    "Duke extracurriculars"
-                ],
-                bio: "Hi, I'm Molly!",
-            },
 
             // matches data
             matches: []
-            // matches: this.getMatches(this.currentUser)
         };
     },
     firebase: { // reference passed b/w Firebase and program
@@ -237,11 +192,119 @@ export default {
         signOut() {
             this.currentUser = null;
         },
-        getMatches(user){
+        getMatchesObj(user){
           return this.matchesObj[user.uuid]
         },
         getUserObj(uuid){
             return this.userObj[uuid]
+        },
+
+        // dynamically calculate matches
+        calculateMatches(user) {
+            let uuid = user.uuid;
+            let matchMap = new Map();
+
+            let users = null;
+            userRef.on('value', function (snapshot) {
+                users = snapshot.val();
+            });
+
+            let matches = [];
+            for (let u in users) {
+                // make sure you don't match with yourself
+                if (users[u].uuid != uuid){
+                    console.log("User ", users[u]);
+                    let score = this.matchScore(user, users[u]);
+                    console.log("Match score: ", score);
+                    if (score > 65) {
+                        matches.push(users[u].uuid);
+                    }
+                }
+            }
+
+            // set final values in map and DB table
+            matchMap.set(uuid, matches);
+            matchesRef.child(uuid).set(matches);
+            console.log("User's matches: ", matches);
+
+            return matches;
+        },
+
+        matchScore(u1, u2) {
+            let rawScore = 0;
+            let adviceScore = 0;
+            let degreeScore = 0;
+            let interestsScore = 0;
+            let concentrationScore = 0;
+            let hometownScore = 0;
+
+            // advice
+            console.log(u1.advice);
+            console.log(u2.advice);
+            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));
+            adviceScore = intersection.length * 6.67;
+
+            // degree
+            if (u1.school === u2.school) {
+                degreeScore += 5;
+            }
+
+            let u1Majors = [];
+            let u2Majors = [];
+            let u1Concentrations = [];
+            let u2Concentrations = [];
+            forEach(u1.degrees, function (degree, key) {
+                if (u1.status === "Undergraduate") {
+                    console.log("My major: ", degree.major);
+                    u1Majors.push(degree.major);
+                } else {
+                    console.log("My prev major: ", degree.previousMajor);
+                    u1Majors.push(degree.previousMajor);
+                }
+                u1Concentrations.push(degree.concentration);
+            });
+            forEach(u2.degrees, function (degree, key) { // TODO: change from id to key    
+                if (u2.status === "Undergraduate") {
+                    console.log("Their major: ", degree.major);
+                    u2Majors.push(degree.major);
+                } else {
+                    console.log("Their prev major: ", degree.previousMajor);
+                    u2Majors.push(degree.previousMajor);
+                }
+                u2Concentrations.push(degree.concentration);
+            });
+
+            intersection = u1Majors.filter(value => -1 !== u2Majors.indexOf(value));
+            degreeScore += intersection.length * 20;
+            intersection = u1Concentrations.filter(value => -1 !== u2Concentrations.indexOf(value));
+            degreeScore += intersection.length * 10;
+            console.log("degreeScore ", degreeScore);
+
+            // interests
+            intersection = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));
+            interestsScore = intersection.length * 2;
+            console.log("interestsScore ", interestsScore);
+
+            // hometown
+            if (u1.hometown.country === u2.hometown.country) {
+                hometownScore += 5;
+            }
+            if (u1.hometown.state && u2.hometown.state && (u1.hometown.state === u2.hometown.state)) {
+                hometownScore += 2.5;
+                if (u1.hometown.city === u2.hometown.city) {
+                    hometownScore += 2.5;
+                }
+            } else {
+                if (u1.hometown.city === u2.hometown.city) {
+                    hometownScore += 5;
+                }
+            }
+            console.log("hometownScore ", hometownScore);
+
+            rawScore = 2 * (adviceScore + degreeScore + interestsScore + hometownScore);
+            console.log("raw match score ", rawScore);
+
+            return Math.min(rawScore, 100);
         }
     },
     props: ['match']

@@ -279,6 +279,9 @@ export default {
 
             console.log("calculating matches...");
             this.calculateMatches(newUser);
+
+            // TODO: redirect to profile page
+            this.toggleProfile();
         },
 
         clear() {
@@ -330,115 +333,9 @@ export default {
             };
 
             return true;
-        },
-
-        calculateMatches(user) {
-            let uuid = user.uuid;
-            let matchMap = new Map();
-
-            let users = null;
-            userRef.on('value', function (snapshot) {
-                users = snapshot.val();
-            });
-
-            let matches = [];
-            for (let u in users) {
-                console.log("User ", users[u]);
-                let score = this.matchScore(user, users[u]); // obtain match score against logged in user
-                console.log("Match score: ", score);
-                if (score > 65) {
-                    matches.push(users[u].uuid);
-                }
-            }
-
-            // set final values in map and DB table
-            matchMap.set(uuid, matches);
-
-            // let myMatches = matchMap.get(uuid) ? matchMap.get(uuid) : []; // should return list of match uuids
-            matchesRef.child(uuid).set(matches);
-            console.log("User's matches: ", matches);
-
-            return matches;
-        },
-
-        matchScore(u1, u2) {
-            let rawScore = 0;
-            let adviceScore = 0;
-            let degreeScore = 0;
-            let interestsScore = 0;
-            let concentrationScore = 0;
-            let hometownScore = 0;
-
-            // advice
-            console.log(u1.advice);
-            console.log(u2.advice);
-            let intersection = u1.advice.filter(value => -1 !== u2.advice.indexOf(value));
-            adviceScore = intersection.length * 6.67;
-
-            // degree
-            if (u1.school === u2.school) {
-                degreeScore += 5;
-            }
-
-            let u1Majors = [];
-            let u2Majors = [];
-            let u1Concentrations = [];
-            let u2Concentrations = [];
-            forEach(u1.degrees, function (degree, key) {
-                if (u1.status === "Undergraduate") {
-                    console.log("My major: ", degree.major);
-                    u1Majors.push(degree.major);
-                } else {
-                    console.log("My prev major: ", degree.previousMajor);
-                    u1Majors.push(degree.previousMajor);
-                }
-                u1Concentrations.push(degree.concentration);
-            });
-            forEach(u2.degrees, function (degree, key) { // TODO: change from id to key    
-                if (u2.status === "Undergraduate") {
-                    console.log("Their major: ", degree.major);
-                    u2Majors.push(degree.major);
-                } else {
-                    console.log("Their prev major: ", degree.previousMajor);
-                    u2Majors.push(degree.previousMajor);
-                }
-                u2Concentrations.push(degree.concentration);
-            });
-
-            intersection = u1Majors.filter(value => -1 !== u2Majors.indexOf(value));
-            degreeScore += intersection.length * 20;
-            intersection = u1Concentrations.filter(value => -1 !== u2Concentrations.indexOf(value));
-            degreeScore += intersection.length * 10;
-            console.log("degreeScore ", degreeScore);
-
-            // interests
-            intersection = u1.interests.filter(value => -1 !== u2.interests.indexOf(value));
-            interestsScore = intersection.length * 2;
-            console.log("interestsScore ", interestsScore);
-
-            // hometown
-            if (u1.hometown.country === u2.hometown.country) {
-                hometownScore += 5;
-            }
-            if (u1.hometown.state && u2.hometown.state && (u1.hometown.state === u2.hometown.state)) {
-                hometownScore += 2.5;
-                if (u1.hometown.city === u2.hometown.city) {
-                    hometownScore += 2.5;
-                }
-            } else {
-                if (u1.hometown.city === u2.hometown.city) {
-                    hometownScore += 5;
-                }
-            }
-            console.log("hometownScore ", hometownScore);
-
-            rawScore = 2 * (adviceScore + degreeScore + interestsScore + hometownScore);
-            console.log("raw match score ", rawScore);
-
-            return Math.min(rawScore, 100);
         }
     },
-    props: ['setUser', 'user', 'graphics']
+    props: ['setUser', 'user', 'graphics', 'calculateMatches', 'toggleProfile']
 };
 </script>
 
