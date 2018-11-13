@@ -30,7 +30,7 @@ export default {
     props: ['match', 'user', 'refreshMatches'],
     methods: {
         refresh(){
-            this.refreshMatches(user);
+            this.refreshMatches(this.user);
         }
     }
 }

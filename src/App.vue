@@ -40,7 +40,7 @@
 <!--                    <div id="flex-display right">-->
                         <match-header :user="currentUser" :refreshMatches="calculateMatches"></match-header>
                         <!--<v-container v-model="matches" v-for="match in getMatchesObj(currentUser)" :key="match">-->
-                        <div v-model="matches" v-for="match in getMatchesO(currentUser)" :key="match">
+                        <div v-for="match in getMatchesObj(currentUser)" :key="match">
                             <match :user="getUserObj(match)"></match>
                         </div>
 <!--                    </div>-->
