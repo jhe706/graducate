@@ -385,6 +385,7 @@ export default {
             // var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
             var uploadTask = storageRef.child("myfiles/" + this.uuid + "/" + file.name).put(file, metadata);
             console.log('upload task', uploadTask)
+            let that = this;
 
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.on(Firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -414,7 +415,7 @@ export default {
                     // Upload completed successfully, now we can get the download URL
                     var url = await uploadTask.snapshot.ref.getDownloadURL();
                     console.log('urll', url);
-                    Vue.set(this, 'profileImageUrl', url);
+                    Vue.set(that, 'profileImageUrl', url);
                     // uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
                         // console.log('File available at', downloadURL);
                         // this.profileImageUrl = downloadURL;
