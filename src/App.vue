@@ -32,18 +32,14 @@
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
                     <v-flex xs3>
-<!--                        <div id="flex-display left">-->
                             <match-filter></match-filter>
-<!--                        </div>-->
                     </v-flex>
                     <v-flex xs9 style="margin-left: 50px">
-<!--                    <div id="flex-display right">-->
-                        <match-header :user="currentUser" :refreshMatches="calculateMatches"></match-header>
-                        <!--<v-container v-model="matches" v-for="match in getMatchesObj(currentUser)" :key="match">-->
+                        <match-header :user="currentUser" :refreshMatches="calculateMatches" :getMatchesObj="getMatchesObj"></match-header>
+                    
                         <div v-for="match in getMatchesObj(currentUser)" :key="match">
                             <match :user="getUserObj(match)"></match>
                         </div>
-<!--                    </div>-->
                     </v-flex>
                 </div>
             </v-container>
