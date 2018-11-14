@@ -25,7 +25,7 @@
 <!--            <v-container>-->
             <v-flex xs4 v-if="!view" style="align-text:right">
                 <v-tooltip bottom>
-                    <span slot="activator"><h4>90% MATCH</h4></span>
+                    <span slot="activator"><h4>{{score}}% MATCH</h4></span>
                     <!--TODO: insert match score-->
                     <span>Match score is generated based on your profile.</span>
                 </v-tooltip>
@@ -61,7 +61,7 @@ export default {
     firebase: {
         userRef
     },
-    props: ['match', 'user', 'toggleProfile'],
+    props: ['match', 'user', 'toggleProfile', 'score'],
     methods: {
         viewProfile() {
             this.view = true;

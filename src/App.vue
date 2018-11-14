@@ -36,9 +36,8 @@
                     </v-flex>
                     <v-flex xs9 style="margin-left: 50px">
                         <match-header :user="currentUser" :refreshMatches="calculateMatches" :getMatchesObj="getMatchesObj"></match-header>
-                    
                         <div v-for="match in getMatchesObj(currentUser)" :key="match">
-                            <match :user="getUserObj(match)"></match>
+                            <match :user="getUserObj(match.uuid)" :score="match.score"></match>
                         </div>
                     </v-flex>
                 </div>
@@ -159,7 +158,7 @@ export default {
             this.showProfile = false;
             this.signUp = false;
             this.showHome = false;
-            this.currentUser = null;        // TODO: check
+            this.currentUser = null;       
         },
         toggleHomePage(){
             this.showHome = true;
@@ -169,7 +168,7 @@ export default {
             this.showProfile = false;
             this.signUp = false;
         },  
-        // TODO: add checks for currentUser
+
         showSignUpPage() {
             return this.signUp && !this.showProfile && !this.showMatches && !this.showLogin;
         },
@@ -180,7 +179,7 @@ export default {
             return this.showMatches && !this.signUp && !this.showProfile && !this.showLogin;
         },
         showLoginPage(){
-            return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;  // TODO: fix
+            return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;  
         },
         showGraphicsPage(){
             return this.showGraphics /*&& this.showLogin && !this.showMatches && !this.signUp && !this.showProfile*/;
@@ -201,7 +200,8 @@ export default {
         // dynamically calculate matches
         calculateMatches(user) {
             let uuid = user.uuid;
-            let matchMap = new Map();
+            // let matchMap = new Map();
+            let matchScores = [];
 
             let users = null;
             userRef.on('value', function (snapshot) {
@@ -216,13 +216,20 @@ export default {
                     let score = this.matchScore(user, users[u]);
                     console.log("Match score: ", score);
                     if (score > 65) {
-                        matches.push(users[u].uuid);
+                        // matches.push(users[u].uuid);
+                        matches.push({                      // make obj instead
+                            firstName: users[u].firstName,
+                            lastName: users[u].lastName,
+                            uuid: users[u].uuid,
+                            score: score
+                        });
+                        // matchScores.push(score);
                     }
                 }
             }
 
-            // set final values in map and DB table
-            matchMap.set(uuid, matches);
+            // matchMap.set(uuid, matches);
+            // this.getScores(matchScores, -1);
             matchesRef.child(uuid).set(matches);
             console.log("User's matches: ", matches);
 
@@ -304,7 +311,14 @@ export default {
             console.log("raw match score ", rawScore);
 
             return Math.min(rawScore, 100);
-        }
+        },
+
+        // getScores(scores, index){
+        //     if (index != -1){
+        //         return scores[index];
+        //     }
+        //     return scores;              // return all if index = -1
+        // }
     },
     props: ['match']
 };
