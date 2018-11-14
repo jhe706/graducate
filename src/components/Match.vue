@@ -6,7 +6,7 @@
             <v-flex xs4 v-if="!view">
                 <v-avatar style="margin-left:50px">
                     <img
-                        src="https://cdn.vuetifyjs.com/images/john.jpg"
+                        :src="user.profileImageUrl"
                         alt="Profile picture"
                         >
                     </v-avatar>
