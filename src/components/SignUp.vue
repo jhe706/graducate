@@ -16,8 +16,12 @@
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
-    <!-- <upload-image url="../assets/coverphoto.jpg" name="" max_files=""></upload-image> -->
-    <upload-image></upload-image>
+    <!-- <file-upload :getPropicURL="getPropicURL"></file-upload> -->
+    <!--File upload-->
+    <div>
+        <input type="file" @change="onFileChanged">
+        <v-btn @click="onUpload">Upload</v-btn>
+    </div>
 
     <!--Buttons-->
     <v-btn :disabled="!valid" @click="back()">Back</v-btn>
@@ -144,15 +148,15 @@
 /* eslint-disable */
 import Vue from "vue";
 import Firebase from "firebase";
-import UploadImage from "./UploadImage";
+// import FileUpload from "./FileUpload";
 
 import {
     db,
     userRef,
     matchesRef,
-    majorsRef
+    majorsRef,
+    storageRef
 } from "../database";
-
 import {
     undergradMajors,
     gradMajors,
@@ -172,7 +176,7 @@ let forEach = require('lodash.foreach');
 export default {
     name: "SignUp",
     components: {
-        UploadImage
+        // FileUpload
     },
     computed: {
 
@@ -235,17 +239,20 @@ export default {
                 id: 1,
                 type: null,
                 major: null,
-                previousMajor: null, // applies only to grads
+                previousMajor: null,
                 concentration: null
             }],
             uuid: "",
-            newUser: null
+            newUser: null,
+            selectedFile: null,
+            url: ""
         };
     },
     firebase: {
         users: userRef,
-        matches2: matchesRef,
-        majors: majorsRef
+        matches: matchesRef,        // matches2
+        majors: majorsRef,
+        storage: storageRef
     },
     methods: {
         next() {
@@ -350,6 +357,65 @@ export default {
             };
 
             return true;
+        },
+
+        getPropicURL(url){
+            console.log("you're in sign up now: ", url);
+            this.url = url;
+        },
+
+        // file uploading
+        onFileChanged(event) {
+            this.selectedFile = event.target.files[0];
+        },
+
+        onUpload() {
+			const storageRef = Firebase.storage().ref();
+
+            // File or Blob named mountains.jpg
+            var file = this.selectedFile;
+
+            // Create the file metadata
+            var metadata = {
+                contentType: 'image/jpeg'
+            };
+
+            // Upload file and metadata to the object 'images/mountains.jpg'
+            // var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+            var uploadTask = storageRef.child("myfiles/" + this.uuid + "/" + file.name).put(file, metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on(Firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                function (snapshot) {
+                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case Firebase.storage.TaskState.PAUSED: // or 'paused'
+                            console.log('Upload is paused');
+                            break;
+                        case Firebase.storage.TaskState.RUNNING: // or 'running'
+                            console.log('Upload is running');
+                            break;
+                    }
+                },
+                function (error) {
+                    switch (error.code) {
+                        case 'storage/unauthorized':
+                            break;
+                        case 'storage/canceled':
+                            break;
+                        case 'storage/unknown':
+                            break;
+                    }
+                },
+                function () {
+                    // Upload completed successfully, now we can get the download URL
+                    uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+						console.log('File available at', downloadURL);
+                        // this.getPropicURL(downloadURL);
+                        // this.url = downloadURL;
+                    });
+                });
         }
     },
     props: ['setUser', 'user', 'graphics', 'calculateMatches', 'toggleProfile']
