@@ -245,7 +245,7 @@ export default {
             uuid: "",
             newUser: null,
             selectedFile: null,
-            url: ""
+            profileImageUrl: "http://placekitten.com/g/200/300"
         };
     },
     firebase: {
@@ -293,6 +293,7 @@ export default {
                 interests: this.selectedInterests,
                 advice: this.selectedAdvice,
                 bio: this.bio,
+                profileImageUrl: this.profileImageUrl 
             };
 
             // equivalent to signing in automatically
@@ -383,6 +384,7 @@ export default {
             // Upload file and metadata to the object 'images/mountains.jpg'
             // var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
             var uploadTask = storageRef.child("myfiles/" + this.uuid + "/" + file.name).put(file, metadata);
+            console.log('upload task', uploadTask)
 
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.on(Firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -408,13 +410,17 @@ export default {
                             break;
                     }
                 },
-                function () {
+                async function () {
                     // Upload completed successfully, now we can get the download URL
-                    uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-						console.log('File available at', downloadURL);
+                    var url = await uploadTask.snapshot.ref.getDownloadURL();
+                    console.log('urll', url);
+                    Vue.set(this, 'profileImageUrl', url);
+                    // uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+                        // console.log('File available at', downloadURL);
+                        // this.profileImageUrl = downloadURL;
                         // this.getPropicURL(downloadURL);
                         // this.url = downloadURL;
-                    });
+                    // });
                 });
         }
     },

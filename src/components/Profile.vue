@@ -6,7 +6,7 @@
             <v-layout row wrap>
                 <!--Default cover photo-->
                 <v-flex xs12>
-                    <!-- <img :src="imgUrl" height="200px" width="1090px"/> -->
+                    <!-- <img :src="urre" height="200px" width="1090px"/> -->
                     <img src="../assets/coverphoto.jpg" height="200px" width="100%"/>
                 </v-flex>
 
@@ -16,7 +16,7 @@
                         <!--TODO: add img binding-->
                         <v-avatar style="float:left; margin-left:20px">
                             <img
-                            src="https://cdn.vuetifyjs.com/images/john.jpg"
+                            :src="user.profileImageUrl"
                             alt="Profile picture"
                         >
                     </v-avatar>
