@@ -4,8 +4,8 @@
         <v-layout row wrap>
             <v-flex xs12>
                 <div id="matches-header">
-                    <h1>{{this.numMatches()}} Matches</h1>
-                    <!-- <v-btn @click="numMatches()">Num</v-btn> -->
+                    <h1 v-if="this.numMatches() != 1">{{this.numMatches()}} Matches</h1>
+                    <h1 v-else>{{this.numMatches()}} Match</h1>
                     <v-btn @click="refresh()">Refresh Matches</v-btn>
                 </div>
                 <div id="matches-header">

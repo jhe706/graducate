@@ -40,8 +40,4 @@ export default {
     text-align: left;
 }
 
-#checkbox {
-    /* list-style-image: url(check.gif); */
-    /* list-style-image:  */
-}
 </style>

@@ -16,6 +16,9 @@
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
+    <!-- <upload-image url="../assets/coverphoto.jpg" name="" max_files=""></upload-image> -->
+    <upload-image></upload-image>
+
     <!--Buttons-->
     <v-btn :disabled="!valid" @click="back()">Back</v-btn>
     <v-btn :disabled="!valid" @click="next()">Next</v-btn>
@@ -26,8 +29,6 @@
     <v-icon class="material-icons" style="float:right" @click="exit()">clear</v-icon>
     <h1>Are you an undergraduate or graduate student?</h1>
     
-
-    <!--TODO: change from radio buttons to larger selection buttons-->
     <v-radio-group v-model="status" class="margins">
         <v-radio v-for="status in statuses" :key="status" :label="status" :value="status"></v-radio>
     </v-radio-group>
@@ -143,6 +144,7 @@
 /* eslint-disable */
 import Vue from "vue";
 import Firebase from "firebase";
+import UploadImage from "./UploadImage";
 
 import {
     db,
@@ -169,7 +171,9 @@ let forEach = require('lodash.foreach');
 
 export default {
     name: "SignUp",
-    components: {},
+    components: {
+        UploadImage
+    },
     computed: {
 
     },
@@ -291,7 +295,6 @@ export default {
                 userRef.child(myUuid).set(newUser);
             }
 
-            console.log("calculating matches...");
             this.calculateMatches(newUser);
 
             // TODO: redirect to profile page

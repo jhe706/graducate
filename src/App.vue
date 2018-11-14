@@ -17,26 +17,53 @@
             <v-container>
                 <!--Idle graphics-->
                 <graphics v-if="showGraphicsPage()"></graphics>
-                
+
                 <!--Log in-->
-                <sign-in v-if="showLoginPage()" :user="currentUser" :setUser="setUser" 
-                :profile="showProfilePage" :graphics="toggleGraphicsPage" :home="toggleHomePage"></sign-in>
+                <sign-in v-if="showLoginPage()" :user="currentUser" :setUser="setUser" :profile="showProfilePage" :graphics="toggleGraphicsPage" :home="toggleHomePage"></sign-in>
 
                 <!--Create profile-->
-                <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser" 
-                :graphics="toggleGraphicsPage" :calculateMatches="calculateMatches" :toggleProfile="toggleProfilePage"></sign-up>
+                <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser" :graphics="toggleGraphicsPage" :calculateMatches="calculateMatches" :toggleProfile="toggleProfilePage"></sign-up>
 
                 <!--View profile-->
                 <profile v-if="showProfilePage()" :user="currentUser"></profile>
 
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
+                    <!--Match filter-->
                     <v-flex xs3>
-                            <match-filter></match-filter>
+                        <!-- <match-filter></match-filter> -->
+                        <v-card>
+                            <v-container grid-list-md text-xs-center id="matches-filter" style="padding: 20px; margin: 15px;">
+                                <v-layout row wrap>
+                                    <v-flex xs12>
+                                        <div id="matches-filter">
+                                            <h1>Filters</h1>
+                                        </div>
+                                        <div id="matches-filter">
+                                            <h3>School</h3>
+                                            <!-- <v-checkbox v-model="selectedSchools" v-for="school in schools" :value="schools[school]" :key="school"></v-checkbox> -->
+                                            <v-checkbox v-model="selectedSchools" :label="schools[0]" :value="schools[0]"></v-checkbox>
+                                            <v-checkbox v-model="selectedSchools" :label="schools[1]" :value="schools[1]"></v-checkbox>
+                                            <v-checkbox v-model="selectedSchools" :label="schools[2]" :value="schools[2]"></v-checkbox>
+                                            <v-checkbox v-model="selectedSchools" :label="schools[3]" :value="schools[3]"></v-checkbox>
+                                            <v-checkbox v-model="selectedSchools" :label="schools[4]" :value="schools[4]"></v-checkbox>
+                                            <v-checkbox v-model="selectedSchools" :label="schools[5]" :value="schools[5]"></v-checkbox>
+                                        </div>
+                                        <div id="matches-filter">
+                                            <!-- <v-btn @click="filteredMatches(currentUser)">Apply</v-btn> -->
+                                            <v-btn @click="filteredMatches()">Apply</v-btn>
+                                        </div>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                        </v-card>
                     </v-flex>
+
+                    <!--Display matches and header-->
                     <v-flex xs9 style="margin-left: 50px">
                         <match-header :user="currentUser" :refreshMatches="calculateMatches" :getMatchesObj="getMatchesObj"></match-header>
                         <div v-for="match in getMatchesObj(currentUser)" :key="match">
+                            <!-- <div v-for="match in filteredMatches()" :key="match"> -->
                             <match :user="getUserObj(match.uuid)" :score="match.score"></match>
                         </div>
                     </v-flex>
@@ -93,15 +120,31 @@ export default {
             showProfile: false,
             showMatches: false,
             showLogin: false,
-            showHome: false,                    // match carousel
-            showGraphics: true,                 // assumes user is signed out at page reload
+            showHome: false, // match carousel
+            showGraphics: true, // assumes user is signed out at page reload
 
             // user data
             currentUser: null,
 
             // matches data
-            matches: []
+            matches: [],
+            schools: ["Trinity", "Pratt", "Law", "Sanford", "Nicholas School", "Fuqua"],
+            selectedSchools: []
         };
+    },
+    computed: {
+        filteredMatches: function () {
+            let matchesObj = this.matchesObj[this.currentUser.uuid];
+            
+            if (!this.selectedSchools.length) {
+                return matchesObj;
+            }
+            let filtered = matchesObj.filter(match => {
+                return this.selectedSchools.includes(match.school)
+            });
+            
+            return filtered;
+        }
     },
     firebase: { // reference passed b/w Firebase and program
         user: userRef,
@@ -143,7 +186,7 @@ export default {
             this.showGraphics = false;
             this.showHome = false;
         },
-        toggleLoginPage(){
+        toggleLoginPage() {
             this.showLogin = true;
             this.showMatches = false;
             this.showProfile = false;
@@ -151,23 +194,23 @@ export default {
             this.showGraphics = false;
             this.showHome = false;
         },
-        toggleGraphicsPage(){
+        toggleGraphicsPage() {
             this.showGraphics = true;
             this.showLogin = false;
             this.showMatches = false;
             this.showProfile = false;
             this.signUp = false;
             this.showHome = false;
-            this.currentUser = null;       
+            this.currentUser = null;
         },
-        toggleHomePage(){
+        toggleHomePage() {
             this.showHome = true;
             this.showGraphics = false;
             this.showLogin = false;
             this.showMatches = false;
             this.showProfile = false;
             this.signUp = false;
-        },  
+        },
 
         showSignUpPage() {
             return this.signUp && !this.showProfile && !this.showMatches && !this.showLogin;
@@ -178,29 +221,27 @@ export default {
         showMatchesPage() {
             return this.showMatches && !this.signUp && !this.showProfile && !this.showLogin;
         },
-        showLoginPage(){
-            return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;  
+        showLoginPage() {
+            return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;
         },
-        showGraphicsPage(){
-            return this.showGraphics /*&& this.showLogin && !this.showMatches && !this.signUp && !this.showProfile*/;
+        showGraphicsPage() {
+            return this.showGraphics /*&& this.showLogin && !this.showMatches && !this.signUp && !this.showProfile*/ ;
         },
-        showHomePage(){
+        showHomePage() {
             return this.showHome && this.currentUser;
         },
         signOut() {
             this.currentUser = null;
         },
-        getMatchesObj(user){
-          return this.matchesObj[user.uuid]
+        getMatchesObj(user) {
+            return this.matchesObj[user.uuid] ? this.matchesObj[user.uuid] : null;
         },
-        getUserObj(uuid){
-            return this.userObj[uuid]
+        getUserObj(uuid) {
+            return this.userObj[uuid] ? this.userObj[uuid] : null;
         },
 
-        // dynamically calculate matches
         calculateMatches(user) {
             let uuid = user.uuid;
-            // let matchMap = new Map();
             let matchScores = [];
 
             let users = null;
@@ -211,13 +252,13 @@ export default {
             let matches = [];
             for (let u in users) {
                 // make sure you don't match with yourself
-                if (users[u].uuid != uuid){
+                if (users[u].uuid != uuid) {
                     console.log("User ", users[u]);
                     let score = this.matchScore(user, users[u]);
                     console.log("Match score: ", score);
                     if (score > 65) {
                         // matches.push(users[u].uuid);
-                        matches.push({                      // make obj instead
+                        matches.push({ // make obj instead
                             firstName: users[u].firstName,
                             lastName: users[u].lastName,
                             uuid: users[u].uuid,
@@ -228,8 +269,6 @@ export default {
                 }
             }
 
-            // matchMap.set(uuid, matches);
-            // this.getScores(matchScores, -1);
             matchesRef.child(uuid).set(matches);
             console.log("User's matches: ", matches);
 
@@ -311,14 +350,7 @@ export default {
             console.log("raw match score ", rawScore);
 
             return Math.min(rawScore, 100);
-        },
-
-        // getScores(scores, index){
-        //     if (index != -1){
-        //         return scores[index];
-        //     }
-        //     return scores;              // return all if index = -1
-        // }
+        }
     },
     props: ['match']
 };
@@ -352,5 +384,17 @@ export default {
 #container {
     display: flex;
     width: 100%;
+}
+
+#matches-filter {
+    display: flex;
+    flex-direction: column;
+    /* margin: auto 10px; */
+    justify-content: space-between;
+    align-items: left;
+    padding: 5px;
+    /* width: 20%; */
+    /* margin-right: 10px; */
+    text-align: left;
 }
 </style>
