@@ -16,11 +16,12 @@
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
-    <!-- <file-upload :getPropicURL="getPropicURL"></file-upload> -->
+    <!-- <file-upload></file-upload> -->
     <!--File upload-->
     <div>
         <input type="file" @change="onFileChanged">
         <v-btn @click="onUpload">Upload</v-btn>
+        <h3 v-if="uploadFinished" id="green">Uploaded successfully</h3>
     </div>
 
     <!--Buttons-->
@@ -245,7 +246,8 @@ export default {
             uuid: "",
             newUser: null,
             selectedFile: null,
-            profileImageUrl: "http://placekitten.com/g/200/300"
+            profileImageUrl: "http://placekitten.com/g/200/300",
+            uploadFinished: false
         };
     },
     firebase: {
@@ -303,10 +305,9 @@ export default {
                 userRef.child(myUuid).set(newUser);
             }
 
-            this.calculateMatches(newUser);
-
             // TODO: redirect to profile page
             this.toggleProfile();
+            this.calculateMatches(newUser);
         },
 
         clear() {
@@ -360,11 +361,6 @@ export default {
             return true;
         },
 
-        getPropicURL(url){
-            console.log("you're in sign up now: ", url);
-            this.url = url;
-        },
-
         // file uploading
         onFileChanged(event) {
             this.selectedFile = event.target.files[0];
@@ -388,15 +384,15 @@ export default {
             let that = this;
 
             // Listen for state changes, errors, and completion of the upload.
-            uploadTask.on(Firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+            uploadTask.on(Firebase.storage.TaskEvent.STATE_CHANGED,
                 function (snapshot) {
                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     console.log('Upload is ' + progress + '% done');
                     switch (snapshot.state) {
-                        case Firebase.storage.TaskState.PAUSED: // or 'paused'
+                        case Firebase.storage.TaskState.PAUSED:
                             console.log('Upload is paused');
                             break;
-                        case Firebase.storage.TaskState.RUNNING: // or 'running'
+                        case Firebase.storage.TaskState.RUNNING:
                             console.log('Upload is running');
                             break;
                     }
@@ -416,12 +412,7 @@ export default {
                     var url = await uploadTask.snapshot.ref.getDownloadURL();
                     console.log('urll', url);
                     Vue.set(that, 'profileImageUrl', url);
-                    // uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-                        // console.log('File available at', downloadURL);
-                        // this.profileImageUrl = downloadURL;
-                        // this.getPropicURL(downloadURL);
-                        // this.url = downloadURL;
-                    // });
+                    Vue.set(that, 'uploadFinished', true);
                 });
         }
     },
@@ -473,7 +464,11 @@ ul {
     float: left;
 }
 
-    .signup{
-        padding: 30px;
-    }
+.signup{
+    padding: 30px;
+}
+
+#green {
+    color: green;
+}
 </style>

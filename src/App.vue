@@ -3,7 +3,7 @@
     <v-app>
         <v-content>
             <!--Header-->
-            <v-toolbar color="green lighten-1">
+            <v-toolbar color="green lighten-1" id="toolbar">
                 <h1 style="text-align:center">graducate</h1>
                 <ul>
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
@@ -19,7 +19,7 @@
                 <graphics v-if="showGraphicsPage()"></graphics>
 
                 <!--Log in-->
-                <sign-in v-if="showLoginPage()" :user="currentUser" :setUser="setUser" :profile="showProfilePage" :graphics="toggleGraphicsPage" :home="toggleHomePage"></sign-in>
+                <sign-in v-if="showLoginPage()" :user="currentUser" :setUser="setUser" :profile="showProfilePage" :graphics="toggleGraphicsPage" :toggleProfile="toggleProfilePage"></sign-in>
 
                 <!--Create profile-->
                 <sign-up v-if="showSignUpPage()" :setUser="setUser" :user="currentUser" :graphics="toggleGraphicsPage" :calculateMatches="calculateMatches" :toggleProfile="toggleProfilePage"></sign-up>
@@ -50,7 +50,6 @@
                                             <v-checkbox v-model="selectedSchools" :label="schools[5]" :value="schools[5]"></v-checkbox>
                                         </div>
                                         <div id="matches-filter">
-                                            <!-- <v-btn @click="filteredMatches(currentUser)">Apply</v-btn> -->
                                             <v-btn @click="filteredMatches()">Apply</v-btn>
                                         </div>
                                     </v-flex>
@@ -72,7 +71,7 @@
 
             <!--Footer-->
             <v-footer app>
-                <span>&copy; Molly Chen, 2018</span>
+                <span>&copy; Grunch Studios, 2018</span>
             </v-footer>
         </v-content>
     </v-app>
@@ -171,6 +170,7 @@ export default {
             this.showHome = false;
         },
         toggleProfilePage() {
+            console.log("toggled");
             this.showProfile = true;
             this.signUp = false;
             this.showMatches = false;
@@ -225,7 +225,7 @@ export default {
             return this.showLogin && !this.showMatches && !this.signUp && !this.showProfile;
         },
         showGraphicsPage() {
-            return this.showGraphics /*&& this.showLogin && !this.showMatches && !this.signUp && !this.showProfile*/ ;
+            return this.showGraphics;
         },
         showHomePage() {
             return this.showHome && this.currentUser;
@@ -256,15 +256,13 @@ export default {
                     console.log("User ", users[u]);
                     let score = this.matchScore(user, users[u]);
                     console.log("Match score: ", score);
-                    if (score > 65) {
-                        // matches.push(users[u].uuid);
+                    if (score >= 65) {
                         matches.push({ // make obj instead
                             firstName: users[u].firstName,
                             lastName: users[u].lastName,
                             uuid: users[u].uuid,
                             score: score
                         });
-                        // matchScores.push(score);
                     }
                 }
             }
@@ -308,7 +306,7 @@ export default {
                 }
                 u1Concentrations.push(degree.concentration);
             });
-            forEach(u2.degrees, function (degree, key) { // TODO: change from id to key    
+            forEach(u2.degrees, function (degree, key) {    
                 if (u2.status === "Undergraduate") {
                     console.log("Their major: ", degree.major);
                     u2Majors.push(degree.major);
@@ -367,7 +365,6 @@ export default {
 
 #flex-display {
     display: flex;
-    /* margin: 0px 10px 0px 10px; */
 }
 
 #left {
@@ -385,6 +382,16 @@ export default {
     display: flex;
     width: 100%;
 }
+
+#toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* #title {
+    display: flex;
+    justify-content: flex-start;
+} */
 
 #matches-filter {
     display: flex;

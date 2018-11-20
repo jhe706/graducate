@@ -4,7 +4,7 @@
         <v-layout row wrap>
             <!--Profile picture-->
             <v-flex xs4 v-if="!view">
-                <v-avatar style="margin-left:50px">
+                <v-avatar class="avatar">
                     <img
                         :src="user.profileImageUrl"
                         alt="Profile picture"
@@ -22,17 +22,14 @@
                     <li v-for="degree in user.degrees" :key="degree">{{degree.type}} {{degree.major}}</li>
                 </ul>
             </v-flex>
-<!--            <v-container>-->
             <v-flex xs4 v-if="!view" style="align-text:right">
                 <v-tooltip bottom>
                     <span slot="activator"><h4>{{score}}% MATCH</h4></span>
-                    <!--TODO: insert match score-->
                     <span>Match score is generated based on your profile.</span>
                 </v-tooltip>
                 <br>
                 <v-btn @click="viewProfile()">View Profile</v-btn>
             </v-flex>
-<!--                </v-container>-->
         </v-layout>
     </v-container>
 
@@ -83,5 +80,13 @@ export default {
     align-items: center;
     padding: 20px;
     text-align: left !important;
+}
+
+.avatar {
+    float: left;
+    margin-left: 20px;
+    height: 150px !important;
+    width: 150px !important;
+    margin-left: 50px;
 }
 </style>

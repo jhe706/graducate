@@ -24,7 +24,7 @@ export default {
             ]
         }
     },
-    props: ['user', 'setUser', 'showLogin', 'profile', 'graphics', 'home'],
+    props: ['user', 'setUser', 'showLogin', 'profile', 'graphics', 'toggleProfile'],
     methods: {
         getUsers() {
             let users = null;
@@ -44,9 +44,8 @@ export default {
                 }
             }
 
-            this.home();
+            this.toggleProfile();
             this.setUser(myAccount);
-
         },
 
         exit() {
