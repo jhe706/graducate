@@ -1,4 +1,5 @@
-# grad-connect
+# graducate
+A website that helps undergrads and grads at Duke connect!
 
 ## Project setup
 ```
