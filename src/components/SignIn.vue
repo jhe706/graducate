@@ -1,10 +1,12 @@
 <template>
-<v-form>
-    <h1 style="margin-top:10px; margin-bottom:20px">Sign in to your account.</h1>
-    <v-text-field v-model="email" label="Email" :rules="emailRules" required class="margins" style="float:left"></v-text-field>
-    <v-btn @click="exit()">Exit</v-btn>
-    <v-btn @click="submit()">Submit</v-btn>
-</v-form>
+<v-card class="signin">
+    <v-form id="form">
+        <h1 id="label">Sign in to your account.</h1>
+        <v-text-field id="textfield" v-model="email" label="Email" :rules="emailRules" required class="margins"></v-text-field>
+        <v-btn id="btn" @click="exit()">Exit</v-btn>
+        <v-btn id="btn" @click="submit()">Submit</v-btn>
+    </v-form>
+</v-card>
 </template>
 
 <script>
@@ -64,3 +66,28 @@ export default {
     }
 }
 </script>
+
+<style>
+    .signin {
+        height: 500px !important;
+    }
+
+    #form {
+        padding: 10px;
+    }
+
+    #label {
+        margin-top: 30px; 
+        margin-bottom: 50px;
+    }
+
+    #textfield {
+        margin-left: 15px;
+    margin-bottom: 15px;
+    }
+
+    #btn {
+        margin-top: 30px;
+    }
+
+</style>

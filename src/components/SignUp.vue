@@ -16,8 +16,8 @@
     <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
     <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
 
-    <!-- <file-upload></file-upload> -->
     <!--File upload-->
+    <!-- <file-upload></file-upload> -->
     <div>
         <input type="file" @change="onFileChanged">
         <v-btn @click="onUpload">Upload</v-btn>
@@ -149,7 +149,7 @@
 /* eslint-disable */
 import Vue from "vue";
 import Firebase from "firebase";
-// import FileUpload from "./FileUpload";
+import FileUpload from "./FileUpload";
 
 import {
     db,
@@ -177,7 +177,7 @@ let forEach = require('lodash.foreach');
 export default {
     name: "SignUp",
     components: {
-        // FileUpload
+        FileUpload
     },
     computed: {
 
@@ -252,7 +252,7 @@ export default {
     },
     firebase: {
         users: userRef,
-        matches: matchesRef,        // matches2
+        matches: matchesRef,        
         majors: majorsRef,
         storage: storageRef
     },
@@ -273,7 +273,7 @@ export default {
             if (this.pageNumber > 1) {
                 this.pageNumber--;
             } else {
-                this.graphics(); // go back to home screen
+                this.graphics();
             }
         },
 
@@ -291,6 +291,7 @@ export default {
                 status: this.status,
                 gradYear: this.gradYear,
                 degrees: this.degrees,
+                school: this.school,
                 hometown: this.hometown,
                 interests: this.selectedInterests,
                 advice: this.selectedAdvice,
@@ -300,12 +301,9 @@ export default {
 
             // equivalent to signing in automatically
             this.setUser(newUser);
-
             if (this.$refs.form.validate()) {
                 userRef.child(myUuid).set(newUser);
             }
-
-            // TODO: redirect to profile page
             this.toggleProfile();
             this.calculateMatches(newUser);
         },
@@ -348,16 +346,13 @@ export default {
             userRef.on('value', function (snapshot) {
                 users = snapshot.val();
             });
-
             console.log("My email: ", v);
-
             for (let user in users) {
                 console.log("Their email: ", users[user].email);
                 if (users[user].email === v) {
                     return false;
                 }
             };
-
             return true;
         },
 
@@ -368,22 +363,13 @@ export default {
 
         onUpload() {
 			const storageRef = Firebase.storage().ref();
-
-            // File or Blob named mountains.jpg
             var file = this.selectedFile;
-
-            // Create the file metadata
             var metadata = {
                 contentType: 'image/jpeg'
             };
-
-            // Upload file and metadata to the object 'images/mountains.jpg'
-            // var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
             var uploadTask = storageRef.child("myfiles/" + this.uuid + "/" + file.name).put(file, metadata);
-            console.log('upload task', uploadTask)
+            console.log('upload task', uploadTask);
             let that = this;
-
-            // Listen for state changes, errors, and completion of the upload.
             uploadTask.on(Firebase.storage.TaskEvent.STATE_CHANGED,
                 function (snapshot) {
                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -410,10 +396,11 @@ export default {
                 async function () {
                     // Upload completed successfully, now we can get the download URL
                     var url = await uploadTask.snapshot.ref.getDownloadURL();
-                    console.log('urll', url);
+                    console.log('url: ', url);
                     Vue.set(that, 'profileImageUrl', url);
                     Vue.set(that, 'uploadFinished', true);
-                });
+                }
+            );
         }
     },
     props: ['setUser', 'user', 'graphics', 'calculateMatches', 'toggleProfile']

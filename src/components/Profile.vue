@@ -25,7 +25,7 @@
                         <li>
                             <h2>{{user.firstName}} {{user.lastName}}</h2>
                         </li>
-                        <li>Trinity, Class of {{user.gradYear}}</li>
+                        <li>{{user.school}}, Class of {{user.gradYear}}</li>
                         <li v-for="degree in user.degrees" :key="degree">{{degree.type}} {{degree.major}}</li>
                         <li v-if="!user.hometown.state">From {{user.hometown.city}}, {{user.hometown.country}}</li>
                         <li v-else>From {{user.hometown.city}}, {{user.hometown.state}}, {{user.hometown.country}}</li>

@@ -170,7 +170,6 @@ export default {
             this.showHome = false;
         },
         toggleProfilePage() {
-            console.log("toggled");
             this.showProfile = true;
             this.signUp = false;
             this.showMatches = false;
