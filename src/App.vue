@@ -61,7 +61,7 @@
                     <!--Display matches and header-->
                     <v-flex xs9 style="margin-left: 50px">
                         <match-header :user="currentUser" :refreshMatches="calculateMatches" :getMatchesObj="getMatchesObj"></match-header>
-                        <div v-for="match in getMatchesObj(currentUser)" :key="match">
+                        <div v-for="match in getSortedMatches(currentUser)" :key="match">
                             <!-- <div v-for="match in filteredMatches()" :key="match"> -->
                             <match :user="getUserObj(match.uuid)" :score="match.score"></match>
                         </div>
@@ -232,13 +232,37 @@ export default {
         signOut() {
             this.currentUser = null;
         },
+        getSortedMatches(user){
+            let myMatches = [...this.matchesObj[user.uuid]];        // spread operator to create new instance, prevent infinite loop
+            let direction = "desc";
+            let sorted = myMatches.sort(this.compareValues("score", direction));
+            console.log(sorted);
+            return sorted ? sorted : null;
+        },
         getMatchesObj(user) {
             return this.matchesObj[user.uuid] ? this.matchesObj[user.uuid] : null;
         },
         getUserObj(uuid) {
             return this.userObj[uuid] ? this.userObj[uuid] : null;
         },
-
+        compareValues(key, order){
+            return function(a, b){
+                if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)){
+                    return 0;
+                }
+                let varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key];
+                let varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key];
+                let comparison = 0;
+                if (varA > varB){
+                    comparison = 1;
+                } else if (varA < varB){
+                    comparison = -1;
+                }
+                return (
+                    (order === 'desc') ? (comparison * -1) : comparison       
+                );
+            }
+        },
         calculateMatches(user) {
             let uuid = user.uuid;
             let matchScores = [];
