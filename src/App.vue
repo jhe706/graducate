@@ -4,7 +4,7 @@
         <v-content>
             <!--Header-->
             <v-toolbar color="green lighten-1" id="toolbar">
-                <h1 style="text-align:center">graducate</h1>
+                <h1 id="toolbar-title">graducate</h1>
                 <ul>
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
@@ -29,7 +29,7 @@
 
                 <!--View existing matches-->
                 <div v-if="showMatchesPage()" id="container">
-                    <!--Match filter-->
+                    <!--Match filter sidebar-->
                     <v-flex xs3>
                         <!-- <match-filter></match-filter> -->
                         <v-card>
@@ -41,8 +41,6 @@
                                         </div>
                                         <div id="matches-filter">
                                             <h3>School</h3>
-                                            <h3>{{selectedSchools}}</h3>
-                                            <!-- <v-checkbox v-model="selectedSchools" v-for="school in schools" :value="schools[school]" :key="school"></v-checkbox> -->
                                             <v-checkbox v-model="selectedSchools" :label="schools[0]" :value="schools[0]"></v-checkbox>
                                             <v-checkbox v-model="selectedSchools" :label="schools[1]" :value="schools[1]"></v-checkbox>
                                             <v-checkbox v-model="selectedSchools" :label="schools[2]" :value="schools[2]"></v-checkbox>
@@ -61,21 +59,14 @@
 
                     <!--Display matches and header-->
                     <v-flex xs9 style="margin-left: 50px">
-                        <match-header 
-                            :user="currentUser" 
-                            :refreshMatches="calculateMatches" 
-                            :getMatchesObj="getMatchesObj"
-                            :filterApplied="filterApplied"
-                            :selectedSchools="selectedSchools"
-                            :applyFilter="applyFilter"
-                        ></match-header>
-                         <div v-if="filterApplied">
-                            <div v-for="match in applyFilter(currentUser, selectedSchools)" :key="match">                           
+                        <match-header :user="currentUser" :refreshMatches="calculateMatches" :getMatchesObj="getMatchesObj" :filterApplied="filterApplied" :selectedSchools="selectedSchools" :applyFilter="applyFilter"></match-header>
+                        <div v-if="filterApplied">
+                            <div v-for="match in applyFilter(currentUser, selectedSchools)" :key="match">
                                 <match :user="match" :score="filteredScore(currentUser, match)"></match>
                             </div>
                         </div>
                         <div v-else>
-                            <div v-for="match in getSortedMatches(currentUser)" :key="match">                           
+                            <div v-for="match in getSortedMatches(currentUser)" :key="match">
                                 <match :user="getUserObj(match.uuid)" :score="match.score"></match>
                             </div>
                         </div>
@@ -114,7 +105,7 @@ let forEach = require('lodash.foreach');
 
 export default {
     name: "App",
-    components: { 
+    components: {
         Discover,
         Header,
         Graphics,
@@ -133,7 +124,7 @@ export default {
             showProfile: false,
             showMatches: false,
             showLogin: false,
-            showGraphics: true,     // assumes user is signed out at page reload
+            showGraphics: true, // assumes user is signed out at page reload
 
             // user data
             currentUser: null,
@@ -148,8 +139,8 @@ export default {
         };
     },
     computed: {
-        filterApplied(){
-            if (this.selectedSchools.length === 0){
+        filterApplied() {
+            if (this.selectedSchools.length === 0) {
                 return false;
             }
             return true;
@@ -241,58 +232,58 @@ export default {
         },
 
         // filters
-        getSortedMatches(user){
-            let myMatches = [...this.matchesObj[user.uuid]];        // spread operator to create new instance, prevent infinite loop
+        getSortedMatches(user) {
+            let myMatches = [...this.matchesObj[user.uuid]]; // spread operator to create new instance, prevent infinite loop
             let direction = "desc";
             let sorted = myMatches.sort(this.compareValues("score", direction));
             return sorted ? sorted : null;
         },
-        applyFilter(user, key){
+        applyFilter(user, key) {
             this.filterApplied = true;
             let myMatches = [...this.matchesObj[user.uuid]];
 
             // key = school
-            if (!this.selectedSchools.length) {                     // no filter selected
+            if (!this.selectedSchools.length) { // no filter selected
                 return myMatches;
             }
             let filtered = [];
-            for (let match in myMatches){
+            for (let match in myMatches) {
                 let userObj = this.getUserObj(myMatches[match].uuid);
-                if (this.selectedSchools.includes(userObj.school)){
+                if (this.selectedSchools.includes(userObj.school)) {
                     filtered.push(userObj);
                 }
             }
-            return filtered;    // should return a list of USERS that point to each match's user obj
+            return filtered; // should return a list of USERS that point to each match's user obj
         },
-        filteredScore(user, match){
+        filteredScore(user, match) {
             let matches = this.getMatchesObj(user);
             let score = 0;
-            if (!matches){
+            if (!matches) {
                 return 0;
             }
-            for (let m in matches){
-                if (matches[m].uuid === match.uuid){
+            for (let m in matches) {
+                if (matches[m].uuid === match.uuid) {
                     score = matches[m].score;
                     return score;
                 }
             }
             return 0;
         },
-        compareValues(key, order){
-            return function(a, b){
-                if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)){
+        compareValues(key, order) {
+            return function (a, b) {
+                if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
                     return 0;
                 }
                 let varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key];
                 let varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key];
                 let comparison = 0;
-                if (varA > varB){
+                if (varA > varB) {
                     comparison = 1;
-                } else if (varA < varB){
+                } else if (varA < varB) {
                     comparison = -1;
                 }
                 return (
-                    (order === 'desc') ? (comparison * -1) : comparison       
+                    (order === 'desc') ? (comparison * -1) : comparison
                 );
             }
         },
@@ -364,7 +355,7 @@ export default {
                 }
                 u1Concentrations.push(degree.concentration);
             });
-            forEach(u2.degrees, function (degree, key) {    
+            forEach(u2.degrees, function (degree, key) {
                 if (u2.status === "Undergraduate") {
                     console.log("Their major: ", degree.major);
                     u2Majors.push(degree.major);
@@ -446,20 +437,22 @@ export default {
     justify-content: flex-end;
 }
 
-/* #title {
+/* #toolbar-title {
     display: flex;
-    justify-content: flex-start;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    line-height: 400px;
+    margin-right: 300px;
 } */
 
 #matches-filter {
     display: flex;
     flex-direction: column;
-    /* margin: auto 10px; */
     justify-content: space-between;
     align-items: left;
     padding: 5px;
-    /* width: 20%; */
-    /* margin-right: 10px; */
     text-align: left;
 }
 </style>
