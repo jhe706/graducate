@@ -13,8 +13,8 @@
     <v-text-field v-model="phoneNumber" :rules="phoneNumberRules" label="Phone number" required class="margins"></v-text-field>
     
     <v-text-field v-model="hometown.city" label="City" class="margins" style="float:left"></v-text-field>
-    <v-select :items="states" v-model="hometown.state" label="State (if in US)" class="margins" style="float:left"></v-select>
-    <v-select :items="countries" v-model="hometown.country" label="Country" class="margins"></v-select>
+    <v-autocomplete v-model="hometown.state" :items="states" label="State (if in US)" class="margins" style="float:left"></v-autocomplete>
+    <v-autocomplete :items="countries" v-model="hometown.country" label="Country" class="margins"></v-autocomplete>
 
     <!--File upload-->
     <!-- <file-upload></file-upload> -->
@@ -247,7 +247,8 @@ export default {
             newUser: null,
             selectedFile: null,
             profileImageUrl: "http://placekitten.com/g/200/300",
-            uploadFinished: false
+            uploadFinished: false,
+            emailLink: "mailto:someone@example.com?Subject=Hello%20from%20Graducate"
         };
     },
     firebase: {
@@ -296,7 +297,8 @@ export default {
                 interests: this.selectedInterests,
                 advice: this.selectedAdvice,
                 bio: this.bio,
-                profileImageUrl: this.profileImageUrl 
+                profileImageUrl: this.profileImageUrl,
+                emailLink: "mailto:" + this.email + "?Subject=Hello%20from%20Graducate" 
             };
 
             // equivalent to signing in automatically

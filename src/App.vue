@@ -4,7 +4,7 @@
         <v-content>
             <!--Header-->
             <v-toolbar color="green lighten-1" id="toolbar">
-                <h1 id="toolbar-title">graducate</h1>
+                <h1>graducate</h1>
                 <ul>
                     <v-btn v-if="currentUser" @click="toggleMatchesPage()">My Matches</v-btn>
                     <v-btn v-if="currentUser" @click="toggleProfilePage()">My Profile</v-btn>
