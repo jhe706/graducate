@@ -10,7 +10,7 @@
                 </v-flex>
 
                 <!--Profile picture-->
-                <v-flex xs3>
+                <v-flex xs6>
                     <v-avatar class="avatar">
                         <img
                         :src="user.profileImageUrl"
@@ -20,7 +20,7 @@
                 </v-flex>
 
                 <!--Name + Summary-->
-                <v-flex xs6 style="height:150px">
+                <v-flex xs6>
                     <ul style="float:left; text-align:left">
                         <li>
                             <h2>{{user.firstName}} {{user.lastName}}</h2>
@@ -31,6 +31,9 @@
                         <li v-else>From {{user.hometown.city}}, {{user.hometown.state}}, {{user.hometown.country}}</li>
                     </ul>
                 </v-flex>
+
+                <!-- <v-flex xs3>
+                </v-flex> -->
 
                 <!--Row 1-->
                 <v-flex xs6>
@@ -47,6 +50,9 @@
                             <h3>Contact</h3>
                             <ul class="square">
                                 <li>Email: {{user.email}}</li>
+                                <!-- <li>Link to email: <a onclick="location.href=user.emailLink"></a></li> -->
+                                <!-- <li><a href onclick="location.href=user.emailLink"></a></li> -->
+                                <!-- <v-btn @click="getEmailLink()">Email Me</v-btn> -->
                                 <li>Phone: {{user.phoneNumber}}</li>
                             </ul>
                         </v-card-text>
@@ -112,30 +118,11 @@ export default {
             }
         },
 
-        getPicURL() {
-            let imgRef = storageRef.child("images");
-            imgRef.getDownloadURL().then(function (url) {
-                // TODO: ?????
-                // Insert url into an <img> tag to "download"
-                console.log(url);
-            }).catch(function (error) {
-                switch (error.code) {
-                    case 'storage/object-not-found':
-                        // File doesn't exist
-                        break;
-                    case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
-                        break;
-                    case 'storage/canceled':
-                        // User canceled the upload
-                        break;
-                    case 'storage/unknown':
-                        // Unknown error occurred, inspect the server response
-                        break;
-                }
-            });
-            // let url = imageRef.getDownloadURL(url)       // doesnt work
-            // console.log(url);
+        getEmailLink(){
+            if (user.emailLink){
+                console.log(user.emailLink);
+                return user.emailLink;
+            }
         }
     },
     props: ['user']
@@ -144,7 +131,7 @@ export default {
 
 <style>
 .profile-text {
-    height: 150px;
+    height: 200px;
     margin: 10px;
     text-align: left;
 }
