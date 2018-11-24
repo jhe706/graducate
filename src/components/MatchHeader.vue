@@ -8,12 +8,6 @@
                     <h1 v-else>{{numMatches}} Match</h1>
                     <v-btn @click="refresh()">Refresh Matches</v-btn>
                 </div>
-                <!-- <div id="matches-header">
-                    <h4>Filtered by:</h4>
-                    <ul v-for="school in schools" :key="school">
-                        <li>{{school}}</li>
-                    </ul>
-                </div> -->
             </v-flex>
         </v-layout>
     </v-container>
@@ -53,7 +47,8 @@ export default {
             return list.length;
         }
     },
-    props: ['match', 'user', 'refreshMatches', 'getMatchesObj', 'filterApplied', 'selectedSchools'],
+    props: ['match', 'user', 'refreshMatches', 'getMatchesObj', 
+            'filterApplied', 'selectedSchools', 'applyFilter'],
     methods: {
         refresh() {
             this.refreshMatches(this.user);

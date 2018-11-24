@@ -67,11 +67,11 @@
                             :getMatchesObj="getMatchesObj"
                             :filterApplied="filterApplied"
                             :selectedSchools="selectedSchools"
+                            :applyFilter="applyFilter"
                         ></match-header>
                          <div v-if="filterApplied">
                             <div v-for="match in applyFilter(currentUser, selectedSchools)" :key="match">                           
-                                <!-- <match :user="match" :score="filteredScore(currentUser, match)"></match> -->
-                                <match :user="match" :score="match.score"></match>
+                                <match :user="match" :score="filteredScore(currentUser, match)"></match>
                             </div>
                         </div>
                         <div v-else>
@@ -265,18 +265,18 @@ export default {
             return filtered;    // should return a list of USERS that point to each match's user obj
         },
         filteredScore(user, match){
-            if (!match){
-                return 0;
-            }
             let matches = this.getMatchesObj(user);
+            let score = 0;
             if (!matches){
                 return 0;
             }
-            let pair = matches[match.uuid];
-            if (!pair){
-                return 0;
+            for (let m in matches){
+                if (matches[m].uuid === match.uuid){
+                    score = matches[m].score;
+                    return score;
+                }
             }
-            return pair.score ? pair.score : 0;
+            return 0;
         },
         compareValues(key, order){
             return function(a, b){
