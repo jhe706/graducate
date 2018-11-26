@@ -19,6 +19,10 @@
     <!--File upload-->
     <!-- <file-upload></file-upload> -->
     <div>
+        <br>
+        <h3>Upload a profile picture.</h3> 
+        <h4>Press Upload to make sure your file was uploaded successfully.</h4>
+        <br>
         <input type="file" @change="onFileChanged">
         <v-btn @click="onUpload">Upload</v-btn>
         <h3 v-if="uploadFinished" id="green">Uploaded successfully</h3>
