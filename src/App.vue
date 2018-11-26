@@ -92,8 +92,6 @@ import {
     userRef,
     matchesRef
 } from "./database";
-import Discover from "./components/Discover";
-import Header from "./components/Header";
 import Graphics from "./components/Graphics";
 import Match from "./components/Match";
 import MatchFilter from "./components/MatchFilter";
@@ -106,8 +104,6 @@ let forEach = require('lodash.foreach');
 export default {
     name: "App",
     components: {
-        Discover,
-        Header,
         Graphics,
         Match,
         MatchFilter,
@@ -233,7 +229,13 @@ export default {
 
         // filters
         getSortedMatches(user) {
+            if (!this.matchesObj || !this.matchesObj[user.uuid]){
+                return null;
+            }
             let myMatches = [...this.matchesObj[user.uuid]]; // spread operator to create new instance, prevent infinite loop
+            if (!myMatches) {
+                return null;
+            }
             let direction = "desc";
             let sorted = myMatches.sort(this.compareValues("score", direction));
             return sorted ? sorted : null;
