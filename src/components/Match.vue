@@ -20,6 +20,7 @@
                     </li>
                     <li>{{user.school}}, Class of {{user.gradYear}}</li>
                     <li v-for="degree in user.degrees" :key="degree">{{degree.type}} {{degree.major}}</li>
+                    <li style="margin-top:15px">{{user.bio}}</li>
                 </ul>
             </v-flex>
             <v-flex xs4 v-if="!view" style="align-text:right">
